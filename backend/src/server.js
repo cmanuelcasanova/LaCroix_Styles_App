@@ -1,0 +1,14 @@
+import app from './app.js';
+import { sequelize } from './config/Postgres.js';
+
+
+const PORT = process.env.PORT || 3000;
+
+
+sequelize.sync({ alter: true }).then(() => {
+  console.log('DB connected');
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  });
+});
+
