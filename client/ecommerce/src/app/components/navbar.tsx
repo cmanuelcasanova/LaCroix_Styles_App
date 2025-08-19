@@ -54,13 +54,13 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="py-3 px-4 flex flex-wrap items-center justify-between relative text-white font-bold ">
+    <nav className="py-3 px-4 mx-2 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold ">
       {/* Logo */}
-      <Image src={Logo} width={100} height={50} alt="Logo" />
+      <Image src={Logo} height={50} alt="Logo" />
 
       {/* Categorías flotantes en desktop */}
       <div
-        className="relative hidden rounded-2xl  md:inline-block ml-4 "
+        className="hidden rounded-2xl md:inline-block ml-4 "
         ref={menuRef}
       >
         <button
@@ -111,7 +111,7 @@ export default function Navbar() {
       </div>
 
       {/* Buscador centrado solo en desktop */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:block">
+      <div className="hidden md:block self-center items-center">
         <label className="bg-[#fe3190] flex items-center font-normal pr-2 gap-1 rounded-r-sm">
           <input
             type="text"
@@ -123,7 +123,7 @@ export default function Navbar() {
       </div>
 
       {/* Auth + Carrito en desktop */}
-      <div className="hidden md:flex items-center gap-4 sm:ml-auto text-white mr-6">
+      <div className="hidden md:flex items-center gap-4  text-white mr-6">
         <Link href="/login" className="flex items-center gap-2 hover:underline">
           <CiLogin />
           LOGIN
@@ -137,7 +137,7 @@ export default function Navbar() {
         </Link>
       </div>
 
-      <Link href="/carrito" className="relative ml-auto sm:ml-2 mr-4">
+      <Link href="/carrito" className="relative mr-10">
         <FaCartShopping size={25}/>
         {cartCount > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">

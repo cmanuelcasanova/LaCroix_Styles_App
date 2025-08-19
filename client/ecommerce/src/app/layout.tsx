@@ -28,11 +28,14 @@ export default function RootLayout({
   return (
     <html lang="en">
 
-      <header> <Navbar /> </header>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} h-screen antialiased bg-linear-to-b from-[#ff8ec9]  via-white via-70% to-[#fed3e7] from-10%`}
+      
+      <body className={`${geistSans.variable} ${geistMono.variable} h-full overflow-x-hidden antialiased bg-gradient-to-b from-[#ff8ec9]  via-white via-70% to-[#fed3e7]`}
       >
+        <Navbar />
+         
+
         {children}
+        
       </body>
     </html>
   );
