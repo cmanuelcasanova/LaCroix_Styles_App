@@ -7,18 +7,20 @@ import { FaSearch } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { CiLogin } from "react-icons/ci";
 import { RxInput } from "react-icons/rx";
-import { FaFemale } from "react-icons/fa";
-import { FaMale } from "react-icons/fa";
-import { MdBoy } from "react-icons/md";
 import { GiClothes, GiShorts, GiWatch } from "react-icons/gi";
 import { CiMenuKebab } from "react-icons/ci";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { useSelector } from "react-redux";
+import { selectItemsc } from "@/app/features/Car/CarSelector";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [showCategories, setShowCategories] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+    const itemsC = useSelector(selectItemsc);
+  
+   
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -30,7 +32,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const cartCount = 0;
+  const cartCount = itemsC.length;
   const categories = [
     {
       name: "Ropa",
@@ -56,11 +58,13 @@ export default function Navbar() {
   return (
     <nav className="py-3 px-4 mx-2 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold ">
       {/* Logo */}
-      <Image src={Logo} height={50} alt="Logo" />
-
+      
+      <Link href={"/"}>
+        <Image src={Logo} height={50} alt="Logo" />
+      </Link>
       {/* Categorías flotantes en desktop */}
       <div
-        className="hidden rounded-2xl md:inline-block ml-4 "
+        className="hidden rounded-2xl md:inline-block ml-4 relative"
         ref={menuRef}
       >
         <button
@@ -71,7 +75,8 @@ export default function Navbar() {
         </button>
 
         {showCategories && (
-          <div className="absolute left-0 mt-2 w-64 bg-gradient-to-b from-[#ff8ec9] via-white via-70% to-[#fed3e7] shadow-lg rounded z-50 p-2">
+          <div className="absolute left-0 mt-2 w-64 bg-gradient-to-b from-[#ff8ec9] via-white via-70% to-[#fed3e7] shadow-lg rounded z-50 p-2 transition-all duration-300 ease-in-out transform translate-y-2
+">
             {categories.map((cat) => (
               <div key={cat.name} className="flex flex-col">
                 <button
@@ -137,7 +142,8 @@ export default function Navbar() {
         </Link>
       </div>
 
-      <Link href="/carrito" className="relative mr-10">
+        
+      <Link href="/shopping" className="relative ml-auto sm:ml-4 mr-4 sm:mr-10 ">
         <FaCartShopping size={25}/>
         {cartCount > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
@@ -148,6 +154,8 @@ export default function Navbar() {
 
       {/* Hamburguesa móvil */}
 
+
+       
       <button
         className="md:hidden text-white"
         onClick={() => setMenuOpen(!menuOpen)}
@@ -161,7 +169,7 @@ export default function Navbar() {
 
       {/* Menú móvil en bloque */}
       {menuOpen && (
-        <div className="w-full mt-4 bg-white p-4 rounded shadow text-gray-800 md:hidden">
+        <div className="absolute inset-x-0 top-full bg-white px-4 py-3 rounded shadow text-gray-800 md:hidden z-40">
           {/* Buscador móvil */}
           <div className="mb-4 border-[#ff298b] border-2">
             <label className="bg-pink-100 flex items-center pr-2 gap-1 rounded">
@@ -238,6 +246,8 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+     
     </nav>
   );
 }

@@ -62,19 +62,20 @@ export default function ImageSlider() {
       transition={{ duration: 0.6 }}
       className="relative w-screen "
     >
-      <div ref={sliderRef} className="keen-slider h-[800px] w-screen ">
+      <div ref={sliderRef} className="keen-slider flex items-center h-[600px] sm:h-[800px] w-screen ">
         {images.map((img, i) => (
           <div
             key={i}
-            className="keen-slider__slide relative w-screen h-[100px] "
+            className="keen-slider__slide relative w-screen h-full"
           >
             <Image
               src={img.src}
               alt={img.alt}
               width={1200} // ancho base para cálculo
               height={600}
-              className="object-cover w-full h-auto"
-              sizes="100vw"
+        
+              className="object-cover w-full h-full sm:h-max"
+      
               priority={i === 0}
             />
           </div>
