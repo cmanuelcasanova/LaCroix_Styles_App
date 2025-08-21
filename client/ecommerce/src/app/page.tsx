@@ -1,17 +1,32 @@
 "use client";
 import Card from "./components/card";
 import ImageSlider from "./components/ImageSlider";
+
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectItems } from "@/app/features/items/itemsSelectors";
-import { selectItemsc } from "@/app/features/Car/CarSelector";
+import { useGetItemsQuery } from '../app/features/api/apiSlice'
+
 
 export default function Home() {
   const items = useSelector(selectItems);
-  const itemsC = useSelector(selectItemsc);
+  
+ const { data: itemsP, isLoading, error } = useGetItemsQuery();
 
-  console.log(itemsC.length)
+  
 
- 
+useEffect(() => {
+    if (isLoading) {
+      console.log("Cargando...");
+    } else if (error) {
+      console.error("Error al cargar los datos:", error);
+    } else if (itemsP) {
+      console.log("Items recibidos:", itemsP);
+    }
+  }, [isLoading, itemsP, error]);
+
+  
+
 
   return (
     <div className="flex flex-col items-center justify-center">

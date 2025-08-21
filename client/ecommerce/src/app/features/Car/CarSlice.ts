@@ -9,6 +9,7 @@ const initialState: CarsState = {
   list: [],
 };
 
+
 export const CarSlice = createSlice({
   name: "Cars",
   initialState,
@@ -22,8 +23,18 @@ export const CarSlice = createSlice({
     clearItems: (state) => {
       state.list = [];
     },
+    updateItem: (state, action: PayloadAction<{ id: string; cant: number; precio: number }>) => {
+      const { id, cant, precio } = action.payload;
+      const item = state.list.find((item) => item.id === id);
+      if (item) {
+        
+        item.cant = cant; ;
+        item.precio = precio;
+      }
+    },
   },
 });
 
-export const { addItem, removeItem, clearItems } = CarSlice.actions;
+export const { addItem, removeItem, clearItems, updateItem } =
+  CarSlice.actions;
 export default CarSlice.reducer;

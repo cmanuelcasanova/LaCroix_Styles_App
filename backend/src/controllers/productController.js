@@ -1,6 +1,6 @@
 import { db } from "../models/index.js";
 
-export const createTask = async (req, res) => {
+export const createProduct = async (req, res) => {
   try {
     const { title, description, done, userId } = req.body;
     const task = await db.Task.create({ title, description, done, userId });
@@ -11,9 +11,9 @@ export const createTask = async (req, res) => {
   }
 };
 
-export const getTasks = async (req, res) => {
+export const getProduct = async (req, res) => {
   try {
-    const task = await db.Task.findAll();
+    const task = await db.Product.findAll();
     res.status(201).json(task);
   } catch (err) {
     console.error("❌ Error al consultar tareas:", err.message);
@@ -21,10 +21,10 @@ export const getTasks = async (req, res) => {
   }
 };
 
-export const findTask = async (req, res) => {
+export const findProduct = async (req, res) => {
   try {
     console.log(req.params.id);
-    const task = await db.Task.findByPk(req.params.id);
+    const task = await db.Product.findByPk(req.params.id);
     res.status(201).json(task);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);
@@ -32,9 +32,9 @@ export const findTask = async (req, res) => {
   }
 };
 
-export const deleteTask = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   try {
-    const task = await db.Task.destroy({ where: { id: req.params.id } });
+    const task = await db.Product.destroy({ where: { id: req.params.id } });
     res.status(201).json(task);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);
@@ -42,10 +42,10 @@ export const deleteTask = async (req, res) => {
   }
 };
 
-export const UpdateTask = async (req, res) => {
+export const UpdateProduct = async (req, res) => {
   try {
     const { title, description, done } = req.body;
-    const task = await db.Task.update(
+    const task = await db.Product.update(
       { title: title, description: description, done: done },
       { where: { id: req.params.id } }
     );

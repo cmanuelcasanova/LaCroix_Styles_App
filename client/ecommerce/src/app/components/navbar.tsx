@@ -12,6 +12,7 @@ import { CiMenuKebab } from "react-icons/ci";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
+import { MdNoteAdd } from "react-icons/md";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -140,6 +141,16 @@ export default function Navbar() {
           <RxInput />
           REGISTRO
         </Link>
+
+        <Link
+          href="/newproduct"
+          className="flex items-center gap-2 hover:underline"
+        >
+          <MdNoteAdd />
+          
+        </Link>
+
+        
       </div>
 
         

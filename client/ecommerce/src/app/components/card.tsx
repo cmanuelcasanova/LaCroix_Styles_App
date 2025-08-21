@@ -24,7 +24,7 @@ export default function Card({
   const dispatch = useDispatch();
 
   const handleAdd = () => {
-    dispatch(addItem({ id: id, cant: 1 }));
+    dispatch(addItem({ id: id, cant: 1, precio: precio}));
   };
 
   return (

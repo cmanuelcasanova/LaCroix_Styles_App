@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/Postgres.js';
 
-export const Task = sequelize.define('Task', {
+export const Product = sequelize.define('Product', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -11,13 +11,23 @@ export const Task = sequelize.define('Task', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  description: {
+  imageUrl: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
-  done: {
-    type: DataTypes.BOOLEAN,
+  categoria: {
+    type: DataTypes.STRING,
+    allowNull: false
+
+  },
+  talla: {
+    type: DataTypes.STRING,
     allowNull: true
+
+  },
+  precio: {
+    type: DataTypes.STRING,
+    allowNull: false
 
   },
    userId: { // 👈 esta es la foreign key

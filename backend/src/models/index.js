@@ -1,14 +1,14 @@
 import { sequelize } from '../config/Postgres.js';
-import { Task } from './task_Postgres.js';
+import { Product } from './product_Postgres.js';
 import { User } from './user_Postgres.js';
 
 
-User.hasMany(Task, { foreignKey: 'userId' });
-Task.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Product, { foreignKey: 'userId' });
+Product.belongsTo(User, { foreignKey: 'userId' });
 
 export const db = {
   sequelize,
-  Task,
+  Product,
   User
 };
 
