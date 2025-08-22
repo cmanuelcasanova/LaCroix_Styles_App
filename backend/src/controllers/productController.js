@@ -2,9 +2,9 @@ import { db } from "../models/index.js";
 
 export const createProduct = async (req, res) => {
   try {
-    const { title, description, done, userId } = req.body;
-    const task = await db.Task.create({ title, description, done, userId });
-    res.status(201).json(task);
+    const { title, categoria, imageUrl, talla, precio } = req.body;
+    const product = await db.Product.create({ title, categoria, imageUrl, talla, precio, userId: "1" });
+    res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);
     res.status(500).json({ error: err.message });
@@ -13,8 +13,8 @@ export const createProduct = async (req, res) => {
 
 export const getProduct = async (req, res) => {
   try {
-    const task = await db.Product.findAll();
-    res.status(201).json(task);
+    const product = await db.Product.findAll();
+    res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al consultar tareas:", err.message);
     res.status(500).json({ error: err.message });

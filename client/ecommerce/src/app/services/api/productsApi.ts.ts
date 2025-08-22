@@ -1,9 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { qdata } from "../api/queryTypes";
-export const api = createApi({
-  reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }), // tu backend Express
-  tagTypes: ['Product'],
+import { baseApi } from '@/app/services/api/baseApi'
+import { qdata } from './queryTypes';
+
+export const productsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getItems: builder.query<qdata[], void>({
       query: () => '/products',
@@ -40,4 +38,4 @@ export const {
   useAddItemMutation,
   useUpdateItemMutation,
   useRemoveItemMutation,
-} = api;
+} = productsApi;

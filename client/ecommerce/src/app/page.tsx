@@ -5,7 +5,7 @@ import ImageSlider from "./components/ImageSlider";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectItems } from "@/app/features/items/itemsSelectors";
-import { useGetItemsQuery } from '../app/features/api/apiSlice'
+import { useGetItemsQuery } from './services/api/productsApi.ts'
 
 
 export default function Home() {

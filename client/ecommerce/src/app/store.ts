@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import itemsReducer from "@/app/features/items/itemsSlice"
 import CarsReducer from "@/app/features/Car/CarSlice"
-import { api } from './features/api/apiSlice'; 
+import authReducer from "@/app/features/auth/authSlice"
+import { baseApi } from './services/api/baseApi'; 
 
 
 
@@ -9,11 +10,12 @@ export const store = configureStore({
   reducer: {
     items: itemsReducer,
     itemsCarrito: CarsReducer,
-    [api.reducerPath]: api.reducer,
+    auth: authReducer,
+    [baseApi.reducerPath]: baseApi.reducer
 
   },
    middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware().concat(baseApi.middleware),
 
 });
 

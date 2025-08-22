@@ -243,16 +243,20 @@ export default function Navbar() {
             <Link
               href="/login"
               className="flex items-center mt-4 gap-2 hover:underline"
+              onClick={() => setMenuOpen(false)}
             >
               <CiLogin />
               LOGIN
+              
             </Link>
             <Link
               href="/registro"
               className="flex items-center gap-2 mt-4 hover:underline"
+              onClick={() => setMenuOpen(false)}
             >
               <RxInput />
               REGISTRO
+              
             </Link>
           </div>
         </div>

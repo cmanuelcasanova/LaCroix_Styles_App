@@ -2,9 +2,12 @@
 
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import Image from "next/image";
-import ImageKit from "imagekit-javascript";
+import { useAddItemMutation } from '../services/api/productsApi.ts'
+import { useProfileQuery } from '../services/api/usersApi';
+
+import { useRouter } from "next/navigation";
 
 
 type FormData = {
@@ -17,48 +20,42 @@ type FormData = {
 
 export default function NewProduct() {
   const { register, handleSubmit } = useForm<FormData>();
+   const router = useRouter();
   
-
   const [foto, setFoto] = useState<string>("");
   const [file, setFile] = useState<File>();
+  const [addItem] = useAddItemMutation();
+  const { data: profile, isLoading, error } = useProfileQuery();
+
+  useEffect(() => {
+    if (error && 'status' in error && error.status === 401) {
+      router.replace('/login'); 
+    }
+  }, [error, router]);
+
+  if (isLoading) return <p>Cargando perfil...</p>;
+  if (!profile) return null;
 
 
 
-  const imagekit = new ImageKit({
-  publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!,
-  urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!,
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
-const uploadToImageKit = async (file: File) => {
-  const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY;
-
-  if (!publicKey) {
-    throw new Error("Falta la clave pública de ImageKit");
-  }
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("fileName", file.name);
-  formData.append("folder", "/portfolio/images");
-
-  const res = await fetch(`https://upload.imagekit.io/api/v1/files/upload?publicKey=${publicKey}`, {
-    method: "POST",
-    body: formData,
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    console.error("Error en la subida:", data);
-    return;
-  }
-
-  console.log("Imagen subida:", data.url);
-};
-
-
-
 
 
 
@@ -68,17 +65,23 @@ const uploadToImageKit = async (file: File) => {
       const previewUrl = URL.createObjectURL(file);
       setFoto(previewUrl);
       setFile(file)
-      console.log(file)
-      uploadToImageKit(file)
+      //console.log(file)
+      
 
      
     }
   };
 
 
-    const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit((data) => {
     console.log(data);
-     
+     try {
+
+     addItem({title: data.titulo, imageUrl: data.image,categoria:data.categoria, talla: data.talla, precio: data.precio })
+         } catch (err) {
+      console.error('Error al agregar producto:', err);
+    }
+
   });
 
   return (
@@ -116,7 +119,7 @@ const uploadToImageKit = async (file: File) => {
           <label className="flex flex-col mb-4">
             Titulo
             <input
-              className="text-white h-10  border-[#202b38] border-1 rounded-md p-2
+              className="h-10  border-[#202b38] border-1 rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
@@ -130,7 +133,7 @@ const uploadToImageKit = async (file: File) => {
           <label className="flex flex-col mb-4">
             categoria
             <input
-              className="text-white h-10  border-[#202b38] border-1 rounded-md p-2
+              className="h-10  border-[#202b38] border-1 rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
@@ -142,9 +145,23 @@ const uploadToImageKit = async (file: File) => {
           </label>
 
           <label className="flex flex-col mb-4">
+            Foto
+            <input
+              className="h-10  border-[#202b38] border-1 rounded-md p-2
+                focus:outline-none focus:ring-2
+             focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
+                hover:border-[#677483] transition-colors duration-200"
+              type="text"
+              placeholder="input categoria"
+              required
+              {...register("image")}
+            />
+          </label>
+
+          <label className="flex flex-col mb-4">
             Talla
             <input
-              className="text-white h-10  border-[#202b38] border-1 rounded-md p-2
+              className="h-10  border-[#202b38] border-1 rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
@@ -158,7 +175,7 @@ const uploadToImageKit = async (file: File) => {
           <label className="flex flex-col mb-4">
             Precio
             <input
-              className="text-white h-10  border-[#202b38] border-1 rounded-md p-2
+              className="h-10  border-[#202b38] border-1 rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
