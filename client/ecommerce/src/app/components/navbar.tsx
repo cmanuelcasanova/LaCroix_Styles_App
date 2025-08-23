@@ -142,16 +142,18 @@ export default function Navbar() {
           REGISTRO
         </Link>
 
-        <Link
+       
+
+        
+      </div>
+
+       <Link
           href="/newproduct"
           className="flex items-center gap-2 hover:underline"
         >
           <MdNoteAdd />
           
         </Link>
-
-        
-      </div>
 
         
       <Link href="/shopping" className="relative ml-auto sm:ml-4 mr-4 sm:mr-10 ">

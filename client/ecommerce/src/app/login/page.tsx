@@ -27,7 +27,7 @@ export default function Login () {
         router.push("/");
       } catch (error) {
         console.error("Error en el registro:", error);
-        alert("Error al registrar")
+        alert("Error al Loguearse, Reintente")
       }
     });
 

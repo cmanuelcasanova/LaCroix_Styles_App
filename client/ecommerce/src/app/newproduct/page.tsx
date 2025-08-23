@@ -2,89 +2,104 @@
 
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { useForm } from "react-hook-form";
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useAddItemMutation } from '../services/api/productsApi.ts'
-import { useProfileQuery } from '../services/api/usersApi';
-
+import {
+  useAddItemMutation,
+  useUpLoadphotoMutation,
+} from "../services/api/productsApi.ts";
+import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter } from "next/navigation";
-
+import Select from 'react-select'
 
 type FormData = {
   titulo: string;
-  image: string;
+  imagepath: string;
   categoria: string;
   talla: string;
   precio: number;
 };
 
+type OptionType = {
+  value: string;
+  label: string;
+};
+
+
+
+
 export default function NewProduct() {
   const { register, handleSubmit } = useForm<FormData>();
-   const router = useRouter();
-  
+  const router = useRouter();
+const [categoria, setCategoria] = useState<OptionType | null> (null);
   const [foto, setFoto] = useState<string>("");
-  const [file, setFile] = useState<File>();
+  const [imagenUrl, setImagenUrl] = useState<string>("");
   const [addItem] = useAddItemMutation();
+  const [upLoadphoto] = useUpLoadphotoMutation();
   const { data: profile, isLoading, error } = useProfileQuery();
 
   useEffect(() => {
-    if (error && 'status' in error && error.status === 401) {
-      router.replace('/login'); 
+    if (error && "status" in error && error.status === 401) {
+      router.push("/login");
     }
   }, [error, router]);
 
   if (isLoading) return <p>Cargando perfil...</p>;
   if (!profile) return null;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const previewUrl = URL.createObjectURL(file);
       setFoto(previewUrl);
-      setFile(file)
-      //console.log(file)
-      
-
-     
+      try {
+        
+        const resurl = await upLoadphoto({ image: file}).unwrap();
+        setImagenUrl(resurl.url)
+        
+        
+      } catch (err) {
+        console.error("Error al agregar producto:", err);
+      }
     }
   };
 
-
   const onSubmit = handleSubmit((data) => {
     console.log(data);
-     try {
 
-     addItem({title: data.titulo, imageUrl: data.image,categoria:data.categoria, talla: data.talla, precio: data.precio })
-         } catch (err) {
-      console.error('Error al agregar producto:', err);
+     if (!categoria) {
+    alert('Por favor selecciona una categoría');
+    return;
+  }
+
+    try {
+      addItem({
+        title: data.titulo,
+        imageUrl: imagenUrl,
+        categoria: categoria.value,
+        talla: data.talla,
+        precio: data.precio,
+      });
+    } catch (err) {
+      console.error("Error al agregar producto:", err);
     }
-
   });
 
+  const options: OptionType[] = [
+    { value: "Dama", label: " Dama" },
+    { value: "Caballero", label: " Caballero" },
+    { value: "niño", label: "niño" }
+];
+
+  const handleChange = (option: OptionType | null) => {
+    setCategoria(option);
+  };
+
+
+    console.log(categoria?.value)
+
   return (
+
     <div className="flex flex-col items-center">
       <div className="w-[700px] h-[800px] flex flex-col items-center rounded-2xl mt-20 bg-white px-8">
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
@@ -92,20 +107,22 @@ export default function NewProduct() {
         <div className="w-[300px] h-[400px] flex flex-col items-center justify-center rounded-2xl bg-gray-300 ">
           <label className="flex flex-col justify-center items-center">
             <span>
-              { foto ?
-              <Image
-                src={foto}
-                alt={"Foto precargada"}
-                width={300} 
-                height={400}
-                className="object-contain w-full h-full sm:h-max"
-              />
-              :
-              <div><MdOutlineAddAPhoto size={120} /> 
-              <span>Cargar Foto...</span>
-              </div> }
+              {foto ? (
+                <Image
+                  src={foto}
+                  alt={"Foto precargada"}
+                  width={300}
+                  height={400}
+                  className="object-contain w-full h-full sm:h-max"
+                />
+              ) : (
+                <div>
+                  <MdOutlineAddAPhoto size={120} />
+                  <span>Cargar Foto...</span>
+                </div>
+              )}
             </span>
-            
+
             <input
               type="file"
               accept="image/png, image/gif, image/jpeg"
@@ -130,33 +147,31 @@ export default function NewProduct() {
             />
           </label>
 
-          <label className="flex flex-col mb-4">
+          <label className="" htmlFor="categoria">
             categoria
-            <input
-              className="h-10  border-[#202b38] border-1 rounded-md p-2
+          </label>
+            <Select
+              className="w-full  border-[#202b38] border-1 mb-4 rounded-md
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
-              type="text"
-              placeholder="input categoria"
-              required
-              {...register("categoria")}
-            />
-          </label>
+            inputId="categoria"
+            value={categoria}
+            onChange={handleChange}
+            options={options}
+            placeholder="Selecciona una categoría"
 
-          <label className="flex flex-col mb-4">
-            Foto
-            <input
-              className="h-10  border-[#202b38] border-1 rounded-md p-2
-                focus:outline-none focus:ring-2
-             focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
-                hover:border-[#677483] transition-colors duration-200"
-              type="text"
-              placeholder="input categoria"
-              required
-              {...register("image")}
+            required
+            //{...register("categoria")}
             />
-          </label>
+
+
+         
+
+
+          
+
+        
 
           <label className="flex flex-col mb-4">
             Talla
