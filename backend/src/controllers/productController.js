@@ -2,8 +2,8 @@ import { db } from "../models/index.js";
 
 export const createProduct = async (req, res) => {
   try {
-    const { title, categoria, imageUrl, talla, precio } = req.body;
-    const product = await db.Product.create({ title, categoria, imageUrl, talla, precio, userId: "1" });
+    const { title, categoria, imageUrl, talla, precio,userId } = req.body;
+    const product = await db.Product.create({ title, categoria, imageUrl, talla, precio, userId });
     res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);
@@ -13,7 +13,17 @@ export const createProduct = async (req, res) => {
 
 export const getProduct = async (req, res) => {
   try {
-    const product = await db.Product.findAll();
+    const product = await db.Product.findAll({
+      include: [
+    {
+      model: db.User,
+      attributes: ['id', 'username', 'email'], 
+    },
+  ],
+
+
+
+    });
     res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al consultar tareas:", err.message);

@@ -2,9 +2,12 @@
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useLoginMutation } from "@/app/services/api/usersApi";
-//import { useDispatch } from "react-redux";
-//import { AppDispatch } from "../../app/store/store";
+
+import { setUser } from "@/app/features/auth/authSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
 import { useRouter } from "next/navigation";
+
 
 type FormData = {
   email: string;
@@ -13,8 +16,8 @@ type FormData = {
 
 export default function Login () {
   const { register, handleSubmit } = useForm<FormData>();
+  const dispatch = useDispatch<AppDispatch>();
 
-//  const dispatch = useDispatch<AppDispatch>();
  const router = useRouter();
 
    const [Login] = useLoginMutation();
@@ -23,7 +26,8 @@ export default function Login () {
       try {
         console.log(data);
         const response = await Login(data).unwrap();
-        console.log(response);
+        dispatch( setUser ({ isAuthenticated: true, user: response.user, username: response.username})) ;
+
         router.push("/");
       } catch (error) {
         console.error("Error en el registro:", error);

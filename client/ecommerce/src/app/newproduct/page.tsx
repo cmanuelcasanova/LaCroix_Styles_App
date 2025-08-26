@@ -4,13 +4,12 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import {
-  useAddItemMutation,
-  useUpLoadphotoMutation,
-} from "../services/api/productsApi.ts";
+import { useAddItemMutation, useUpLoadphotoMutation } from "../services/api/productsApi.ts";
 import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter } from "next/navigation";
-import Select from 'react-select'
+import Select from "react-select";
+import LoadingModal from "../components/Loadingpage";
+
 
 type FormData = {
   titulo: string;
@@ -25,18 +24,18 @@ type OptionType = {
   label: string;
 };
 
-
-
-
 export default function NewProduct() {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit, reset } = useForm<FormData>();
   const router = useRouter();
-const [categoria, setCategoria] = useState<OptionType | null> (null);
-  const [foto, setFoto] = useState<string>("");
+  const [categoria, setCategoria] = useState<OptionType | null>(null);
+  const [foto, setFoto] = useState<string | null>(null);
   const [imagenUrl, setImagenUrl] = useState<string>("");
   const [addItem] = useAddItemMutation();
   const [upLoadphoto] = useUpLoadphotoMutation();
   const { data: profile, isLoading, error } = useProfileQuery();
+
+
+
 
   useEffect(() => {
     if (error && "status" in error && error.status === 401) {
@@ -44,7 +43,7 @@ const [categoria, setCategoria] = useState<OptionType | null> (null);
     }
   }, [error, router]);
 
-  if (isLoading) return <p>Cargando perfil...</p>;
+  if (isLoading) return <LoadingModal />;
   if (!profile) return null;
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,33 +52,45 @@ const [categoria, setCategoria] = useState<OptionType | null> (null);
       const previewUrl = URL.createObjectURL(file);
       setFoto(previewUrl);
       try {
-        
-        const resurl = await upLoadphoto({ image: file}).unwrap();
-        setImagenUrl(resurl.url)
-        
-        
+        const resurl = await upLoadphoto({ image: file }).unwrap();
+        setImagenUrl(resurl.url);
       } catch (err) {
         console.error("Error al agregar producto:", err);
       }
     }
+
   };
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
-
-     if (!categoria) {
-    alert('Por favor selecciona una categoría');
-    return;
-  }
+    
+    if (!categoria) {
+      alert("Por favor selecciona una categoría");
+      return;
+    }
+    if (!foto) {
+      alert("Debe seleccionar una foto");
+      return;
+    }
 
     try {
+
+
+
+
+
       addItem({
         title: data.titulo,
         imageUrl: imagenUrl,
         categoria: categoria.value,
         talla: data.talla,
         precio: data.precio,
+        userId: profile.userId
       });
+      reset ()
+      setFoto(null)
+      setCategoria(null)
+     
     } catch (err) {
       console.error("Error al agregar producto:", err);
     }
@@ -88,20 +99,18 @@ const [categoria, setCategoria] = useState<OptionType | null> (null);
   const options: OptionType[] = [
     { value: "Dama", label: " Dama" },
     { value: "Caballero", label: " Caballero" },
-    { value: "niño", label: "niño" }
-];
+    { value: "niño", label: "niño" },
+  ];
 
   const handleChange = (option: OptionType | null) => {
     setCategoria(option);
   };
 
-
-    console.log(categoria?.value)
+  
 
   return (
-
     <div className="flex flex-col items-center">
-      <div className="w-[700px] h-[800px] flex flex-col items-center rounded-2xl mt-20 bg-white px-8">
+      <div className="w-[700px] h-[900px] flex flex-col items-center rounded-2xl mt-20 bg-white px-8">
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
 
         <div className="w-[300px] h-[400px] flex flex-col items-center justify-center rounded-2xl bg-gray-300 ">
@@ -150,8 +159,8 @@ const [categoria, setCategoria] = useState<OptionType | null> (null);
           <label className="" htmlFor="categoria">
             categoria
           </label>
-            <Select
-              className="w-full  border-[#202b38] border-1 mb-4 rounded-md
+          <Select
+            className="w-full  border-[#202b38] border-1 mb-4 rounded-md
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
@@ -160,18 +169,9 @@ const [categoria, setCategoria] = useState<OptionType | null> (null);
             onChange={handleChange}
             options={options}
             placeholder="Selecciona una categoría"
-
             required
             //{...register("categoria")}
-            />
-
-
-         
-
-
-          
-
-        
+          />
 
           <label className="flex flex-col mb-4">
             Talla

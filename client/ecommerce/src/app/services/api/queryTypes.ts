@@ -4,11 +4,13 @@ export interface qdata {
     imageUrl:string,
     talla:string
     precio:number
+    userId: string | null
 }
   
 export interface AuthResponse {
   userId: string;
   username: string;
+  user: string;
 }
 
 export interface LoginData {

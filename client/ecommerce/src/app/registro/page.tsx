@@ -18,7 +18,7 @@ export default function Signup() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      console.log(data);
+      
       const response = await registro(data).unwrap();
       console.log(response);
       router.push("/login");

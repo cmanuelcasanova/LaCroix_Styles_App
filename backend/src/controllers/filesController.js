@@ -17,7 +17,7 @@ export const uploadfiles = async (req, res) => {
     const result = await imagekit.upload({
       file: fileBuffer,
       fileName,
-      folder: 'productos', // opcional: organiza tus imágenes en carpetas
+      folder: 'LaCroix', // opcional: organiza tus imágenes en carpetas
     });
 
     return res.status(200).json({ url: result.url });

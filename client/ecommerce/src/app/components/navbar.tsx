@@ -12,14 +12,29 @@ import { CiMenuKebab } from "react-icons/ci";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
+import { selectUsername } from "../features/auth/authSelectors"
 import { MdNoteAdd } from "react-icons/md";
+import { FaUserCircle } from "react-icons/fa";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [showCategories, setShowCategories] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-    const itemsC = useSelector(selectItemsc);
+  const [showUser, setshowUSer] = useState<string | null>(null);
+  const itemsC = useSelector(selectItemsc);
+  const UserS = useSelector(selectUsername);
+  
+
+  
+  
+ useEffect(() => {
+  if (UserS) {
+    setshowUSer(UserS);
+  }
+}, [UserS]);
+
+
   
    
 
@@ -56,10 +71,12 @@ export default function Navbar() {
     setOpenCategory(openCategory === name ? null : name);
   };
 
+
+ 
   return (
     <nav className="py-3 px-4 mx-2 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold ">
-      {/* Logo */}
       
+     
       <Link href={"/"}>
         <Image src={Logo} height={50} alt="Logo" />
       </Link>
@@ -147,13 +164,31 @@ export default function Navbar() {
         
       </div>
 
+        { showUser &&  <div className="flex flex-wrap gap-2">
+      
+      <Link
+          href="/profile"
+          className="flex items-center gap-2 hover:underline"
+        >
+          <FaUserCircle size={25}/>
+          {showUser}
+          
+      </Link>
+
        <Link
           href="/newproduct"
           className="flex items-center gap-2 hover:underline"
         >
-          <MdNoteAdd />
+          <MdNoteAdd size={25}/>
+          {"Agregar"}
           
         </Link>
+        
+        </div>
+
+        }
+
+      
 
         
       <Link href="/shopping" className="relative ml-auto sm:ml-4 mr-4 sm:mr-10 ">

@@ -12,9 +12,7 @@ export const createUser = async (req, res) => {
       return res.status(400).json({ message: "El usuario ya existe" });
     }
 
-    console.log(email);
-    // Crea y guarda el nuevo usuario
-    // 🔒 Hashear la contraseña
+    
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -23,9 +21,7 @@ export const createUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
-    res.status(201).json(user.id, user.username);
-
-    res.status(201).json({ message: "Usuario registrado exitosamente" });
+    res.status(201).json({userid: user.id, username: user.username});
   } catch (error) {
     res.status(500).json({ message: "Error al registrar usuario", error });
   }
@@ -51,7 +47,7 @@ export const login = async (req, res) => {
       sameSite: "strict",
       maxAge: 1000 * 60 * 60, // 1 hora
     });
-    res.status(200).json({ message: "Login exitoso", user: user.username });
+    res.status(200).json({ message: "Login exitoso", user: user.id,username: user.username });
   } catch (err) {
     res.status(500).json({ message: "Error en el servidor" });
   }
@@ -70,6 +66,7 @@ export const getprofile = async (req, res) => {
 
     res.json({
       username: user.username,
+      userId: user.id,
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,

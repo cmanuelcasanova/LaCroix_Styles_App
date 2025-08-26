@@ -1,14 +1,21 @@
+// models/index.js
 import { sequelize } from '../config/Postgres.js';
-import { Product } from './product_Postgres.js';
-import { User } from './user_Postgres.js';
+import { UserModel } from './user_Postgres.js';
+import { ProductModel } from './product_Postgres.js';
 
+const db = {};
 
-User.hasMany(Product, { foreignKey: 'userId' });
-Product.belongsTo(User, { foreignKey: 'userId' });
+db.sequelize = sequelize;
+db.User = UserModel(sequelize);
+db.Product = ProductModel(sequelize);
 
-export const db = {
-  sequelize,
-  Product,
-  User
-};
+// Ejecutar asociaciones si existen
+Object.values(db).forEach((model) => {
+  if (model.associate) {
+    model.associate(db);
+  }
+});
+
+export { db };
+
 
