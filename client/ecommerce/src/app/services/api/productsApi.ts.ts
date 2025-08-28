@@ -1,10 +1,14 @@
 import { baseApi } from "@/app/services/api/baseApi";
-import { qdata } from "./queryTypes";
+import { qdata, CatData  } from "./queryTypes";
 
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getItems: builder.query<qdata[], void>({
       query: () => "/products",
+      providesTags: ["Product"],
+    }),
+    getCategory: builder.query<CatData[], void>({
+      query: () => "/products/category",
       providesTags: ["Product"],
     }),
     addItem: builder.mutation<void, qdata>({
@@ -15,10 +19,7 @@ export const productsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
-    updateItem: builder.mutation<
-      void,
-      { id: string; cant?: number; precio?: number }
-    >({
+    updateItem: builder.mutation <void,{ id: string; cant?: number; precio?: number }>({
       query: ({ id, ...patch }) => ({
         url: `/products/${id}`,
         method: "PATCH",
@@ -56,4 +57,5 @@ export const {
   useUpdateItemMutation,
   useRemoveItemMutation,
   useUpLoadphotoMutation,
+  useGetCategoryQuery
 } = productsApi;

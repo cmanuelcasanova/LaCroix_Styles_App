@@ -1,6 +1,6 @@
 export interface qdata {
     title: string,
-    categoria: string
+    categoryId: number
     imageUrl:string,
     talla:string
     precio:number
@@ -22,4 +22,10 @@ export interface RegisterData {
   username: string;
   email: string;
   password: string;
+}
+
+export interface CatData {
+  id: number;
+  name: string;
+  
 }

@@ -4,7 +4,7 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useAddItemMutation, useUpLoadphotoMutation } from "../services/api/productsApi.ts";
+import { useAddItemMutation, useUpLoadphotoMutation , useGetCategoryQuery } from "../services/api/productsApi.ts";
 import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
@@ -14,15 +14,17 @@ import LoadingModal from "../components/Loadingpage";
 type FormData = {
   titulo: string;
   imagepath: string;
-  categoria: string;
+  categoryId: string;
   talla: string;
   precio: number;
 };
 
 type OptionType = {
-  value: string;
+  value: number;
   label: string;
 };
+
+
 
 export default function NewProduct() {
   const { register, handleSubmit, reset } = useForm<FormData>();
@@ -33,6 +35,7 @@ export default function NewProduct() {
   const [addItem] = useAddItemMutation();
   const [upLoadphoto] = useUpLoadphotoMutation();
   const { data: profile, isLoading, error } = useProfileQuery();
+  const { data: categories } = useGetCategoryQuery();
 
 
 
@@ -61,8 +64,9 @@ export default function NewProduct() {
 
   };
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    
+    
     
     if (!categoria) {
       alert("Por favor selecciona una categoría");
@@ -75,14 +79,10 @@ export default function NewProduct() {
 
     try {
 
-
-
-
-
-      addItem({
+      await addItem({
         title: data.titulo,
         imageUrl: imagenUrl,
-        categoria: categoria.value,
+        categoryId: categoria.value,
         talla: data.talla,
         precio: data.precio,
         userId: profile.userId
@@ -92,15 +92,17 @@ export default function NewProduct() {
       setCategoria(null)
      
     } catch (err) {
-      console.error("Error al agregar producto:", err);
+      console.log("Error al agregar producto:" ,err);
     }
   });
 
-  const options: OptionType[] = [
-    { value: "Dama", label: " Dama" },
-    { value: "Caballero", label: " Caballero" },
-    { value: "niño", label: "niño" },
-  ];
+const options: OptionType[] = categories?.map(cat => ({
+  value: cat.id,
+  label: cat.name,
+})) ?? [];
+
+
+
 
   const handleChange = (option: OptionType | null) => {
     setCategoria(option);

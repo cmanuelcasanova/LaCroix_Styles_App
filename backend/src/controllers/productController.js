@@ -2,8 +2,9 @@ import { db } from "../models/index.js";
 
 export const createProduct = async (req, res) => {
   try {
-    const { title, categoria, imageUrl, talla, precio,userId } = req.body;
-    const product = await db.Product.create({ title, categoria, imageUrl, talla, precio, userId });
+    
+    const { title, imageUrl, talla, precio,userId, categoryId } = req.body;
+    const product = await db.Product.create({ title, imageUrl, talla, precio, userId, categoryId });
     res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);
@@ -19,6 +20,11 @@ export const getProduct = async (req, res) => {
       model: db.User,
       attributes: ['id', 'username', 'email'], 
     },
+    {
+      model: db.Category,
+      attributes: ['id', 'name'],
+    },
+
   ],
 
 
@@ -62,6 +68,39 @@ export const UpdateProduct = async (req, res) => {
     res.status(201).json(task);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+export const findCategory = async (req, res) => {
+
+
+ try {
+    const category = await db.Category.findAll({
+
+      attributes: ['id', 'name']
+    });
+
+    const {id, name} = category
+    res.status(201).json(category);
+  } catch (err) {
+    console.error("❌ Error al consultar Categorias:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+export const findTags = async (req, res) => {
+
+ 
+ try {
+    const Tags = await db.Tag.findAll();
+    res.status(201).json(Tags);
+  } catch (err) {
+    console.error("❌ Error al consultar Tags:", err.message);
     res.status(500).json({ error: err.message });
   }
 };
