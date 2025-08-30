@@ -1,9 +1,9 @@
 import { baseApi } from "@/app/services/api/baseApi";
-import { qdata, CatData  } from "./queryTypes";
+import { qdata, CatData , product } from "./queryTypes";
 
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getItems: builder.query<qdata[], void>({
+    getItems: builder.query<product[], void>({
       query: () => "/products",
       providesTags: ["Product"],
     }),

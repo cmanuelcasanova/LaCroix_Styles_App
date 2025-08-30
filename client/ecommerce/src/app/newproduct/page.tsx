@@ -9,6 +9,7 @@ import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
 import LoadingModal from "../components/Loadingpage";
+import AlertModal from "../components/alertModal";
 
 
 type FormData = {
@@ -24,18 +25,27 @@ type OptionType = {
   label: string;
 };
 
+type OptionTypeT = {
+  value: string;
+  label: string;
+};
+
 
 
 export default function NewProduct() {
   const { register, handleSubmit, reset } = useForm<FormData>();
   const router = useRouter();
   const [categoria, setCategoria] = useState<OptionType | null>(null);
+  const [talla, setTalla] = useState<OptionTypeT | null>(null);
   const [foto, setFoto] = useState<string | null>(null);
+  const [modal, setModal] = useState<boolean>(false);
+  const [tipo,setTipo] = useState<boolean>(false)
   const [imagenUrl, setImagenUrl] = useState<string>("");
   const [addItem] = useAddItemMutation();
   const [upLoadphoto] = useUpLoadphotoMutation();
   const { data: profile, isLoading, error } = useProfileQuery();
   const { data: categories } = useGetCategoryQuery();
+  
 
 
 
@@ -64,11 +74,18 @@ export default function NewProduct() {
 
   };
 
+
+
   const onSubmit = handleSubmit(async (data) => {
     
     
     
     if (!categoria) {
+      alert("Por favor selecciona una categoría");
+      return;
+    }
+
+   if (!talla) {
       alert("Por favor selecciona una categoría");
       return;
     }
@@ -83,16 +100,21 @@ export default function NewProduct() {
         title: data.titulo,
         imageUrl: imagenUrl,
         categoryId: categoria.value,
-        talla: data.talla,
+        talla: talla.value,
         precio: data.precio,
         userId: profile.userId
-      });
+      }).unwrap();
       reset ()
       setFoto(null)
       setCategoria(null)
+      setTalla(null)
+      setModal(true)
+      setTipo(true)
+      setImagenUrl("")
      
-    } catch (err) {
-      console.log("Error al agregar producto:" ,err);
+    } catch  {
+      setModal(true)
+      setTipo(false)
     }
   });
 
@@ -102,20 +124,41 @@ const options: OptionType[] = categories?.map(cat => ({
 })) ?? [];
 
 
+const optionsT: OptionTypeT[] = [
+      { value: 'XS', label: 'XS' },
+      { value: 'S', label: 'S' },
+      { value: 'M', label: 'M' },
+      { value: 'L', label: 'L' },
+      { value: 'XL', label: 'XL' },
+      { value: 'XXL', label: 'XXL' },
+      
+    ];
+
 
 
   const handleChange = (option: OptionType | null) => {
     setCategoria(option);
   };
 
+    const handleChangeT = (option: OptionTypeT | null) => {
+    setTalla(option);
+  };
+
   
 
   return (
+
+
     <div className="flex flex-col items-center">
+
+      {modal && <AlertModal onClose={() => setModal(false)} tipo={tipo}  />}
       <div className="w-[700px] h-[900px] flex flex-col items-center rounded-2xl mt-20 bg-white px-8">
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
 
+        
         <div className="w-[300px] h-[400px] flex flex-col items-center justify-center rounded-2xl bg-gray-300 ">
+          
+          
           <label className="flex flex-col justify-center items-center">
             <span>
               {foto ? (
@@ -124,7 +167,7 @@ const options: OptionType[] = categories?.map(cat => ({
                   alt={"Foto precargada"}
                   width={300}
                   height={400}
-                  className="object-contain w-full h-full sm:h-max"
+                  className="object-cover h-full sm:h-max"
                 />
               ) : (
                 <div>
@@ -175,19 +218,23 @@ const options: OptionType[] = categories?.map(cat => ({
             //{...register("categoria")}
           />
 
-          <label className="flex flex-col mb-4">
+          <label className="" htmlFor="talla">
             Talla
-            <input
-              className="h-10  border-[#202b38] border-1 rounded-md p-2
+          </label>
+          <Select
+            className="w-full  border-[#202b38] border-1 mb-4 rounded-md
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
-              type="text"
-              placeholder="input Talla"
-              required
-              {...register("talla")}
-            />
-          </label>
+            inputId="talla"
+            value={talla}
+            onChange={handleChangeT}
+            options={optionsT}
+            placeholder="Selecciona una Talla"
+            required
+            
+          />
+         
 
           <label className="flex flex-col mb-4">
             Precio

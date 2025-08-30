@@ -1,3 +1,4 @@
+
 export interface qdata {
     title: string,
     categoryId: number
@@ -6,7 +7,19 @@ export interface qdata {
     precio:number
     userId: string | null
 }
-  
+
+export interface product {
+    id:number,  
+    title: string,
+    categoryId: number
+    imageUrl:string,
+    talla:string
+    precio:number
+    category: {id:number, name: string}
+
+}
+
+
 export interface AuthResponse {
   userId: string;
   username: string;

@@ -10,19 +10,19 @@ import type { KeenSliderOptions, KeenSliderInstance } from "keen-slider/react";
 
 const images = [
   {
-    src: "/Lacroix_img_1.jpg",
+    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_1.jpg?updatedAt=1756507463490",
     alt: "Slide 1",
     width: 1200,
     height: 600,
   },
   {
-    src: "/Lacroix_img_2.jpg",
+    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_2.jpg?updatedAt=1756507463468",
     alt: "Slide 2",
     width: 1200,
     height: 600,
   },
   {
-    src: "/Lacroix_img_3.jpg",
+    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_3.jpg?updatedAt=1756507463542",
     alt: "Slide 3",
     width: 1200,
     height: 600,
@@ -62,7 +62,7 @@ export default function ImageSlider() {
       transition={{ duration: 0.6 }}
       className="relative w-screen "
     >
-      <div ref={sliderRef} className="keen-slider flex items-center h-[600px] sm:h-[800px] w-screen ">
+      <div ref={sliderRef} className="keen-slider flex items-center h-[300px] sm:h-[800px] w-screen ">
         {images.map((img, i) => (
           <div
             key={i}
@@ -71,10 +71,10 @@ export default function ImageSlider() {
             <Image
               src={img.src}
               alt={img.alt}
-              width={1200} // ancho base para cálculo
-              height={600}
+              width={img.width} // ancho base para cálculo
+              height={img.height}
         
-              className="object-cover w-full h-full sm:h-max"
+              className="object-cover w-full sm:h-max"
       
               priority={i === 0}
             />

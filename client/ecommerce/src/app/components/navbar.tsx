@@ -15,24 +15,21 @@ import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { selectUsername } from "../features/auth/authSelectors"
 import { MdNoteAdd } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
+import { GoSignOut } from "react-icons/go";
+
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [showCategories, setShowCategories] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [showUser, setshowUSer] = useState<string | null>(null);
   const itemsC = useSelector(selectItemsc);
   const UserS = useSelector(selectUsername);
+
   
 
   
-  
- useEffect(() => {
-  if (UserS) {
-    setshowUSer(UserS);
-  }
-}, [UserS]);
+
 
 
   
@@ -85,9 +82,21 @@ export default function Navbar() {
         className="hidden rounded-2xl md:inline-block ml-4 relative"
         ref={menuRef}
       >
+        <div className="flex flex-wrap justify-between items-center w-[200px] ">
+        <button className=" hover:underline" >
+        WOMAN
+        </button>
+        
+        <button className=" hover:underline">
+
+          MEN
+        </button>
+       
+        <button className=" hover:underline"> KID</button>
+         </div>
         <button
           onClick={() => setShowCategories(!showCategories)}
-          className="px-4 py-2 bg-[#ff298b] text-white rounded hover:bg-pink-100 transition"
+          className="px-4 py-2 hidden bg-[#ff298b] text-white rounded hover:bg-pink-100 transition"
         >
           CATEGORIAS {showCategories ? "▲" : "▼"}
         </button>
@@ -133,19 +142,23 @@ export default function Navbar() {
         )}
       </div>
 
+
+
       {/* Buscador centrado solo en desktop */}
       <div className="hidden md:block self-center items-center">
         <label className="bg-[#fe3190] flex items-center font-normal pr-2 gap-1 rounded-r-sm">
           <input
             type="text"
             placeholder="Buscar productos..."
-            className="bg-white border-white rounded-l-sm text-gray-700 w-100 px-4 py-1 focus:outline-none"
+            className="bg-white border-white rounded-l-sm text-gray-700 w-[250px] px-4 py-1 focus:outline-none"
           />
           <FaSearch />
         </label>
       </div>
 
       {/* Auth + Carrito en desktop */}
+      
+      {!UserS && 
       <div className="hidden md:flex items-center gap-4  text-white mr-6">
         <Link href="/login" className="flex items-center gap-2 hover:underline">
           <CiLogin />
@@ -158,20 +171,19 @@ export default function Navbar() {
           <RxInput />
           REGISTRO
         </Link>
-
-       
-
         
       </div>
 
-        { showUser &&  <div className="flex flex-wrap gap-2">
+          }
+
+        { UserS &&  <div className="flex flex-wrap gap-2">
       
       <Link
           href="/profile"
           className="flex items-center gap-2 hover:underline"
         >
           <FaUserCircle size={25}/>
-          {showUser}
+          {UserS}
           
       </Link>
 
@@ -181,6 +193,15 @@ export default function Navbar() {
         >
           <MdNoteAdd size={25}/>
           {"Agregar"}
+          
+        </Link>
+
+        <Link
+          href="/logout"
+          className="flex items-center gap-2 hover:underline"
+        >
+          <GoSignOut size={25}/>
+          {"Salir"}
           
         </Link>
         

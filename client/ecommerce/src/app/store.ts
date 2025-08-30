@@ -16,6 +16,9 @@ export const store = configureStore({
   },
    middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware),
+     devTools: process.env.NODE_ENV !== 'production', 
+
+
 
 });
 

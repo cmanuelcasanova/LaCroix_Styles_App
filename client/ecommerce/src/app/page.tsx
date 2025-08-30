@@ -3,13 +3,12 @@ import Card from "./components/card";
 import ImageSlider from "./components/ImageSlider";
 
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { selectItems } from "@/app/features/items/itemsSelectors";
 import { useGetItemsQuery } from './services/api/productsApi.ts'
+import LoadingModal from "./components/Loadingpage";
 
 
 export default function Home() {
-  const items = useSelector(selectItems);
+//  const items = useSelector(selectItems);
   
  const { data: itemsP, isLoading, error } = useGetItemsQuery();
 
@@ -17,12 +16,10 @@ export default function Home() {
 
 useEffect(() => {
     if (isLoading) {
-      console.log("Cargando...");
+      <LoadingModal />
     } else if (error) {
       console.error("Error al cargar los datos:", error);
-    } else if (itemsP) {
-      console.log("Items recibidos:", itemsP);
-    }
+    } 
   }, [isLoading, itemsP, error]);
 
   
@@ -35,14 +32,14 @@ useEffect(() => {
       <h1 className="font-bold text-3xl my-8 "> Man & Woman</h1>
 
       <section className="flex flex-wrap items-center sm:justify-start w-[350px] sm:w-[1000px]">
-        {items.map((product) => (
+        {itemsP?.map((product) => (
           <Card
             key={product.id}
-            title={product.name}
-            imageUrl={product.photo}
+            title={product.title}
+            imageUrl={product.imageUrl}
             talla={product.talla}
-            precio={product.price}
-            id={product.id}
+            precio={Number(product.precio)}
+            id={(product.id)}
           />
         ))}
       </section>

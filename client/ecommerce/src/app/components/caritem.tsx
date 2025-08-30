@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { removeItem, updateItem } from "@/app/features/Car/CarSlice";
 
 type caritem = {
-  id: string;
+  id: number;
   title: string;
   precio: number;
   talla: string;
@@ -25,17 +25,19 @@ export const Caritem = ({
 }: caritem) => {
   const dispatch = useDispatch();
 
-  const imgurlmin = imgurl.replace("LaCroix/", "LaCroix/tr:w-100,h-100/");
+  const imgurlmin = imgurl.replace("LaCroix/", "LaCroix/tr:h-100/");
 
+ 
 
   const reduce = () => {
     if (cant > 1) {
-      dispatch(updateItem({ id: id, cant: cant - 1,precio: precio * (cant-1) }));
+      dispatch(updateItem({ id: id, cant: cant - 1,precio: precio  }));
     }
     }
 
   const addm = () => {
-      dispatch(updateItem({ id: id, cant: cant + 1, precio: precio * (cant+1) }));
+
+      dispatch(updateItem({ id: id, cant: cant + 1 , precio: precio }));
     
   };
 
@@ -44,26 +46,27 @@ export const Caritem = ({
   };
 
   return (
-    <div className="flex flex-wrap justify-between rounded-2xl bg-white w-full mb-4">
+    <div className="flex flex-wrap justify-center items-center rounded-2xl bg-white w-dvw h-[120px] sm:w-full mb-4">
       <Image
         src={imgurlmin}
         height={100}
         width={100}
         alt="Logo"
-        className="object-contain rounded-l-2xl"
+        className="object-contain rounded-l-2xl p-2"
       />
 
-      <div className="flex flex-col items-center mr-auto ml-2 py-6 justify-start">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:w-[400px] items-start ml-2 py-6 justify-start sm:gap-4 sm:pr-6">
+        <div className="sm:mr-auto mr-10">
         <h1>
-          {" "}
+        
           Title: <span className="font-bold">{title}</span>{" "}
         </h1>
         <h1>
-          {" "}
+        
           Talla: <span className="font-bold">{talla}</span>{" "}
         </h1>
       </div>
-      <section className="flex flex-wrap justify-between items-center gap-2 mr-10 ml-4">
+      <div className="flex flex-wrap justify-between items-start gap-2 mt-2 sm:ml-4">
         <button onClick={reduce}>
           <IoRemoveCircle size={25} />
         </button>
@@ -74,9 +77,9 @@ export const Caritem = ({
         <button onClick={remove} className="ml-6">
           <FaRegTrashCan size={25} />
         </button>
-      </section>
-
-      <div className="flex flex-col  mr-6 items-center justify-center w-[120px]">
+      </div>
+</div>
+      <div className="flex flex-col items-center justify-center ">
         <h1 className="px-2">Precio: </h1>
         <h1 className="font-bold text-3xl px-2">{precio * cant} $</h1>
       </div>

@@ -17,19 +17,20 @@ export const CarSlice = createSlice({
     addItem: (state, action: PayloadAction<Car>) => {
       state.list.push(action.payload);
     },
-    removeItem: (state, action: PayloadAction<string>) => {
+    removeItem: (state, action: PayloadAction<number>) => {
       state.list = state.list.filter((item) => item.id !== action.payload);
     },
     clearItems: (state) => {
       state.list = [];
     },
-    updateItem: (state, action: PayloadAction<{ id: string; cant: number; precio: number }>) => {
+    updateItem: (state, action: PayloadAction<{ id: number; cant: number; precio: number }>) => {
       const { id, cant, precio } = action.payload;
       const item = state.list.find((item) => item.id === id);
       if (item) {
         
-        item.cant = cant; ;
+        
         item.precio = precio;
+        item.cant = cant; ;
       }
     },
   },

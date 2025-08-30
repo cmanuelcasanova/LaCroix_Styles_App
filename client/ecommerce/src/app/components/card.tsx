@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import { useDispatch } from "react-redux";
-import { addItem } from "@/app/features/Car/CarSlice";
+import { addItem, removeItem} from "@/app/features/Car/CarSlice";
+import { useState } from "react";
+import { FaCartShopping } from "react-icons/fa6";
+import { TbShoppingCartOff } from "react-icons/tb";
 
 type CardProps = {
-  id: string;
+  id: number;
   title: string;
   imageUrl: string;
   talla: string;
@@ -22,9 +25,21 @@ export default function Card({
 }: CardProps) {
   
   const dispatch = useDispatch();
+  const [carrito, setCarrito] =useState<boolean>(false)
 
   const handleAdd = () => {
-    dispatch(addItem({ id: id, cant: 1, precio: precio}));
+    
+    if(!carrito){ 
+ 
+      
+    dispatch(addItem({ id: id, cant: 1, precio: precio, imgUrl: imageUrl, title: title, talla: talla })) 
+    setCarrito(true)
+    }else{
+
+       dispatch(removeItem(id))
+      setCarrito(false)
+    }
+  
   };
 
   return (
@@ -45,15 +60,15 @@ export default function Card({
         alt="Image"
         width={400}
         height={700}
-        loading="lazy"
+        priority
       />
 
       <div className="flex flex-wrap items-center justify-around gap-8 pt-4 ">
         <button
           onClick={handleAdd}
-          className="bg-[#fe298c] text-white font-bold rounded-2xl px-4 py-1 hover:bg-[#dd3369]"
+          className={`flex flex-wrap items-center justify-center gap-2 text-white font-bold rounded-2xl px-4 py-1 hover:bg-[#dd3369] ${carrito ? "bg-[#233232]" : "bg-[#fe298c]"}`}
         >
-          Añadir carrito
+          {carrito ? <> Quitar carrito <TbShoppingCartOff /> </>: <>Añadir carrito <FaCartShopping /> </>}
         </button>
       </div>
     </div>

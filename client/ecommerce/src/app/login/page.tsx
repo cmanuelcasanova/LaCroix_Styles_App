@@ -24,13 +24,13 @@ export default function Login () {
   
     const onSubmit = handleSubmit(async (data) => {
       try {
-        console.log(data);
+        
         const response = await Login(data).unwrap();
         dispatch( setUser ({ isAuthenticated: true, user: response.user, username: response.username})) ;
 
         router.push("/");
       } catch (error) {
-        console.error("Error en el registro:", error);
+        console.error("Error en el Login:", error);
         alert("Error al Loguearse, Reintente")
       }
     });
