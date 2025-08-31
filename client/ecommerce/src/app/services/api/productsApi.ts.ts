@@ -7,6 +7,10 @@ export const productsApi = baseApi.injectEndpoints({
       query: () => "/products",
       providesTags: ["Product"],
     }),
+    getItem: builder.query<product, {id:string}>({
+      query: ({id}) => `/products/${id}`,
+      providesTags: ["Product"],
+    }),
     getCategory: builder.query<CatData[], void>({
       query: () => "/products/category",
       providesTags: ["Product"],
@@ -57,5 +61,6 @@ export const {
   useUpdateItemMutation,
   useRemoveItemMutation,
   useUpLoadphotoMutation,
-  useGetCategoryQuery
+  useGetCategoryQuery,
+  useGetItemQuery
 } = productsApi;

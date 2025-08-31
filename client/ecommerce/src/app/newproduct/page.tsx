@@ -10,6 +10,9 @@ import { useRouter } from "next/navigation";
 import Select from "react-select";
 import LoadingModal from "../components/Loadingpage";
 import AlertModal from "../components/alertModal";
+import { themeBgMap } from "@/app/themeStyles"
+import { useSelector } from "react-redux";
+import { selectTheme } from "@/app/features/theme/themeSelector";
 
 
 type FormData = {
@@ -45,6 +48,8 @@ export default function NewProduct() {
   const [upLoadphoto] = useUpLoadphotoMutation();
   const { data: profile, isLoading, error } = useProfileQuery();
   const { data: categories } = useGetCategoryQuery();
+  const theme = useSelector(selectTheme);
+  const bgClass = themeBgMap[theme]
   
 
 
@@ -253,8 +258,8 @@ const optionsT: OptionTypeT[] = [
           <div className="flex justify-center mt-4">
             <button
               type="submit"
-              className="bg-[#ff288c] w-[180px] rounded-md mb-4 mt-4 h-10 mx-auto text-black font-semibold active:scale-95
-                 transition-colors duration-300 ease-in-out hover:bg-[#677483] cursor-pointer"
+              className={`bg-${bgClass} w-[180px] rounded-md mb-4 mt-4 h-10 mx-auto text-black font-semibold active:scale-95
+                 transition-colors duration-300 ease-in-out hover:bg-[#677483] cursor-pointer`}
             >
               Registrar Producto
             </button>

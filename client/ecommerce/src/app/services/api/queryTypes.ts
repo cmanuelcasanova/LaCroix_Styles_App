@@ -15,7 +15,7 @@ export interface product {
     imageUrl:string,
     talla:string
     precio:number
-    category: {id:number, name: string}
+    Category: {id:number, name: string}
 
 }
 

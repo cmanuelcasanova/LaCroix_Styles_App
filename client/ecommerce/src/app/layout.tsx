@@ -27,15 +27,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <ReduxProvider>
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen overflow-x-hidden antialiased bg-gradient-to-b from-[#ff8ec9]  via-white via-70% to-[#fed3e7]`}
       >
-        <ReduxProvider>
+        
           <Navbar />
 
           {children}
-        </ReduxProvider>
+        
       </body>
+      </ReduxProvider>
     </html>
   );
 }

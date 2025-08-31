@@ -7,6 +7,9 @@ import { motion } from "framer-motion";
 import { RiArrowRightSLine } from "react-icons/ri";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import type { KeenSliderOptions, KeenSliderInstance } from "keen-slider/react";
+import { themeBgMap } from "@/app/themeStyles"
+import { useSelector } from "react-redux";
+import { selectTheme } from "@/app/features/theme/themeSelector";
 
 const images = [
   {
@@ -32,6 +35,8 @@ const images = [
 export default function ImageSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const theme = useSelector(selectTheme);
+  const bgClass = themeBgMap[theme]
 
   const [sliderRef, instanceRef] = useKeenSlider({
     initial: 0,
@@ -113,7 +118,7 @@ export default function ImageSlider() {
             }}
             transition={{ duration: 0.3 }}
             className={`w-3 h-3 rounded-full ${
-              currentSlide === idx ? "bg-[#fe298c]" : "bg-gray-300"
+              currentSlide === idx ? `bg-${bgClass}` : "bg-gray-300"
             }`}
           />
         ))}

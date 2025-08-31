@@ -26,9 +26,6 @@ export const getProduct = async (req, res) => {
     },
 
   ],
-
-
-
     });
     res.status(201).json(product);
   } catch (err) {
@@ -39,9 +36,9 @@ export const getProduct = async (req, res) => {
 
 export const findProduct = async (req, res) => {
   try {
-    console.log(req.params.id);
-    const task = await db.Product.findByPk(req.params.id);
-    res.status(201).json(task);
+    
+    const product = await db.Product.findByPk(req.params.id);
+    res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);
     res.status(500).json({ error: err.message });

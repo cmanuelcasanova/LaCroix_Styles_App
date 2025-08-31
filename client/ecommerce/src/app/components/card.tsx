@@ -6,6 +6,10 @@ import { addItem, removeItem} from "@/app/features/Car/CarSlice";
 import { useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
 import { TbShoppingCartOff } from "react-icons/tb";
+import { themeBgMap, themeBgMapHOpacity, themeText} from "@/app/themeStyles"
+import { useSelector } from "react-redux";
+import { selectTheme } from "@/app/features/theme/themeSelector";
+import Link from "next/link";
 
 type CardProps = {
   id: number;
@@ -26,6 +30,10 @@ export default function Card({
   
   const dispatch = useDispatch();
   const [carrito, setCarrito] =useState<boolean>(false)
+    const theme = useSelector(selectTheme);
+   const bgClass = themeBgMap[theme]
+   const bgClassHOpa = themeBgMapHOpacity[theme]
+   const themeTextCard = themeText[theme]
 
   const handleAdd = () => {
     
@@ -43,18 +51,19 @@ export default function Card({
   };
 
   return (
-    <div className="bg-white flex flex-col items-center shadow-2xl p-4 mb-6 mx-4 w-[300px]">
+    <div className="bg-white flex flex-col items-center shadow-2xl rounded-2xl p-4 mb-6 mx-4 w-[300px]">
       <h1 className="text-2xl font-extrabold mb-4"> {title} </h1>
-      <h1 className="text-[#ff2992] mb-10">
-        {" "}
+      <div className={`${themeTextCard} mb-10 flex flex-wrap gap-6`}>
+        
         <span className="font-bold">
           Precio: <span className="text-black">$ {precio}</span>{" "}
-        </span>{" "}
+        </span>
         <span className="font-bold">
           Talla: <span className="text-black">{talla} </span>
-        </span>{" "}
-      </h1>
+        </span>
+      </div>
 
+      <Link href={`/itemview/${id}`}>
       <Image
         src={imageUrl}
         alt="Image"
@@ -62,11 +71,12 @@ export default function Card({
         height={700}
         priority
       />
+      </Link>
 
       <div className="flex flex-wrap items-center justify-around gap-8 pt-4 ">
         <button
           onClick={handleAdd}
-          className={`flex flex-wrap items-center justify-center gap-2 text-white font-bold rounded-2xl px-4 py-1 hover:bg-[#dd3369] ${carrito ? "bg-[#233232]" : "bg-[#fe298c]"}`}
+          className={`flex flex-wrap items-center justify-center gap-2 text-white font-bold rounded-2xl px-4 py-1 ${bgClassHOpa} ${carrito ? "bg-[#233232]" : `bg-${bgClass}`}  active:scale-95 transition-transform duration-150 ease-in-out`}
         >
           {carrito ? <> Quitar carrito <TbShoppingCartOff /> </>: <>Añadir carrito <FaCartShopping /> </>}
         </button>

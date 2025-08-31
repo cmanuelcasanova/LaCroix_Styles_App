@@ -12,28 +12,60 @@ import { CiMenuKebab } from "react-icons/ci";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
+import { selectTheme } from "@/app/features/theme/themeSelector";
 import { selectUsername } from "../features/auth/authSelectors"
+import { Themetype } from "../features/theme/themeTypes"
+import { setTheme }  from "@/app/features/theme/themeSlice"
 import { MdNoteAdd } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { GoSignOut } from "react-icons/go";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { themeBgMap} from "@/app/themeStyles"
+
+
 
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [showCategories, setShowCategories] = useState(false);
+
   const menuRef = useRef<HTMLDivElement>(null);
   const itemsC = useSelector(selectItemsc);
+  const theme = useSelector(selectTheme);
+  
   const UserS = useSelector(selectUsername);
-
+  const dispatch = useDispatch<AppDispatch>();
+  const bgClass = themeBgMap[theme]
+  
   
 
-  
+
+ 
+
+  useEffect(() => {
+    document.body.classList.remove("bg-woman", "bg-men", "bg-boy", "bg-all");
+
+    switch (theme) {
+      case Themetype.WOMAN:
+        document.body.classList.add("bg-woman");
+        break;
+      case Themetype.MEN:
+        document.body.classList.add("bg-men");
+        break;
+      case Themetype.BOY:
+        document.body.classList.add("bg-boy");
+        break;
+      case Themetype.ALL:
+      default:
+        document.body.classList.add("bg-all");
+        break;
+    }
+  }, [theme]);
 
 
 
-  
-   
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -69,30 +101,40 @@ export default function Navbar() {
   };
 
 
+
  
   return (
-    <nav className="py-3 px-4 mx-2 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold ">
+    <nav className={`px-4 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold bg-${bgClass}/30`}>
       
      
-      <Link href={"/"}>
-        <Image src={Logo} height={50} alt="Logo" />
+      <Link href={"/"} onClick={()=> setMenuOpen(false)} className="active:scale-95 transition-transform duration-150 ease-in-out">
+        <Image src={Logo} height={40} alt="Logo" priority />
       </Link>
       {/* Categorías flotantes en desktop */}
       <div
         className="hidden rounded-2xl md:inline-block ml-4 relative"
         ref={menuRef}
       >
-        <div className="flex flex-wrap justify-between items-center w-[200px] ">
-        <button className=" hover:underline" >
+        <div className="flex flex-wrap justify-between items-center w-[250px] ">
+       
+       <button className=" hover:underline"  onClick={() => dispatch(setTheme(Themetype.WOMAN))}
+ >
         WOMAN
         </button>
         
-        <button className=" hover:underline">
-
+        <button className=" hover:underline" onClick={ () => dispatch(setTheme(Themetype.MEN))} >
           MEN
         </button>
        
-        <button className=" hover:underline"> KID</button>
+        <button className=" hover:underline" onClick={ () => dispatch(setTheme(Themetype.BOY))} >
+          KID
+        </button>
+
+        <button className=" hover:underline" onClick={ () => dispatch(setTheme(Themetype.ALL))} >
+          ALL
+        </button>
+
+
          </div>
         <button
           onClick={() => setShowCategories(!showCategories)}
@@ -146,7 +188,7 @@ export default function Navbar() {
 
       {/* Buscador centrado solo en desktop */}
       <div className="hidden md:block self-center items-center">
-        <label className="bg-[#fe3190] flex items-center font-normal pr-2 gap-1 rounded-r-sm">
+        <label className={`bg-${bgClass} flex items-center font-normal pr-2 gap-1 rounded-r-sm`}>
           <input
             type="text"
             placeholder="Buscar productos..."
@@ -180,7 +222,7 @@ export default function Navbar() {
       
       <Link
           href="/profile"
-          className="flex items-center gap-2 hover:underline"
+          className="flex items-center gap-2 ml-4 sm:ml-0 hover:underline"
         >
           <FaUserCircle size={25}/>
           {UserS}
@@ -189,7 +231,7 @@ export default function Navbar() {
 
        <Link
           href="/newproduct"
-          className="flex items-center gap-2 hover:underline"
+          className="sm:flex sm:items-center gap-2 hidden  hover:underline"
         >
           <MdNoteAdd size={25}/>
           {"Agregar"}
@@ -198,7 +240,7 @@ export default function Navbar() {
 
         <Link
           href="/logout"
-          className="flex items-center gap-2 hover:underline"
+          className="sm:flex sm:items-center gap-2 hidden hover:underline"
         >
           <GoSignOut size={25}/>
           {"Salir"}
@@ -212,10 +254,10 @@ export default function Navbar() {
       
 
         
-      <Link href="/shopping" className="relative ml-auto sm:ml-4 mr-4 sm:mr-10 ">
-        <FaCartShopping size={25}/>
+      <Link href="/shopping" className="relative ml-auto sm:ml-4 mr-4 sm:mr-10 " onClick={()=>setMenuOpen(false)}>
+        <FaCartShopping size={25} className="active:scale-95 transition-transform duration-150 ease-in-out"/>
         {cartCount > 0 && (
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
+          <span className={`absolute -top-2 -right-2 bg-${bgClass} text-white text-xs rounded-full px-1`}>
             {cartCount}
           </span>
         )}
@@ -238,9 +280,44 @@ export default function Navbar() {
 
       {/* Menú móvil en bloque */}
       {menuOpen && (
-        <div className="absolute inset-x-0 top-full bg-white px-4 py-3 rounded shadow text-gray-800 md:hidden z-40">
+        <div className={`absolute inset-x-0 top-full bg-${bgClass} px-4 py-3 rounded shadow text-gray-800 md:hidden z-40`}>
+          
+        <div className="flex flex-wrap items-center justify-between gap-4 my-4 ">
+       
+       <button className=" hover:underline"  onClick={() => {
+       setMenuOpen(false) 
+       dispatch(setTheme(Themetype.WOMAN))
+       }
+      }
+ >
+        WOMAN
+        </button>
+        
+        <button className=" hover:underline" onClick={ () => {
+           setMenuOpen(false)
+          dispatch(setTheme(Themetype.MEN))}} >
+          MEN
+        </button>
+       
+        <button className=" hover:underline" onClick={ () => {
+           setMenuOpen(false)
+           dispatch(setTheme(Themetype.BOY))} }>
+          KID
+        </button>
+
+        <button className=" hover:underline" onClick={ () => {
+           setMenuOpen(false)
+           dispatch(setTheme(Themetype.ALL))} }>
+          ALL
+        </button>
+
+
+         </div>
+          
+          
+          
           {/* Buscador móvil */}
-          <div className="mb-4 border-[#ff298b] border-2">
+          <div className={`mb-4 border-${bgClass} border-2`}>
             <label className="bg-pink-100 flex items-center pr-2 gap-1 rounded">
               <input
                 type="text"
@@ -250,6 +327,15 @@ export default function Navbar() {
               <FaSearch />
             </label>
           </div>
+
+          <Link
+              href="/newproduct"
+              className="flex flex-wrap items-center my-4 gap-2 hover:underline"
+            >
+              <MdNoteAdd size={25}/>
+              {"Agregar"}
+              
+            </Link>
 
           {/* Categorías */}
           <span className="text-lg font-semibold mb-2">CATEGORIAS</span>
@@ -315,6 +401,15 @@ export default function Navbar() {
               <RxInput />
               REGISTRO
               
+            </Link>
+
+            <Link
+              href="/logout"
+              className="flex flex-wrap items-center my-4 gap-2 hover:underline"
+            >
+              <GoSignOut size={25}/>
+              {"Salir"}
+          
             </Link>
           </div>
         </div>

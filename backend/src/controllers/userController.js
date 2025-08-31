@@ -2,6 +2,26 @@ import { db } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Obtener __dirname en ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Ruta del log fuera de src
+console.log(__dirname)
+const logPath = path.join(__dirname, '../../logs/loging.log');
+
+const logStep = (label, data) => {
+  fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${label}: ${JSON.stringify(data)}\n`);
+};
+
+
+
+
 export const createUser = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -28,42 +48,52 @@ export const createUser = async (req, res) => {
 
 export const login = async (req, res) => {
 
-  console.log(req.body)
+   logStep('Inicio login', req.body);
+
   const { email, password } = req.body;
 
   if (!email || !password) {
-    console.warn("⚠️ Datos incompletos en login:", req.body);
+    logStep('Datos incompletos', req.body);
     return res.status(400).json({ message: "Email y contraseña requeridos" });
   }
 
   try {
     const user = await db.User.findOne({ where: { email } });
+    logStep('Usuario encontrado', user ? { id: user.id, email: user.email } : 'No encontrado');
+
     if (!user)
       return res.status(400).json({ message: "Usuario no encontrado" });
 
     const isMatch = await bcrypt.compare(password, user.password);
+    logStep('Password match', isMatch);
+
     if (!isMatch)
       return res.status(400).json({ message: "Contraseña incorrecta" });
 
     const token = generateToken(user.id);
+    logStep('Token generado', token);
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // solo HTTPS en producción
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 1000 * 60 * 60, // 1 hora
+      maxAge: 1000 * 60 * 60,
     });
-    res
-      .status(200)
-      .json({
-        message: "Login exitoso",
-        user: user.id,
-        username: user.username,
-      });
-  } catch (err) {
-    console.error("❌ Error en login:", err);
 
+    logStep('Cookie enviada', { userId: user.id });
+
+    res.status(200).json({
+      message: "Login exitoso",
+      user: user.id,
+      username: user.username,
+    });
+
+    logStep('Respuesta enviada', { userId: user.id });
+  } catch (err) {
+    logStep('Error en login', err.message);
     res.status(500).json({ message: "Error en el servidor" });
   }
+
 };
 
 export const getprofile = async (req, res) => {

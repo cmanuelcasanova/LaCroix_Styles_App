@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { baseApi } from './services/api/baseApi'; 
 import itemsReducer from "@/app/features/items/itemsSlice"
 import CarsReducer from "@/app/features/Car/CarSlice"
 import authReducer from "@/app/features/auth/authSlice"
-import { baseApi } from './services/api/baseApi'; 
+import ThemeReducer from "@/app/features/theme/themeSlice"
+
 
 
 
@@ -10,6 +12,7 @@ export const store = configureStore({
   reducer: {
     items: itemsReducer,
     itemsCarrito: CarsReducer,
+    theme: ThemeReducer,
     auth: authReducer,
     [baseApi.reducerPath]: baseApi.reducer
 

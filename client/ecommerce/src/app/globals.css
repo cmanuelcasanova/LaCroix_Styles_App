@@ -7,3 +7,19 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.bg-woman {
+  @apply bg-gradient-to-b from-[#c37ff0] via-white via-70% to-[#ffa1df];
+}
+
+.bg-men {
+  @apply bg-gradient-to-b from-[#4e8bc0] via-white via-70% to-[#e1edf9];
+}
+.bg-boy {
+  @apply bg-gradient-to-b from-[#fe871e] via-white via-70% to-[#679f16];
+}
+.bg-all {
+  @apply bg-gradient-to-b from-[#ff8ec9] via-white via-70% to-[#fed3e7];
+}
+
+
