@@ -5,7 +5,8 @@ import { useGetItemsQuery } from './services/api/productsApi.ts'
 import LoadingModal from "./components/Loadingpage";
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
-import { SocialIcon } from 'react-social-icons'
+
+
 
 
 
@@ -57,19 +58,6 @@ const filteredItems = itemsP?.filter((pro) => {
         ))}
       </section>
 
-        <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-4 mt-20 my-6">
-           <SocialIcon url="https://instagram.com" />
-            <SocialIcon url="https://youtube.com" />
-          <SocialIcon url="https://x.com" />
-           <SocialIcon url="https://facebook.com" />
-            <SocialIcon url="https://www.threads.com" />
-            <SocialIcon url="https://www.tiktok.com/" />
-            <SocialIcon url="https://www.whatsapp.com/" />
-           
-         
-         
-
-        </div>
 
     </div>
   );

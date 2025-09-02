@@ -3,12 +3,13 @@
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addItem, removeItem} from "@/app/features/Car/CarSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
 import { TbShoppingCartOff } from "react-icons/tb";
 import { themeBgMap, themeBgMapHOpacity, themeText} from "@/app/themeStyles"
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
+import { selectItemsc } from "@/app/features/Car/CarSelector";
 import Link from "next/link";
 
 type CardProps = {
@@ -34,6 +35,15 @@ export default function Card({
    const bgClass = themeBgMap[theme]
    const bgClassHOpa = themeBgMapHOpacity[theme]
    const themeTextCard = themeText[theme]
+  const itemsC = useSelector(selectItemsc);
+
+
+
+
+   useEffect(() => {
+      const find = itemsC.find(num => num.id  === id)
+  if (find){setCarrito(true)}
+  }, [itemsC,id]); 
 
   const handleAdd = () => {
     

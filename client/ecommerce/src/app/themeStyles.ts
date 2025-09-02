@@ -5,6 +5,20 @@ export const themeBgMap: Record<string, string> = {
   BOY: "[#fe871e]",
 };
 
+export const themeBg: Record<string, string> = {
+  ALL: "bg-[#ff8ec9]",
+  WOMAN: "bg-[#c37ff0]",
+  MEN: "bg-[#4e8bc0]",
+  BOY: "bg-[#fe871e]",
+};
+
+export const themeBgOpa: Record<string, string> = {
+  ALL: "bg-[#ff8ec9]/30",
+  WOMAN: "bg-[#c37ff0]/30",
+  MEN: "bg-[#4e8bc0]/30",
+  BOY: "bg-[#fe871e]/30",
+};
+
 export const themeText: Record<string, string> = {
   ALL: "text-[#ff8ec9]",
   WOMAN: "text-[#c37ff0]",

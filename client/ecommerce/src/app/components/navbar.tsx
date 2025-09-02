@@ -21,7 +21,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { GoSignOut } from "react-icons/go";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { themeBgMap} from "@/app/themeStyles"
+import { themeBgMap, themeBgOpa} from "@/app/themeStyles"
+import { useRouter } from "next/navigation";
 
 
 
@@ -38,6 +39,8 @@ export default function Navbar() {
   const UserS = useSelector(selectUsername);
   const dispatch = useDispatch<AppDispatch>();
   const bgClass = themeBgMap[theme]
+   const bgClassOpa = themeBgOpa[theme]
+    const router = useRouter();
   
   
 
@@ -104,7 +107,7 @@ export default function Navbar() {
 
  
   return (
-    <nav className={`px-4 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold bg-${bgClass}/30`}>
+    <nav className={`px-4 py-1 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold ${bgClassOpa}`}>
       
      
       <Link href={"/"} onClick={()=> setMenuOpen(false)} className="active:scale-95 transition-transform duration-150 ease-in-out">
@@ -117,20 +120,25 @@ export default function Navbar() {
       >
         <div className="flex flex-wrap justify-between items-center w-[250px] ">
        
-       <button className=" hover:underline"  onClick={() => dispatch(setTheme(Themetype.WOMAN))}
+       <button className=" hover:underline"  onClick={() => {
+        router.push("/");
+        dispatch(setTheme(Themetype.WOMAN))}}
  >
         WOMAN
         </button>
         
-        <button className=" hover:underline" onClick={ () => dispatch(setTheme(Themetype.MEN))} >
+        <button className=" hover:underline" onClick={ () => {
+           router.push("/");
+           dispatch(setTheme(Themetype.MEN))} }>
           MEN
         </button>
        
-        <button className=" hover:underline" onClick={ () => dispatch(setTheme(Themetype.BOY))} >
+        <button className=" hover:underline" onClick={ () => { router.push("/");
+        dispatch(setTheme(Themetype.BOY))} }>
           KID
         </button>
 
-        <button className=" hover:underline" onClick={ () => dispatch(setTheme(Themetype.ALL))} >
+        <button className=" hover:underline" onClick={ () => { router.push("/"); dispatch(setTheme(Themetype.ALL))} }>
           ALL
         </button>
 
@@ -284,8 +292,9 @@ export default function Navbar() {
           
         <div className="flex flex-wrap items-center justify-between gap-4 my-4 ">
        
-       <button className=" hover:underline"  onClick={() => {
+       <button className=" hover:underline bg-white p-2 rounded-2xl"  onClick={() => {
        setMenuOpen(false) 
+       router.push("/");
        dispatch(setTheme(Themetype.WOMAN))
        }
       }
@@ -293,20 +302,23 @@ export default function Navbar() {
         WOMAN
         </button>
         
-        <button className=" hover:underline" onClick={ () => {
+        <button className=" hover:underline bg-white p-2 rounded-2xl" onClick={ () => {
            setMenuOpen(false)
+           router.push("/");
           dispatch(setTheme(Themetype.MEN))}} >
           MEN
         </button>
        
-        <button className=" hover:underline" onClick={ () => {
+        <button className=" hover:underline bg-white p-2 rounded-2xl" onClick={ () => {
            setMenuOpen(false)
+           router.push("/");
            dispatch(setTheme(Themetype.BOY))} }>
           KID
         </button>
 
-        <button className=" hover:underline" onClick={ () => {
+        <button className=" hover:underline bg-white p-2 rounded-2xl" onClick={ () => {
            setMenuOpen(false)
+           router.push("/");
            dispatch(setTheme(Themetype.ALL))} }>
           ALL
         </button>
