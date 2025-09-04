@@ -75,6 +75,7 @@ export default function Card({
 
       <Link href={`/itemview/${id}`}>
       <Image
+        className="rounded"
         src={imageUrl}
         alt="Image"
         width={400}
@@ -86,7 +87,7 @@ export default function Card({
       <div className="flex flex-wrap items-center justify-around gap-8 pt-4 ">
         <button
           onClick={handleAdd}
-          className={`flex flex-wrap items-center justify-center gap-2 text-white font-bold rounded-2xl px-4 py-1 ${bgClassHOpa} ${carrito ? "bg-[#233232]" : `bg-${bgClass}`}  active:scale-95 transition-transform duration-150 ease-in-out`}
+          className={`flex flex-wrap items-center justify-center gap-2 text-white font-bold rounded px-4 py-1 ${bgClassHOpa} ${carrito ? "bg-gray-500" : `bg-${bgClass}`}  active:scale-95 transition-transform duration-150 ease-in-out`}
         >
           {carrito ? <> Quitar carrito <TbShoppingCartOff /> </>: <>Añadir carrito <FaCartShopping /> </>}
         </button>

@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Ruta del log fuera de src
-console.log(__dirname)
+
 const logPath = path.join(__dirname, '../../logs/loging.log');
 
 const logStep = (label, data) => {

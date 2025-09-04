@@ -40,3 +40,8 @@ export const themeBgMapHOpacity: Record<string, string> = {
   BOY: "hover:bg-[#fe871e]/70",
 };
 
+
+
+
+
+

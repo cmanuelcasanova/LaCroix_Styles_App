@@ -3,11 +3,11 @@ import { db } from "../models/index.js";
 export const createProduct = async (req, res) => {
   try {
     
-    const { title, imageUrl, talla, precio,userId, categoryId } = req.body;
-    const product = await db.Product.create({ title, imageUrl, talla, precio, userId, categoryId });
+    const { title, imageUrl, talla, precio,userId, seccionId,color, category } = req.body;
+    const product = await db.Product.create({ title, imageUrl, talla, precio, userId, seccionId,color, category });
     res.status(201).json(product);
   } catch (err) {
-    console.error("❌ Error al crear tarea:", err.message);
+    console.error("❌ Error al crear Producto:", err.message);
     res.status(500).json({ error: err.message });
   }
 };
@@ -21,7 +21,7 @@ export const getProduct = async (req, res) => {
       attributes: ['id', 'username', 'email'], 
     },
     {
-      model: db.Category,
+      model: db.Seccion,
       attributes: ['id', 'name'],
     },
 
@@ -29,7 +29,7 @@ export const getProduct = async (req, res) => {
     });
     res.status(201).json(product);
   } catch (err) {
-    console.error("❌ Error al consultar tareas:", err.message);
+    console.error("❌ Error al consultar BD:", err.message);
     res.status(500).json({ error: err.message });
   }
 };
@@ -71,19 +71,19 @@ export const UpdateProduct = async (req, res) => {
 
 
 
-export const findCategory = async (req, res) => {
+export const findSeccion = async (req, res) => {
 
 
  try {
-    const category = await db.Category.findAll({
+    const seccion = await db.Seccion.findAll({
 
       attributes: ['id', 'name']
     });
 
-    const {id, name} = category
-    res.status(201).json(category);
+    const {id, name} = seccion
+    res.status(201).json(seccion);
   } catch (err) {
-    console.error("❌ Error al consultar Categorias:", err.message);
+    console.error("❌ Error al consultar Secciones:", err.message);
     res.status(500).json({ error: err.message });
   }
 };

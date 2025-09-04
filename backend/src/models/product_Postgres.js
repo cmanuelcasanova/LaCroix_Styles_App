@@ -16,7 +16,15 @@ export const ProductModel = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     talla: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    color: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -28,7 +36,7 @@ export const ProductModel = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    categoryId: {
+    seccionId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -37,7 +45,7 @@ export const ProductModel = (sequelize) => {
 
   Product.associate = (models) => {
     Product.belongsTo(models.User, { foreignKey: 'userId' });
-    Product.belongsTo(models.Category, { foreignKey: 'categoryId' });
+    Product.belongsTo(models.Seccion, { foreignKey: 'seccionId' });
     Product.belongsToMany(models.Tag, { through: 'ProductTags' }); 
   };
 

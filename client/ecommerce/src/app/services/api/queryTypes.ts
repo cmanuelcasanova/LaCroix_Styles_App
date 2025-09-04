@@ -1,9 +1,11 @@
 
 export interface qdata {
     title: string,
-    categoryId: number
+    seccionId: number
     imageUrl:string,
     talla:string
+    color: string
+    category: string
     precio:number
     userId: string | null
 }
@@ -11,11 +13,13 @@ export interface qdata {
 export interface product {
     id:number,  
     title: string,
-    categoryId: number
+    seccionId: number
     imageUrl:string,
     talla:string
     precio:number
-    Category: {id:number, name: string}
+    category: string
+    color: string
+    Seccion: {id:number, name: string}
 
 }
 
@@ -37,7 +41,7 @@ export interface RegisterData {
   password: string;
 }
 
-export interface CatData {
+export interface SecData {
   id: number;
   name: string;
   

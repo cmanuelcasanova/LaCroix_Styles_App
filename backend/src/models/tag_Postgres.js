@@ -15,7 +15,7 @@ export const TagModel = (sequelize) => {
         allowNull: false,
         
       },
-      categoryId: {
+      seccionId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -24,7 +24,7 @@ export const TagModel = (sequelize) => {
       indexes: [
         {
           unique: true,
-          fields: ["name", "categoryId"],
+          fields: ["name", "seccionId"],
         },
       ],
     }
@@ -32,7 +32,7 @@ export const TagModel = (sequelize) => {
 
   Tag.associate = (models) => {
     Tag.belongsToMany(models.Product, { through: "ProductTags" });
-    Tag.belongsTo(models.Category, { foreignKey: "categoryId" });
+    Tag.belongsTo(models.Seccion, { foreignKey: "seccionId" });
   };
 
   return Tag;

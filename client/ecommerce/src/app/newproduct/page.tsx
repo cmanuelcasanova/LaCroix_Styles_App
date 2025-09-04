@@ -4,21 +4,23 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useAddItemMutation, useUpLoadphotoMutation , useGetCategoryQuery } from "../services/api/productsApi.ts";
+import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery } from "../services/api/productsApi.ts";
 import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
+import { COLOR_PALETTE , TALLAS , categoriesWomen , categoriesMen , categoriesKids } from "../components/params"
 import LoadingModal from "../components/Loadingpage";
 import AlertModal from "../components/alertModal";
 import { themeBgMap } from "@/app/themeStyles"
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
+import { CustomOption } from "../components/customOption"
 
 
 type FormData = {
   titulo: string;
   imagepath: string;
-  categoryId: string;
+  seccionId: string;
   talla: string;
   precio: number;
 };
@@ -28,7 +30,7 @@ type OptionType = {
   label: string;
 };
 
-type OptionTypeT = {
+type OptionTypeG = {
   value: string;
   label: string;
 };
@@ -38,8 +40,9 @@ type OptionTypeT = {
 export default function NewProduct() {
   const { register, handleSubmit, reset } = useForm<FormData>();
   const router = useRouter();
-  const [categoria, setCategoria] = useState<OptionType | null>(null);
-  const [talla, setTalla] = useState<OptionTypeT | null>(null);
+  const [seccion, setSeccion] = useState<OptionType | null>(null);
+  const [categoria, setCategoria] = useState<OptionTypeG | null>(null);
+  const [talla, setTalla] = useState< OptionTypeG | null>(null);
   const [foto, setFoto] = useState<string | null>(null);
   const [modal, setModal] = useState<boolean>(false);
   const [tipo,setTipo] = useState<boolean>(false)
@@ -47,9 +50,11 @@ export default function NewProduct() {
   const [addItem] = useAddItemMutation();
   const [upLoadphoto] = useUpLoadphotoMutation();
   const { data: profile, isLoading, error } = useProfileQuery();
-  const { data: categories } = useGetCategoryQuery();
+  const [color, setColor] = useState< OptionTypeG | null>(null);
+  const { data: sec } = useGetSeccionQuery();
   const theme = useSelector(selectTheme);
   const bgClass = themeBgMap[theme]
+ 
   
 
 
@@ -85,13 +90,23 @@ export default function NewProduct() {
     
     
     
+    if (!seccion) {
+      alert("Por favor selecciona una seccion");
+      return;
+    }
     if (!categoria) {
-      alert("Por favor selecciona una categoría");
+      alert("Por favor selecciona una categoria");
       return;
     }
 
    if (!talla) {
-      alert("Por favor selecciona una categoría");
+      alert("Por favor selecciona una talla");
+      return;
+    }
+
+    
+   if (!color) {
+      alert("Por favor selecciona un color");
       return;
     }
     if (!foto) {
@@ -104,14 +119,16 @@ export default function NewProduct() {
       await addItem({
         title: data.titulo,
         imageUrl: imagenUrl,
-        categoryId: categoria.value,
+        seccionId: seccion.value,
+        category: categoria.value,
         talla: talla.value,
         precio: data.precio,
+        color: color.value,
         userId: profile.userId
       }).unwrap();
       reset ()
       setFoto(null)
-      setCategoria(null)
+      setSeccion(null)
       setTalla(null)
       setModal(true)
       setTipo(true)
@@ -123,41 +140,58 @@ export default function NewProduct() {
     }
   });
 
-const options: OptionType[] = categories?.map(cat => ({
-  value: cat.id,
-  label: cat.name,
+const options: OptionType[] = sec?.map(secc => ({
+  value: secc.id,
+  label: secc.name,
 })) ?? [];
 
 
-const optionsT: OptionTypeT[] = [
-      { value: 'XS', label: 'XS' },
-      { value: 'S', label: 'S' },
-      { value: 'M', label: 'M' },
-      { value: 'L', label: 'L' },
-      { value: 'XL', label: 'XL' },
-      { value: 'XXL', label: 'XXL' },
-      
-    ];
 
-
-
-  const handleChange = (option: OptionType | null) => {
-    setCategoria(option);
+const handleChange = (option: OptionType | null) => {
+    setSeccion(option);
   };
 
-    const handleChangeT = (option: OptionTypeT | null) => {
-    setTalla(option);
-  };
+const handleChangeG = (selectedOption:  OptionTypeG | null, actionMeta: { name?: string }) => {
+  switch (actionMeta.name) {
+
+    case 'categoria':
+      setCategoria(selectedOption);
+      break;
+    case 'talla':
+      setTalla(selectedOption);
+      break;
+    case 'color':
+      setColor(selectedOption);
+      break;
+    default:
+      console.warn('Campo no reconocido:', actionMeta.name);
+  }
+};
+
+const getCategoryOptions = (seccionValue: number | undefined) => {
+  switch (seccionValue) {
+    case 1:
+      return categoriesWomen;
+    case 2:
+      return categoriesMen;
+    case 3:
+      return categoriesKids;
+    case undefined:
+      return undefined;
+    default:
+      return [];
+  }
+};
 
   
 
   return (
 
 
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center p-4 ">
 
       {modal && <AlertModal onClose={() => setModal(false)} tipo={tipo}  />}
-      <div className="w-[700px] h-[900px] flex flex-col items-center rounded-2xl mt-20 bg-white px-8">
+      <div className="w-[700px] h-[950px] flex flex-col items-center rounded-2xl mt-20 bg-white px-8">
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
 
         
@@ -172,7 +206,7 @@ const optionsT: OptionTypeT[] = [
                   alt={"Foto precargada"}
                   width={300}
                   height={400}
-                  className="object-cover h-full sm:h-max"
+                  className="object-cover h-full sm:h-max p-2 rounded-2xl"
                 />
               ) : (
                 <div>
@@ -206,8 +240,26 @@ const optionsT: OptionTypeT[] = [
             />
           </label>
 
-          <label className="" htmlFor="categoria">
-            categoria
+          <label className="" htmlFor="seccion">
+            Seccion
+          </label>
+          <Select
+            className="w-full  border-[#202b38] border-1 mb-4 rounded-md
+                focus:outline-none focus:ring-2
+             focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
+                hover:border-[#677483] transition-colors duration-200"
+            inputId="seccion"
+            name="seccion"
+            value={seccion}
+            onChange={handleChange}
+            options={options}
+            placeholder="Selecciona una Seccion"
+            required
+            
+          />
+
+           <label className="" htmlFor="categoria">
+            Categoria
           </label>
           <Select
             className="w-full  border-[#202b38] border-1 mb-4 rounded-md
@@ -215,12 +267,13 @@ const optionsT: OptionTypeT[] = [
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
             inputId="categoria"
+            name="categoria"
             value={categoria}
-            onChange={handleChange}
-            options={options}
-            placeholder="Selecciona una categoría"
+            onChange={handleChangeG}
+            options={ getCategoryOptions(seccion?.value)}
+            placeholder="Selecciona una Categoria"
             required
-            //{...register("categoria")}
+            
           />
 
           <label className="" htmlFor="talla">
@@ -232,11 +285,32 @@ const optionsT: OptionTypeT[] = [
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
             inputId="talla"
+            name="talla"
             value={talla}
-            onChange={handleChangeT}
-            options={optionsT}
+            onChange={handleChangeG}
+            options={TALLAS}
             placeholder="Selecciona una Talla"
             required
+            
+          />
+          <label className="" htmlFor="color">
+            Color
+          </label>
+          <Select
+            className="w-full border-[#202b38] border-1 mb-4 rounded-md
+                focus:outline-none focus:ring-2
+             focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
+                hover:border-[#677483] transition-colors duration-200"
+            inputId="color"
+            name="color"
+            value={color}
+            onChange={handleChangeG}
+            options={COLOR_PALETTE}
+            placeholder="Selecciona un Color"
+            required
+            components={{ Option: CustomOption }}
+
+
             
           />
          

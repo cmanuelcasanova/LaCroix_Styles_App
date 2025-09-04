@@ -1,5 +1,5 @@
 import { baseApi } from "@/app/services/api/baseApi";
-import { qdata, CatData , product } from "./queryTypes";
+import { qdata, SecData , product } from "./queryTypes";
 
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -11,8 +11,8 @@ export const productsApi = baseApi.injectEndpoints({
       query: ({id}) => `/products/${id}`,
       providesTags: ["Product"],
     }),
-    getCategory: builder.query<CatData[], void>({
-      query: () => "/products/category",
+    getSeccion: builder.query<SecData[], void>({
+      query: () => "/products/seccion",
       providesTags: ["Product"],
     }),
     addItem: builder.mutation<void, qdata>({
@@ -61,6 +61,6 @@ export const {
   useUpdateItemMutation,
   useRemoveItemMutation,
   useUpLoadphotoMutation,
-  useGetCategoryQuery,
+  useGetSeccionQuery,
   useGetItemQuery
 } = productsApi;

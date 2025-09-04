@@ -19,8 +19,7 @@ export default function Signup() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       
-      const response = await registro(data).unwrap();
-      console.log(response);
+      await registro(data).unwrap();
       router.push("/login");
     } catch (error) {
       console.error("Error en el registro:", error);

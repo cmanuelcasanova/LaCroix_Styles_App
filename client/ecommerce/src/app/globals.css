@@ -2,7 +2,6 @@
 
 html,
 body {
-
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -21,5 +20,3 @@ body {
 .bg-all {
   @apply bg-gradient-to-b from-[#ff8ec9] via-white via-70% to-[#fed3e7];
 }
-
-

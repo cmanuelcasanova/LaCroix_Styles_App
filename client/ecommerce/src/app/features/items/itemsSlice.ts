@@ -11,7 +11,7 @@ const initialState: ItemsState = {
     {
       id: "1",
   name: "Vestido Azul Marino",
-  category: "Vestido Dama",
+  seccion: "Vestido Dama",
   price: 30,
   talla: "L",
   photo: "https://ik.imagekit.io/wakm0y68u/LaCroix/Lacroix_img_1.jpg"
@@ -21,7 +21,7 @@ const initialState: ItemsState = {
       {
       id: "2",
   name: "Vestido Azul Claro",
-  category: "Vestido Dama",
+  seccion: "Vestido Dama",
   price: 25,
   talla: "S",
   photo: "https://ik.imagekit.io/wakm0y68u/LaCroix/Lacroix_img_4.jpg"
@@ -31,7 +31,7 @@ const initialState: ItemsState = {
       {
       id: "3",
   name: "Conjunto Deportivo",
-  category: "Conjuntos Dama",
+  seccion: "Conjuntos Dama",
   price: 40,
   talla: "L",
   photo: "https://ik.imagekit.io/wakm0y68u/LaCroix/Lacroix_img_3.jpg"
