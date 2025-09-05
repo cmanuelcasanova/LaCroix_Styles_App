@@ -1,8 +1,3 @@
-export interface Item {
-  id: string;
-  name: string;
-  seccion: string;
-  price: number;
-  talla: string;
-  photo: string
+export interface Items {
+  total: number;
 }

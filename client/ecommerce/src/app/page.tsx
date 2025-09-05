@@ -7,16 +7,18 @@ import LoadingModal from "./components/Loadingpage";
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { addFilters } from "@/app/features/filter/FilterSlice" 
+import { setItems } from "@/app/features/items/itemsSlice" 
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../app/store";
 import { useEffect } from "react";
+import { filteritem } from "@/app/features/filter/FilterTypes"
 
 
-type filteritem = {
+type filteritems = {
 
-  categoria: string[],
-  talla:string[],
-  color:string[]
+  categoria: filteritem[],
+  talla:filteritem[],
+  color:filteritem[]
 
 }
 
@@ -42,22 +44,50 @@ const dispatch = useDispatch<AppDispatch>();
       return pro.Seccion.name === theme;
     });
 
-
+   
 
  useEffect(() => {
-   if (!itemsP || itemsP.length === 0) return;
+   if (!itemsP || !filteredItems || itemsP.length === 0) return;
 
   
-    const filterget: filteritem = {categoria:[],talla:[],color:[]}
+    const filterget: filteritems = {categoria:[],talla:[],color:[]}
 
 
-    filteredItems?.map((item) =>{
+    filteredItems?.forEach((item) =>{
 
-      filterget.categoria.push(item.category)
-      filterget.talla.push(item.talla)
-      filterget.color.push(item.color)
+      const cat = filterget.categoria.find( i => i.name === item.category)
+      
+      if (cat) {
+        cat.cant = cat.cant + 1
+      }else {
+        filterget.categoria.push({name: item.category, cant:1})
+      }
+
+      const col = filterget.color.find( i => i.name === item.color)
+      
+      if (col) {
+        col.cant = col.cant + 1
+      }else {
+        filterget.color.push({name: item.color, cant:1})
+      }
+
+      const tal = filterget.talla.find( i => i.name === item.talla)
+
+      if (tal) {
+        tal.cant = tal.cant + 1
+      }else {
+        filterget.talla.push({name: item.talla, cant:1})
+      }
+
+       
+
+
+      //filterget.categoria.push(item.category)
+     // filterget.talla.push(item.talla)
+      //filterget.color.push(item.color)
     })
     dispatch(addFilters( {category: filterget.categoria , color: filterget.color, talla: filterget.talla   }  ))
+    dispatch(setItems( filteredItems.length))
 }, [filteredItems, dispatch, itemsP ]);
 
 

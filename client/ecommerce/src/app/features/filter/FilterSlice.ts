@@ -1,16 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { FilterState , filteritem } from "./FilterTypes";
 
-
-interface FilterState {
-  category: string[];
-  color: string[];
-  talla: string[];
-}
 
 const initialState: FilterState = {
   category: [],
   color: [],
-  talla: []
+  talla: [],
+
 };
 
 
@@ -18,7 +14,7 @@ export const FilterSlice = createSlice({
   name: "Filters",
   initialState,
   reducers: {
-    addFilters: (state, action: PayloadAction< {category: string[]; color: string[]; talla: string[] }>) => {
+    addFilters: (state, action: PayloadAction< {category:filteritem[]; color:filteritem[]; talla: filteritem[] }>) => {
       state.category = action.payload.category;
       state.color = action.payload.color
       state.talla = action.payload.talla

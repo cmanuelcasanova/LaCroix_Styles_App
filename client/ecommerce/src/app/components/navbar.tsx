@@ -14,39 +14,34 @@ import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { selectFilter } from "@/app/features/filter/FilterSelector";
 import { FaFilter } from "react-icons/fa";
 import { selectTheme } from "@/app/features/theme/themeSelector";
-import { selectUsername } from "../features/auth/authSelectors"
-import { Themetype } from "../features/theme/themeTypes"
-import { setTheme }  from "@/app/features/theme/themeSlice"
+import { selectUsername } from "../features/auth/authSelectors";
+import { Themetype } from "../features/theme/themeTypes";
+import { setTheme } from "@/app/features/theme/themeSlice";
 import { MdNoteAdd } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { GoSignOut } from "react-icons/go";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { themeBgMap, themeBgOpa} from "@/app/themeStyles"
+import { themeBgMap, themeBgOpa } from "@/app/themeStyles";
 import { useRouter } from "next/navigation";
 import { GiConsoleController } from "react-icons/gi";
-
-
-
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import FilterBar from "./Filters";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-    const [menuFiltros, setMenuFiltros] = useState(false);
+  const [menuFiltros, setMenuFiltros] = useState(false);
 
   const itemsC = useSelector(selectItemsc);
   const theme = useSelector(selectTheme);
-  
+ 
+
   const UserS = useSelector(selectUsername);
   const UserFilters = useSelector(selectFilter);
   const dispatch = useDispatch<AppDispatch>();
-  const bgClass = themeBgMap[theme]
-   const bgClassOpa = themeBgOpa[theme]
-    const router = useRouter();
-  
-  
-
-
- 
+  const bgClass = themeBgMap[theme];
+  const bgClassOpa = themeBgOpa[theme];
+  const router = useRouter();
 
   useEffect(() => {
     document.body.classList.remove("bg-woman", "bg-men", "bg-boy", "bg-all");
@@ -68,55 +63,68 @@ export default function Navbar() {
     }
   }, [theme]);
 
-
-
-
   const cartCount = itemsC.length;
-  
 
-
- 
   return (
-    <nav className={`px-4 py-1 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold ${bgClassOpa}`}>
-      
-     
-      <Link href={"/"} onClick={()=> setMenuOpen(false)} className="active:scale-95 transition-transform duration-150 ease-in-out">
+    <nav
+      className={`px-4 py-1 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold ${bgClassOpa}`}
+    >
+      <Link
+        href={"/"}
+        onClick={() => setMenuOpen(false)}
+        className="active:scale-95 transition-transform duration-150 ease-in-out"
+      >
         <Image src={Logo} height={40} alt="Logo" priority />
       </Link>
       {/* Categorías flotantes en desktop */}
-    
-        <div className="sm:flex flex-wrap justify-between hidden items-center w-[250px] ">
-       
-       <button className=" hover:underline"  onClick={() => {
-        router.push("/");
-        dispatch(setTheme(Themetype.WOMAN))}}
- >
-        WOMAN
+
+      <div className="sm:flex flex-wrap justify-between hidden items-center w-[250px] ">
+        <button
+          className=" hover:underline"
+          onClick={() => {
+            router.push("/");
+            dispatch(setTheme(Themetype.WOMAN));
+          }}
+        >
+          WOMAN
         </button>
-        
-        <button className=" hover:underline" onClick={ () => {
-           router.push("/");
-           dispatch(setTheme(Themetype.MEN))} }>
+
+        <button
+          className=" hover:underline"
+          onClick={() => {
+            router.push("/");
+            dispatch(setTheme(Themetype.MEN));
+          }}
+        >
           MEN
         </button>
-       
-        <button className=" hover:underline" onClick={ () => { router.push("/");
-        dispatch(setTheme(Themetype.BOY))} }>
+
+        <button
+          className=" hover:underline"
+          onClick={() => {
+            router.push("/");
+            dispatch(setTheme(Themetype.BOY));
+          }}
+        >
           KID
         </button>
 
-        <button className=" hover:underline" onClick={ () => { router.push("/"); dispatch(setTheme(Themetype.ALL))} }>
+        <button
+          className=" hover:underline"
+          onClick={() => {
+            router.push("/");
+            dispatch(setTheme(Themetype.ALL));
+          }}
+        >
           ALL
         </button>
-
-
-         </div>
-        
-
+      </div>
 
       {/* Buscador centrado solo en desktop */}
       <div className="hidden md:block self-center items-center">
-        <label className={`bg-${bgClass} flex items-center font-normal pr-2 gap-1 rounded-r-sm`}>
+        <label
+          className={`bg-${bgClass} flex items-center font-normal pr-2 gap-1 rounded-r-sm`}
+        >
           <input
             type="text"
             placeholder="Buscar productos..."
@@ -126,93 +134,114 @@ export default function Navbar() {
         </label>
       </div>
 
+
+
+          {/* Filtros  */}
+
+          <button
+            className="text-white ml-4"
+            onClick={() => setMenuFiltros(!menuFiltros)}
+          >
+            <FaFilter size={20} />
+          </button>
+
+          {/* Menú móvil en bloque */}
+          {menuFiltros && (
+            <div
+              className={`fixed top-0 right-0 h-full w-full sm:w-64 bg-${bgClass} px-4 py-3 overflow-scroll shadow-lg z-40 transform transition-transform duration-300 ease-in-out 
+      
+`}
+            >
+              <div className="flex flex-wrap items-center justify-between m-4 border-b-2 pb-2 mb-10">
+
+              
+              <h1 className="text-2xl"> Filter  </h1>
+              < IoMdCloseCircleOutline size={30}  onClick={() => setMenuFiltros(!menuFiltros)}/> 
+
+                
+
+              </div>
+
+              <FilterBar />
+
+
+             
+              
+            </div>
+          )}
+          {/* FIN  MENU FILTRO */}
+
+
+
+
+
       {/* Auth + Carrito en desktop */}
-      
-      {!UserS && 
-      <div className="hidden md:flex items-center gap-4  text-white mr-6">
-        <Link href="/login" className="flex items-center gap-2 hover:underline">
-          <CiLogin />
-          LOGIN
-        </Link>
-        <Link
-          href="/registro"
-          className="flex items-center gap-2 hover:underline"
-        >
-          <RxInput />
-          REGISTRO
-        </Link>
-        
-      </div>
 
-          }
-
-        { UserS &&  <div className="flex flex-wrap gap-4">
-      
-      <Link
-          href="/profile"
-          className="flex items-center gap-2 ml-4 sm:ml-0 hover:underline"
-        >
-          <FaUserCircle size={25}/>
-          {UserS}
-          
-      </Link>
-
-   
-
-      {/* Filtros  */}
-
-  <button
-        className="md:hidden text-white"
-        onClick={() => setMenuFiltros(!menuFiltros)}
-      >
-        <FaFilter size={20}/>
-      </button>
-
-      {/* Menú móvil en bloque */}
-      {menuFiltros && (
-        <div className={`absolute inset-x-0 top-full bg-${bgClass} px-4 py-3 rounded shadow text-gray-800 md:hidden z-40`}>
-          
-
-        <div className="flex flex-wrap items-center justify-between gap-4 my-4 "></div>
+      {!UserS && (
+        <div className="hidden md:flex items-center gap-4  text-white mr-6">
+          <Link
+            href="/login"
+            className="flex items-center gap-2 hover:underline"
+          >
+            <CiLogin />
+            LOGIN
+          </Link>
+          <Link
+            href="/registro"
+            className="flex items-center gap-2 hover:underline"
+          >
+            <RxInput />
+            REGISTRO
+          </Link>
         </div>
       )}
-{/* FIN  MENU FILTRO */}
 
 
 
 
 
 
+      {UserS && (
+        <div className="flex flex-wrap gap-4">
+          <Link
+            href="/profile"
+            className="flex items-center gap-2 ml-4 sm:ml-0 hover:underline"
+          >
+            <FaUserCircle size={25} />
+            {UserS}
+          </Link>
 
-       <Link
-          href="/newproduct"
-          className="sm:flex sm:items-center gap-2 hidden  hover:underline"
-        >
-          <MdNoteAdd size={25}/>
-          {"Agregar"}
-          
-        </Link>
+          <Link
+            href="/newproduct"
+            className="sm:flex sm:items-center gap-2 hidden  hover:underline"
+          >
+            <MdNoteAdd size={25} />
+            {"Agregar"}
+          </Link>
 
-        <Link
-          href="/logout"
-          className="sm:flex sm:items-center gap-2 hidden hover:underline"
-        >
-          <GoSignOut size={25}/>
-          {"Salir"}
-          
-        </Link>
-        
+          <Link
+            href="/logout"
+            className="sm:flex sm:items-center gap-2 hidden hover:underline"
+          >
+            <GoSignOut size={25} />
+            {"Salir"}
+          </Link>
         </div>
+      )}
 
-        }
-
-      
-
-        
-      <Link href="/shopping" className="relative ml-auto sm:ml-4 mr-4 sm:mr-10 " onClick={()=>setMenuOpen(false)}>
-        <FaCartShopping size={25} className="active:scale-95 transition-transform duration-150 ease-in-out"/>
+      <Link
+        href="/shopping"
+        className="relative ml-auto sm:ml-4 mr-4 sm:mr-10 "
+        onClick={() => setMenuOpen(false)}
+      >
+        <FaCartShopping
+          size={25}
+          className="active:scale-95 transition-transform duration-150 ease-in-out"
+        />
         {cartCount > 0 && (
-          <span className={`absolute -top-2 -right-2 bg-${bgClass} text-white text-xs rounded-full pt-1 border-2 border-white px-1`}>
+          <span
+            className={`absolute -top-2 -right-2 bg-${bgClass} text-white text-xs rounded-full pt-1 border-2 border-white px-1`}
+          >
             {cartCount}
           </span>
         )}
@@ -220,8 +249,6 @@ export default function Navbar() {
 
       {/* Hamburguesa móvil */}
 
-
-       
       <button
         className="md:hidden text-white"
         onClick={() => setMenuOpen(!menuOpen)}
@@ -235,46 +262,55 @@ export default function Navbar() {
 
       {/* Menú móvil en bloque */}
       {menuOpen && (
-        <div className={`absolute inset-x-0 top-full bg-${bgClass} px-4 py-3 rounded shadow text-gray-800 md:hidden z-40`}>
-          
-        <div className="flex flex-wrap items-center justify-between gap-4 my-4 ">
-       
-       <button className=" hover:underline bg-white p-2 rounded-2xl"  onClick={() => {
-       setMenuOpen(false) 
-       router.push("/");
-       dispatch(setTheme(Themetype.WOMAN))
-       }
-      }
- >
-        WOMAN
-        </button>
-        
-        <button className=" hover:underline bg-white p-2 rounded-2xl" onClick={ () => {
-           setMenuOpen(false)
-           router.push("/");
-          dispatch(setTheme(Themetype.MEN))}} >
-          MEN
-        </button>
-       
-        <button className=" hover:underline bg-white p-2 rounded-2xl" onClick={ () => {
-           setMenuOpen(false)
-           router.push("/");
-           dispatch(setTheme(Themetype.BOY))} }>
-          KID
-        </button>
+        <div
+          className={`absolute inset-x-0 top-full bg-${bgClass} px-4 py-3 rounded shadow text-gray-800 md:hidden z-40`}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4 my-4 ">
+            <button
+              className=" hover:underline bg-white p-2 rounded-2xl"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/");
+                dispatch(setTheme(Themetype.WOMAN));
+              }}
+            >
+              WOMAN
+            </button>
 
-        <button className=" hover:underline bg-white p-2 rounded-2xl" onClick={ () => {
-           setMenuOpen(false)
-           router.push("/");
-           dispatch(setTheme(Themetype.ALL))} }>
-          ALL
-        </button>
+            <button
+              className=" hover:underline bg-white p-2 rounded-2xl"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/");
+                dispatch(setTheme(Themetype.MEN));
+              }}
+            >
+              MEN
+            </button>
 
+            <button
+              className=" hover:underline bg-white p-2 rounded-2xl"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/");
+                dispatch(setTheme(Themetype.BOY));
+              }}
+            >
+              KID
+            </button>
 
-         </div>
-          
-          
-          
+            <button
+              className=" hover:underline bg-white p-2 rounded-2xl"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/");
+                dispatch(setTheme(Themetype.ALL));
+              }}
+            >
+              ALL
+            </button>
+          </div>
+
           {/* Buscador móvil */}
           <div className={`mb-4 border-${bgClass} border-2`}>
             <label className="bg-pink-100 flex items-center pr-2 gap-1 rounded">
@@ -288,16 +324,14 @@ export default function Navbar() {
           </div>
 
           <Link
-              href="/newproduct"
-              className="flex flex-wrap items-center my-4 bg-white p-2 rounded gap-2 hover:underline"
-              onClick={()=>setMenuOpen(false)}
-            >
-              <MdNoteAdd size={25}/>
-              {"Agregar"}
-              
-            </Link>
+            href="/newproduct"
+            className="flex flex-wrap items-center my-4 bg-white p-2 rounded gap-2 hover:underline"
+            onClick={() => setMenuOpen(false)}
+          >
+            <MdNoteAdd size={25} />
+            {"Agregar"}
+          </Link>
 
-         
           <div className="md:flex items-center gap-4 ml-auto  text-black mr-6">
             <Link
               href="/login"
@@ -306,7 +340,6 @@ export default function Navbar() {
             >
               <CiLogin />
               LOGIN
-              
             </Link>
             <Link
               href="/registro"
@@ -315,22 +348,18 @@ export default function Navbar() {
             >
               <RxInput />
               REGISTRO
-              
             </Link>
 
             <Link
               href="/logout"
               className="flex flex-wrap items-center my-4 gap-2 hover:underline"
             >
-              <GoSignOut size={25}/>
+              <GoSignOut size={25} />
               {"Salir"}
-          
             </Link>
           </div>
         </div>
       )}
-
-     
     </nav>
   );
 }

@@ -5,6 +5,7 @@ import CarsReducer from "@/app/features/Car/CarSlice"
 import authReducer from "@/app/features/auth/authSlice"
 import ThemeReducer from "@/app/features/theme/themeSlice"
 import FilterSlice from "../app/features/filter/FilterSlice"
+import SeletedFilterSlice from "@/app/features/selectedFilter/selectedFilterSlice"
 
 
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     theme: ThemeReducer,
     auth: authReducer,
     filter: FilterSlice,
+    SelectedFilters: SeletedFilterSlice,
     [baseApi.reducerPath]: baseApi.reducer
 
   },
