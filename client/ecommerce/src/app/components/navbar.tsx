@@ -148,7 +148,7 @@ export default function Navbar() {
           {/* Menú móvil en bloque */}
           {menuFiltros && (
             <div
-              className={`fixed top-0 right-0 h-full w-full sm:w-64 bg-${bgClass} px-4 py-3 overflow-scroll shadow-lg z-40 transform transition-transform duration-300 ease-in-out 
+              className={`fixed top-0 right-0 h-full w-full sm:w-80 bg-${bgClass} px-4 py-3 overflow-scroll shadow-lg z-40 transform transition-transform duration-300 ease-in-out 
       
 `}
             >
@@ -212,7 +212,7 @@ export default function Navbar() {
           </Link>
 
           <Link
-            href="/newproduct"
+            href="/newproduct/nuevo"
             className="sm:flex sm:items-center gap-2 hidden  hover:underline"
           >
             <MdNoteAdd size={25} />
@@ -324,7 +324,11 @@ export default function Navbar() {
           </div>
 
           <Link
-            href="/newproduct"
+            href={{
+              pathname: "/newproduct",
+              query: { mode: "create" }
+            }}
+
             className="flex flex-wrap items-center my-4 bg-white p-2 rounded gap-2 hover:underline"
             onClick={() => setMenuOpen(false)}
           >

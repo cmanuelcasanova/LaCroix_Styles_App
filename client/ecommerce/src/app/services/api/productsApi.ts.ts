@@ -31,8 +31,8 @@ export const productsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
-    removeItem: builder.mutation<void, string>({
-      query: (id) => ({
+    removeItem: builder.mutation<void,{ id: number }>({
+      query: ({id}) => ({
         url: `/products/${id}`,
         method: "DELETE",
       }),
@@ -52,6 +52,17 @@ export const productsApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Product"],
     }),
+
+    deletePhoto: builder.mutation<void, { name: string | undefined }>({
+      query: ({ name }) => {
+        return {
+          url: `/auth/delete?filePath=${name} `,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Product"],
+    }),
+
   }),
 });
 
@@ -60,7 +71,9 @@ export const {
   useAddItemMutation,
   useUpdateItemMutation,
   useRemoveItemMutation,
+  useDeletePhotoMutation,
   useUpLoadphotoMutation,
   useGetSeccionQuery,
   useGetItemQuery
+  
 } = productsApi;

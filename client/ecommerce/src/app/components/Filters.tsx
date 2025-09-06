@@ -4,7 +4,7 @@ import { selectFilter } from "@/app/features/filter/FilterSelector";
 import { useSelector } from "react-redux";
 import { COLOR_PALETTE } from "@/app/components/params"
 import { selectItems } from "@/app/features/items/itemsSelectors"
-import { addSelectFilters , deleteSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
+import { addSelectFilters , deleteSelectFilters , clearSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
 import { selectedFiltersG } from "@/app/features/selectedFilter/selectedFilterSelector"
 
 import { useDispatch } from "react-redux";
@@ -15,6 +15,7 @@ export default function FilterBar() {
   const [color, setColor] = useState<boolean>(false);
   const [talla, setTalla] = useState<boolean>(false);
   const [precio, setPrecio] = useState<boolean>(false);
+  const [ applyFilter , setApplyFilter] = useState<boolean>(false)
    const totalProductos = useSelector(selectItems);
     const SelectedFilters = useSelector( selectedFiltersG )  ;
    const dispatch = useDispatch();
@@ -24,6 +25,14 @@ export default function FilterBar() {
 
   return (
     <div>
+
+      {(SelectedFilters.category.length>0 || SelectedFilters.color.length>0 || SelectedFilters.talla.length>0) && <button 
+      className= "p-2 mb-4 ml-auto bg-white text-black rounded"
+      onClick={() => dispatch( clearSelectFilters()) }
+      > Limpiar Filtros  
+      
+      
+      </button> }
 
 
       <div className="flex flex-wrap justify-between mb-4 border-b-2 pb-2 mx-4">
@@ -69,13 +78,13 @@ export default function FilterBar() {
                 className="flex flex-wrap justify-between items-center p-2 pl-2 border-b-[1px] border-gray-400"
               >
                 
-                {COLOR_PALETTE.find((c)=> product.name === c.value )?.label} ({product.cant})
+                {product.name} ({product.cant})
                 <input 
                 name={product.name}
                 type="checkbox" 
                 className="h-4 w-4" 
-                checked={ SelectedFilters.color.includes ( COLOR_PALETTE.find((c)=> product.name === c.value )?.label || '')  } 
-                onChange={e => dispatch( e.target.checked ? addSelectFilters({color: COLOR_PALETTE.find((c)=> product.name === c.value )?.label}) :  deleteSelectFilters ({name: "color", value: product.name})   )}/>
+                checked={ SelectedFilters.color.includes ( product.name)  } 
+                onChange={e => dispatch( e.target.checked ? addSelectFilters({color: product.name}) :  deleteSelectFilters ({name: "color", value: product.name})   )}/>
               </div>
             ))}
           </div>

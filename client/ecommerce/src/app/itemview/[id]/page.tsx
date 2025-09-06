@@ -8,6 +8,7 @@ import LoadingModal from "../../components/Loadingpage";
 import { useParams } from "next/navigation";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { themeBg , themeBgMapHOpacity } from "@/app/themeStyles";
+import { COLOR_PALETTE } from "@/app/components/params"
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { FaCartShopping } from "react-icons/fa6";
@@ -91,7 +92,7 @@ export default function Item({ id }: itemProps) {
 
         <div
           className="h-[30px] w-[30px] border-black border-2 mr-auto"
-          style={{ background: item.color }}
+          style={{ background:  COLOR_PALETTE.find((c)=> item.color === c.label )?.value }}
         ></div>
 
         <h1 className="mr-auto mt-4 mb-2"> TALLA: </h1>

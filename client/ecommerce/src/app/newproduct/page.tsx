@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery } from "../services/api/productsApi.ts";
 import { useProfileQuery } from "../services/api/usersApi";
-import { useRouter } from "next/navigation";
+import { useRouter , useSearchParams } from "next/navigation";
 import Select from "react-select";
 import { COLOR_PALETTE , TALLAS , categoriesWomen , categoriesMen , categoriesKids } from "../components/params"
 import LoadingModal from "../components/Loadingpage";
@@ -15,6 +15,7 @@ import { themeBgMap } from "@/app/themeStyles"
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { CustomOption } from "../components/customOption"
+
 
 
 type FormData = {
@@ -54,6 +55,14 @@ export default function NewProduct() {
   const { data: sec } = useGetSeccionQuery();
   const theme = useSelector(selectTheme);
   const bgClass = themeBgMap[theme]
+const searchParams = useSearchParams();
+const mode = searchParams.get("mode");
+
+ 
+
+ 
+console.log(mode)
+
  
   
 
@@ -83,7 +92,6 @@ export default function NewProduct() {
     }
 
   };
-
 
 
   const onSubmit = handleSubmit(async (data) => {
@@ -123,7 +131,7 @@ export default function NewProduct() {
         category: categoria.value,
         talla: talla.value,
         precio: data.precio,
-        color: color.value,
+        color: color.label,
         userId: profile.userId
       }).unwrap();
       reset ()

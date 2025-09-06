@@ -31,10 +31,18 @@ export const SeletedFilterSlice = createSlice({
       if (name === "color" ) state.color = state.color.filter( item => item !== value);
 
     },
+
+    clearSelectFilters: (state, action: PayloadAction< void >) => {
+      
+      state.category = [];
+      state.talla = [];
+      state.color = [];
+
+    },
     
   },
 });
 
-export const { addSelectFilters , deleteSelectFilters } =
+export const { addSelectFilters , deleteSelectFilters , clearSelectFilters } =
   SeletedFilterSlice.actions;
 export default SeletedFilterSlice.reducer;
