@@ -10,9 +10,10 @@ router.get('/products/seccion', findSeccion);
 router.get('/products/tags' , findTags);
 router.get('/products/:id', findProduct );
 
-router.post('/products', createProduct);
+router.post('/products', authMiddleware , createProduct);
+router.put('/products',authMiddleware , UpdateProduct );
 router.delete('/products/:id', deleteProduct );
-router.patch('/products/:id', UpdateProduct );
+
 
 
 

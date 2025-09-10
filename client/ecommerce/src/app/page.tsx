@@ -16,6 +16,8 @@ import { filteritem } from "@/app/features/filter/FilterTypes"
 import { product } from "@/app/services/api/queryTypes" 
 
 
+
+
 type filteritems = {
 
   categoria: filteritem[],

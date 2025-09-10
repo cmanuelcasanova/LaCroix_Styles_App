@@ -15,6 +15,7 @@ import { selectUsername } from "../features/auth/authSelectors";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useRemoveItemMutation } from "@/app/services/api/productsApi.ts";
 import { useDeletePhotoMutation } from "../services/api/productsApi.ts";
+import  ConfirmationtModal  from "@/app/components/confirmation"
 import Link from "next/link";
 
 type CardProps = {
@@ -44,6 +45,9 @@ export default function Card({
   const UserS = useSelector(selectUsername);
   const [DeleteItem] = useRemoveItemMutation();
   const [deletePhoto] = useDeletePhotoMutation();
+  const [modal, setModal] = useState<boolean>(false);
+  const [borrar, setBorrar] = useState<boolean>(false);
+
 
   useEffect(() => {
     const find = itemsC.find((num) => num.id === id);
@@ -71,17 +75,37 @@ export default function Card({
     }
   };
 
-  const handleDelete = async (id: number) => {
+
+   useEffect(() => {
     try {
-      await DeleteItem({ id: id }).unwrap();
-      await deletePhoto({ name: imageUrl.split("/").pop() }).unwrap();
+
+      if(borrar) {
+
+         DeleteItem({ id: id }).unwrap();
+         deletePhoto({ name: imageUrl.split("/").pop() }).unwrap();
+      }
     } catch (err) {
       console.log(err);
     }
+    }, [borrar,DeleteItem, deletePhoto, id,imageUrl]);
+
+
+
+
+  const handleDelete = async () => {
+
+      setModal(true)
+
+    
   };
 
   return (
+
+
     <div className="bg-white relative flex flex-col items-center shadow-2xl rounded-2xl p-4 mb-6 mx-4 w-[300px]">
+      
+      {modal && <ConfirmationtModal onClose={() => setModal(false)} confirm={() => {setBorrar(true)}} />}
+      
       <h1 className="w-full">
         {" "}
         <CiMenuKebab
@@ -105,7 +129,7 @@ export default function Card({
               <Link
                 href={{
                   pathname: "/newproduct",
-                  query: { mode: "edit" },
+                  query: { mode: "edit",id: id },
                 }}
                 className="shadow-2xl p-2 pl-4"
                 onClick={() => setDetails(!detail)}
@@ -117,7 +141,7 @@ export default function Card({
                 className="shadow-2xl p-2 pl-4"
                 onClick={() => {
                   setDetails(!detail);
-                  handleDelete(id);
+                  handleDelete();
                 }}
               >
                 Eliminar Producto
@@ -168,5 +192,6 @@ export default function Card({
         </button>
       </div>
     </div>
+  
   );
 }

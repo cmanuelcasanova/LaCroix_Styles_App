@@ -57,12 +57,10 @@ export const deleteProduct = async (req, res) => {
 
 export const UpdateProduct = async (req, res) => {
   try {
-    const { title, description, done } = req.body;
-    const task = await db.Product.update(
-      { title: title, description: description, done: done },
-      { where: { id: req.params.id } }
-    );
-    res.status(201).json(task);
+    
+    const { title, imageUrl, talla, precio,userId, seccionId,color, category, id } = req.body;
+    const product = await db.Product.update({ title, imageUrl, talla, precio, userId, seccionId,color, category }, {where: {id}});
+    res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);
     res.status(500).json({ error: err.message });

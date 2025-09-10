@@ -10,6 +10,18 @@ export interface qdata {
     userId: string | null
 }
 
+export interface qdataUpdate {
+    id: number | undefined,
+    title: string,
+    seccionId: number
+    imageUrl:string,
+    talla:string
+    color: string
+    category: string
+    precio:number
+    userId: string | null
+}
+
 export interface product {
     id:number,  
     title: string,

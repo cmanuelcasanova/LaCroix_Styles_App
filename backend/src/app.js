@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import taskRoutes from './routes/productRoutes.js';
+import ProductRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import fileRoutes from './routes/fileRoutes.js'
 import cookieParser from "cookie-parser";
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 
 app.use(express.json());
 app.use(cookieParser());
-app.use('/api', taskRoutes);
+app.use('/api', ProductRoutes);
 app.use('/api', userRoutes);
 app.use('/api', fileRoutes);
 

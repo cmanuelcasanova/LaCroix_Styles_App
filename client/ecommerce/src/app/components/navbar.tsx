@@ -26,22 +26,30 @@ import { themeBgMap, themeBgOpa } from "@/app/themeStyles";
 import { useRouter } from "next/navigation";
 import { GiConsoleController } from "react-icons/gi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
+import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import FilterBar from "./Filters";
+import { useProfileQuery } from "@/app/services/api/usersApi";
+import { setUser } from "@/app/features/auth/authSlice";
+
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuFiltros, setMenuFiltros] = useState(false);
-
   const itemsC = useSelector(selectItemsc);
   const theme = useSelector(selectTheme);
- 
-
   const UserS = useSelector(selectUsername);
   const UserFilters = useSelector(selectFilter);
   const dispatch = useDispatch<AppDispatch>();
   const bgClass = themeBgMap[theme];
   const bgClassOpa = themeBgOpa[theme];
   const router = useRouter();
+  const { data: profile, isLoading, error } = useProfileQuery();
+
+
+  useEffect(() => {
+    if(profile)
+       dispatch( setUser ({ isAuthenticated: true, user: profile.user, username: profile.username})) ;
+  }, [profile,dispatch]);
 
   useEffect(() => {
     document.body.classList.remove("bg-woman", "bg-men", "bg-boy", "bg-all");
@@ -142,7 +150,7 @@ export default function Navbar() {
             className="text-white ml-4"
             onClick={() => setMenuFiltros(!menuFiltros)}
           >
-            <FaFilter size={20} />
+            <TbAdjustmentsHorizontal size={25} />
           </button>
 
           {/* Menú móvil en bloque */}
@@ -212,7 +220,10 @@ export default function Navbar() {
           </Link>
 
           <Link
-            href="/newproduct/nuevo"
+              href={{
+              pathname: "/newproduct",
+              query: { mode: "create" }
+            }}
             className="sm:flex sm:items-center gap-2 hidden  hover:underline"
           >
             <MdNoteAdd size={25} />
@@ -323,7 +334,7 @@ export default function Navbar() {
             </label>
           </div>
 
-          <Link
+          {UserS && <Link
             href={{
               pathname: "/newproduct",
               query: { mode: "create" }
@@ -335,6 +346,7 @@ export default function Navbar() {
             <MdNoteAdd size={25} />
             {"Agregar"}
           </Link>
+          }         
 
           <div className="md:flex items-center gap-4 ml-auto  text-black mr-6">
             <Link
@@ -356,6 +368,7 @@ export default function Navbar() {
 
             <Link
               href="/logout"
+              onClick={() => setMenuOpen(false)}
               className="flex flex-wrap items-center my-4 gap-2 hover:underline"
             >
               <GoSignOut size={25} />

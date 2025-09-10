@@ -1,5 +1,5 @@
 import { baseApi } from "@/app/services/api/baseApi";
-import { qdata, SecData , product } from "./queryTypes";
+import { qdata, SecData , product, qdataUpdate } from "./queryTypes";
 
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -23,11 +23,11 @@ export const productsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
-    updateItem: builder.mutation <void,{ id: string; cant?: number; precio?: number }>({
-      query: ({ id, ...patch }) => ({
-        url: `/products/${id}`,
-        method: "PATCH",
-        body: patch,
+    updateProduct: builder.mutation <void, qdataUpdate >({
+      query: (newItem) => ({
+        url: `/products`,
+        method: "PUT",
+        body: {...newItem},
       }),
       invalidatesTags: ["Product"],
     }),
@@ -69,7 +69,7 @@ export const productsApi = baseApi.injectEndpoints({
 export const {
   useGetItemsQuery,
   useAddItemMutation,
-  useUpdateItemMutation,
+  useUpdateProductMutation,
   useRemoveItemMutation,
   useDeletePhotoMutation,
   useUpLoadphotoMutation,

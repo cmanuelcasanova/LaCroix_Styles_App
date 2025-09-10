@@ -18,6 +18,9 @@ import { useRouter } from "next/navigation";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useDispatch } from "react-redux";
 import { addItem, removeItem} from "@/app/features/Car/CarSlice";
+import { selectUsername } from "@/app/features/auth/authSelectors";
+import { useRemoveItemMutation } from "@/app/services/api/productsApi.ts";
+import { useDeletePhotoMutation } from "@/app/services/api/productsApi.ts";
 
 
 
@@ -29,7 +32,7 @@ export default function Item({ id }: itemProps) {
   //const theme = useSelector(selectTheme);
   const params = useParams();
   const id_item = params?.id?.toString();
-
+  const UserS = useSelector(selectUsername);
   const theme = useSelector(selectTheme);
 
   const tBg = themeBg[theme];
@@ -38,6 +41,8 @@ export default function Item({ id }: itemProps) {
   const router = useRouter();
   const itemsC = useSelector(selectItemsc);
   const dispatch = useDispatch();
+  const [DeleteItem] = useRemoveItemMutation();
+  const [deletePhoto] = useDeletePhotoMutation();
 
   const {
     data: item,
@@ -69,6 +74,17 @@ export default function Item({ id }: itemProps) {
       setCarrito(false)
     }
   
+  };
+
+    const handleDelete = async (id: number) => {
+    try {
+      await DeleteItem({ id: id }).unwrap();
+      await deletePhoto({ name: item.imageUrl.split("/").pop() }).unwrap();
+      router.push("/");
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -126,6 +142,24 @@ export default function Item({ id }: itemProps) {
             </>
           )}{" "}
         </button>
+
+        {UserS && <>
+        <button
+          onClick={ ()=> {router.push(`/newproduct?mode=edit&id=${item.id}`);}}
+          className= "bg-green-300 mt-4  rounded text-white w-full p-2 flex items-center gap-2 justify-center active:scale-95 transition-transform duration-150 ease-in-out"
+        > Actualizar Producto 
+        </button>
+        
+        <button
+          onClick={ ()=> {handleDelete(item.id)}}
+          className= "bg-red-400 mt-4  rounded text-white w-full p-2 flex items-center gap-2 justify-center active:scale-95 transition-transform duration-150 ease-in-out"
+        > Eliminar Producto 
+        </button>
+        </>
+        
+        
+        }
+
       </div>
 
       <button

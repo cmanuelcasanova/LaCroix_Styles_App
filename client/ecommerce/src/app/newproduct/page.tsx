@@ -4,7 +4,7 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery } from "../services/api/productsApi.ts";
+import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery, useUpdateProductMutation } from "../services/api/productsApi.ts";
 import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter , useSearchParams } from "next/navigation";
 import Select from "react-select";
@@ -15,6 +15,11 @@ import { themeBgMap } from "@/app/themeStyles"
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { CustomOption } from "../components/customOption"
+import { useGetItemQuery } from "@/app/services/api/productsApi.ts";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { setUser } from "@/app/features/auth/authSlice";
 
 
 
@@ -39,7 +44,7 @@ type OptionTypeG = {
 
 
 export default function NewProduct() {
-  const { register, handleSubmit, reset } = useForm<FormData>();
+  const { register, handleSubmit, reset , setValue} = useForm<FormData>();
   const router = useRouter();
   const [seccion, setSeccion] = useState<OptionType | null>(null);
   const [categoria, setCategoria] = useState<OptionTypeG | null>(null);
@@ -47,26 +52,60 @@ export default function NewProduct() {
   const [foto, setFoto] = useState<string | null>(null);
   const [modal, setModal] = useState<boolean>(false);
   const [tipo,setTipo] = useState<boolean>(false)
+  const [actualizar,setActualizar] = useState<boolean>(false)
   const [imagenUrl, setImagenUrl] = useState<string>("");
   const [addItem] = useAddItemMutation();
+  const [UpdateProduct] = useUpdateProductMutation ();
   const [upLoadphoto] = useUpLoadphotoMutation();
   const { data: profile, isLoading, error } = useProfileQuery();
   const [color, setColor] = useState< OptionTypeG | null>(null);
   const { data: sec } = useGetSeccionQuery();
   const theme = useSelector(selectTheme);
   const bgClass = themeBgMap[theme]
-const searchParams = useSearchParams();
-const mode = searchParams.get("mode");
-
- 
-
- 
-console.log(mode)
-
- 
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode");
+  const id_item =  searchParams.get("id");
+  const dispatch = useDispatch<AppDispatch>();
+  
+  
   
 
+  const isEditMode = mode === "edit";
+  const {data: item, isLoading: isLoadingProfile } = useGetItemQuery(id_item ? { id: id_item } : skipToken)
+    
+useEffect(() => { 
+  if(isEditMode && item?.category && !isLoadingProfile) {
+    
+    setValue('titulo',item?.title)
+    setValue('precio', item?.precio)
+    setFoto(item?.imageUrl)
+    setImagenUrl(item?.imageUrl)
+    
+    setTalla ({label: TALLAS.find((c)=> item?.talla === c.value )?.label ?? item?.talla, value:item?.talla})
+    setColor ({label: item?.color, value: COLOR_PALETTE.find((c)=> item?.color === c.label )?.label ?? item?.color})
+    setActualizar(true)
+    if(item.category!==undefined) {
+    switch (item?.seccionId) { 
+      case 1:
+        setSeccion(  {value: item?.seccionId , label: "WOMAN" })
+        setCategoria ( {label: categoriesWomen.find((c)=> item?.category === c.value )?.label ?? item?.category, value:item?.category})
+        break
+        case 2:
+           setSeccion(  {value: item?.seccionId , label: "MEN" })
+         setCategoria ( {label: categoriesMen.find((c)=> item?.category === c.value )?.label ?? item?.category, value:item?.category})
+        break
+        case 3:
+           setSeccion(  {value: item?.seccionId , label: "KID" })
+ setCategoria ( {label: categoriesKids.find((c)=> item?.category === c.value )?.label ?? item?.category, value:item?.category})
+        default:
+        return
+    
+    }
+  }
 
+  
+  }
+  }, [item, isEditMode,setValue, isLoadingProfile]);
 
 
   useEffect(() => {
@@ -76,7 +115,7 @@ console.log(mode)
   }, [error, router]);
 
   if (isLoading) return <LoadingModal />;
-  if (!profile) return null;
+  if (!profile) {dispatch( setUser ({ isAuthenticated: false, user: null , username: null})) ; return null };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -123,7 +162,7 @@ console.log(mode)
     }
 
     try {
-
+      if (!actualizar) {
       await addItem({
         title: data.titulo,
         imageUrl: imagenUrl,
@@ -134,6 +173,31 @@ console.log(mode)
         color: color.label,
         userId: profile.userId
       }).unwrap();
+
+    }else{
+
+  
+     await UpdateProduct({
+        id:item?.id,
+        title: data.titulo,
+        imageUrl: imagenUrl,
+        seccionId: seccion.value,
+        category: categoria.value,
+        talla: talla.value,
+        precio: data.precio,
+        color: color.label,
+        userId: profile.userId
+      }).unwrap();
+
+
+
+
+
+    }
+
+
+
+
       reset ()
       setFoto(null)
       setSeccion(null)
@@ -141,6 +205,7 @@ console.log(mode)
       setModal(true)
       setTipo(true)
       setImagenUrl("")
+      if(actualizar) {router.push("/")}
      
     } catch  {
       setModal(true)
@@ -199,7 +264,7 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
     <div className="flex flex-col items-center p-4 ">
 
       {modal && <AlertModal onClose={() => setModal(false)} tipo={tipo}  />}
-      <div className="w-[700px] h-[950px] flex flex-col items-center rounded-2xl mt-20 bg-white px-8">
+      <div className={`w-[700px] h-[1000px] flex flex-col items-center rounded-2xl mt-20  px-8 ${actualizar ? 'bg-green-200' : 'bg-white' }`}>
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
 
         
@@ -237,7 +302,7 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
           <label className="flex flex-col mb-4">
             Titulo
             <input
-              className="h-10  border-[#202b38] border-1 rounded-md p-2
+              className="h-10 bg-white border-[#202b38] border-1 rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
@@ -326,7 +391,7 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
           <label className="flex flex-col mb-4">
             Precio
             <input
-              className="h-10  border-[#202b38] border-1 rounded-md p-2
+              className="h-10 bg-white border-[#202b38] border-1 rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
@@ -343,7 +408,7 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
               className={`bg-${bgClass} w-[180px] rounded-md mb-4 mt-4 h-10 mx-auto text-black font-semibold active:scale-95
                  transition-colors duration-300 ease-in-out hover:bg-[#677483] cursor-pointer`}
             >
-              Registrar Producto
+              { actualizar ? 'Actualizar Producto' : 'Registrar Producto' }
             </button>
           </div>
         </form>
