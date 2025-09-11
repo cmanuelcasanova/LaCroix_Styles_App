@@ -4,7 +4,7 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery, useUpdateProductMutation } from "../services/api/productsApi.ts";
+import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery, useUpdateProductMutation } from "../services/api/productsApi";
 import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter , useSearchParams } from "next/navigation";
 import Select from "react-select";
@@ -15,7 +15,7 @@ import { themeBgMap } from "@/app/themeStyles"
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { CustomOption } from "../components/customOption"
-import { useGetItemQuery } from "@/app/services/api/productsApi.ts";
+import { useGetItemQuery } from "@/app/services/api/productsApi";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
