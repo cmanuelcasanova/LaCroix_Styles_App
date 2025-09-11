@@ -5,7 +5,8 @@ import { AuthState } from "./authTypes";
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
-  username: null
+  username: null,
+  role: null
 };
 
 
@@ -14,14 +15,16 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<AuthState>) => {
-      const { user, isAuthenticated, username} = action.payload;
+      const { user, isAuthenticated, username , role} = action.payload;
       state.user = user;
       state.isAuthenticated = isAuthenticated;
       state.username= username;
+      state.role= role;
     },
     logout: (state) => {
       state.user = null;
       state.username = null;
+      state.role = null;
       state.isAuthenticated = false;
     },
   },

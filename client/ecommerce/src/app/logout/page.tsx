@@ -3,9 +3,10 @@
 import { useLogoutMutation } from '@/app/services/api/usersApi';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { setUser } from "@/app/features/auth/authSlice";
+import { logout as logout_Auth} from "@/app/features/auth/authSlice";
 import { AppDispatch } from "../store";
 import { useDispatch } from "react-redux";
+import { baseApi  } from "@/app/services/api/baseApi"
 
 
 export default function Logout() {
@@ -16,8 +17,11 @@ export default function Logout() {
   useEffect(() => {
     const handleLogout = async () => {
       try {
+        
         await logout().unwrap(); // 👈 importante para capturar errores
-        dispatch( setUser ({ isAuthenticated: false, user: null, username: null})) ;
+        dispatch(  logout_Auth()) ;
+        localStorage.removeItem('token');
+        dispatch(baseApi.util.resetApiState());
       } catch (error) {
         console.error("Error al cerrar sesión:", error);
       } finally {

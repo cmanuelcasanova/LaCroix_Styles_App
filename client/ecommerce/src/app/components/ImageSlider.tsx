@@ -13,23 +13,44 @@ import { selectTheme } from "@/app/features/theme/themeSelector";
 
 const images = [
   {
-    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_1.jpg?updatedAt=1756507463490",
+    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_1.jpg",
     alt: "Slide 1",
     width: 1200,
     height: 600,
   },
   {
-    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_2.jpg?updatedAt=1756507463468",
+    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_8.jpg",
     alt: "Slide 2",
     width: 1200,
     height: 600,
   },
   {
-    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_3.jpg?updatedAt=1756507463542",
+    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_3.jpg",
     alt: "Slide 3",
     width: 1200,
     height: 600,
   },
+  {
+    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_7.jpg",
+    alt: "Slide 4",
+    width: 1200,
+    height: 600,
+  },
+    {
+    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_9.jpg",
+    alt: "Slide 5",
+    width: 1200,
+    height: 600,
+  },
+    {
+    src: "https://ik.imagekit.io/wakm0y68u/LaCroix/Homepage/Lacroix_img_2.jpg",
+    alt: "Slide 6",
+    width: 1200,
+    height: 600,
+  },
+
+
+
 ];
 
 export default function ImageSlider() {

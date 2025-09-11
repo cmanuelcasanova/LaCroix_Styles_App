@@ -14,6 +14,8 @@ import { AppDispatch } from "../app/store";
 import { useState , useEffect } from "react";
 import { filteritem } from "@/app/features/filter/FilterTypes"
 import { product } from "@/app/services/api/queryTypes" 
+import { setUser } from "@/app/features/auth/authSlice";
+import { useProfileQuery } from "@/app/services/api/usersApi";
 
 
 
@@ -32,15 +34,21 @@ type filteritems = {
 
 export default function Home() {
  const theme = useSelector(selectTheme);
-const dispatch = useDispatch<AppDispatch>();
+ const dispatch = useDispatch<AppDispatch>();
  const UserFilters = useSelector(selectedFiltersG);
  const [allProducts, setAllProducts] = useState<product[] | undefined>([]);
  const [filteredProducts, setFilteredProducts] = useState<product[] | undefined>([]);
- 
-  
-
-  
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
+const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile } = useProfileQuery();
+
+
+  useEffect(() => {
+   
+    if(profile && !Loading_Profile && !Fetching_Profile)
+      dispatch( setUser ({ isAuthenticated: true, user: profile.user, username: profile.username , role: profile.role})) ;
+  }, [profile,dispatch,Fetching_Profile,Loading_Profile]);
+
+
 
 useEffect( ()=> {  
     const ProductbySeccion = Productos?.filter((pro) => {

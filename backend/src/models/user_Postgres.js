@@ -19,11 +19,16 @@ export const UserModel = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   });
 
   
   User.associate = (models) => {
     User.hasMany(models.Product, { foreignKey: 'userId' });
+    User.hasMany(models.Shopping, { foreignKey: 'userId' });
   };
 
   return User;

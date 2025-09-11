@@ -39,6 +39,7 @@ export const createUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      role: "USER"
     });
     res.status(201).json({ userid: user.id, username: user.username });
   } catch (error) {
@@ -56,21 +57,22 @@ export const login = async (req, res) => {
     logStep('Datos incompletos', req.body);
     return res.status(400).json({ message: "Email y contraseña requeridos" });
   }
-
+console.log("1111")
   try {
     const user = await db.User.findOne({ where: { email } });
     logStep('Usuario encontrado', user ? { id: user.id, email: user.email } : 'No encontrado');
-
+    console.log("2222")
     if (!user)
       return res.status(400).json({ message: "Usuario no encontrado" });
-
+    console.log("3333")
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log("44444")
     logStep('Password match', isMatch);
 
     if (!isMatch)
       return res.status(400).json({ message: "Contraseña incorrecta" });
 
-    const token = generateToken(user.id);
+    const token = generateToken(user.id, user.role);
     logStep('Token generado', token);
 
     res.cookie("token", token, {
@@ -86,6 +88,7 @@ export const login = async (req, res) => {
       message: "Login exitoso",
       user: user.id,
       username: user.username,
+      role: user.role
     });
 
     logStep('Respuesta enviada', { userId: user.id });
@@ -113,6 +116,7 @@ export const getprofile = async (req, res) => {
       username: user.username,
       userId: user.id,
       email: user.email,
+      email: user.role,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });

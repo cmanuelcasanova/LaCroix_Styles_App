@@ -19,7 +19,7 @@ import { useGetItemQuery } from "@/app/services/api/productsApi.ts";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { setUser } from "@/app/features/auth/authSlice";
+import { logout as logout_Auth} from "@/app/features/auth/authSlice";
 
 
 
@@ -115,7 +115,8 @@ useEffect(() => {
   }, [error, router]);
 
   if (isLoading) return <LoadingModal />;
-  if (!profile) {dispatch( setUser ({ isAuthenticated: false, user: null , username: null})) ; return null };
+  if (!profile ) {dispatch( logout_Auth()) ; return null };
+  if (profile.role!== "ADMIN") router.push("/login");
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -201,11 +202,13 @@ useEffect(() => {
       reset ()
       setFoto(null)
       setSeccion(null)
+      setCategoria(null)
+      setColor(null)
       setTalla(null)
       setModal(true)
       setTipo(true)
       setImagenUrl("")
-      if(actualizar) {router.push("/")}
+      
      
     } catch  {
       setModal(true)

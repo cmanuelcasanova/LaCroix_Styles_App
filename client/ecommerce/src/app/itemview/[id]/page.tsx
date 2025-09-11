@@ -3,7 +3,6 @@
 import Image from "next/image";
 
 import { useState, useEffect} from "react";
-import { useGetItemQuery } from "../../services/api/productsApi.ts";
 import LoadingModal from "../../components/Loadingpage";
 import { useParams } from "next/navigation";
 import { skipToken } from "@reduxjs/toolkit/query";
@@ -18,9 +17,10 @@ import { useRouter } from "next/navigation";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useDispatch } from "react-redux";
 import { addItem, removeItem} from "@/app/features/Car/CarSlice";
-import { selectUsername } from "@/app/features/auth/authSelectors";
-import { useRemoveItemMutation } from "@/app/services/api/productsApi.ts";
-import { useDeletePhotoMutation } from "@/app/services/api/productsApi.ts";
+import { selectRole } from "@/app/features/auth/authSelectors";
+import { useRemoveItemMutation , useDeletePhotoMutation , useGetItemQuery} from "@/app/services/api/productsApi";
+import  ConfirmationtModal  from "@/app/components/confirmation"
+
 
 
 
@@ -32,9 +32,8 @@ export default function Item({ id }: itemProps) {
   //const theme = useSelector(selectTheme);
   const params = useParams();
   const id_item = params?.id?.toString();
-  const UserS = useSelector(selectUsername);
+  const UserRole = useSelector(selectRole);
   const theme = useSelector(selectTheme);
-
   const tBg = themeBg[theme];
   const tBgH = themeBgMapHOpacity[theme];
   const [carrito, setCarrito] = useState<boolean>(false);
@@ -43,6 +42,8 @@ export default function Item({ id }: itemProps) {
   const dispatch = useDispatch();
   const [DeleteItem] = useRemoveItemMutation();
   const [deletePhoto] = useDeletePhotoMutation();
+  const [modal, setModal] = useState<boolean>(false);
+  const [borrar, setBorrar] = useState<boolean>(false);
 
   const {
     data: item,
@@ -50,6 +51,29 @@ export default function Item({ id }: itemProps) {
     error,
     isFetching,
   } = useGetItemQuery(id_item ? { id: id_item } : skipToken);
+
+  
+  useEffect(() => {
+      try {
+  
+        if(borrar && item?.id) {
+  
+           DeleteItem({ id: item?.id }).unwrap();
+           deletePhoto({ name: item.imageUrl.split("/").pop() }).unwrap();
+           router.push("/");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+      }, [borrar,DeleteItem, deletePhoto, item?.id, item?.imageUrl,router]);
+  
+  
+  const handleDelete = async () => {
+
+      setModal(true)
+
+    
+  };
 
   useEffect(() => {
     const find = itemsC.find((num) => num.id === item?.id);
@@ -76,19 +100,12 @@ export default function Item({ id }: itemProps) {
   
   };
 
-    const handleDelete = async (id: number) => {
-    try {
-      await DeleteItem({ id: id }).unwrap();
-      await deletePhoto({ name: item.imageUrl.split("/").pop() }).unwrap();
-      router.push("/");
-
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  
 
   return (
     <div className={`flex flex-col items-center justify-center `}>
+
+        {modal && <ConfirmationtModal onClose={() => setModal(false)} confirm={() => {setBorrar(true)}} />}
       <div className="bg-white flex flex-col items-center shadow-2xl mt-20 rounded-2xl p-4 mb-6 mx-4 w-dwv">
         <Image
           className="rounded-b-2xl shadow-2xl p-1 rounded-t-2xl"
@@ -143,7 +160,7 @@ export default function Item({ id }: itemProps) {
           )}{" "}
         </button>
 
-        {UserS && <>
+        {UserRole==="ADMIN" && <>
         <button
           onClick={ ()=> {router.push(`/newproduct?mode=edit&id=${item.id}`);}}
           className= "bg-green-300 mt-4  rounded text-white w-full p-2 flex items-center gap-2 justify-center active:scale-95 transition-transform duration-150 ease-in-out"
@@ -151,7 +168,7 @@ export default function Item({ id }: itemProps) {
         </button>
         
         <button
-          onClick={ ()=> {handleDelete(item.id)}}
+          onClick={ ()=> {handleDelete()}}
           className= "bg-red-400 mt-4  rounded text-white w-full p-2 flex items-center gap-2 justify-center active:scale-95 transition-transform duration-150 ease-in-out"
         > Eliminar Producto 
         </button>

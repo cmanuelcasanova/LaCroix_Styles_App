@@ -7,7 +7,7 @@ export const baseApi = createApi({
     baseUrl: process.env.NEXT_PUBLIC_API_URL,
     credentials: 'include', // ✅ para enviar cookies automáticamente
   }),
-  tagTypes: ['Product', 'User'],
+  tagTypes: ['Product', 'User','Shopping'],
   endpoints: () => ({}),
 });
 

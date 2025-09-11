@@ -3,6 +3,7 @@ import cors from 'cors';
 import ProductRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import fileRoutes from './routes/fileRoutes.js'
+import shoppingRoutes from './routes/ShoppingRoutes.js'
 import cookieParser from "cookie-parser";
 
 import dotenv from "dotenv";
@@ -28,6 +29,7 @@ app.use(cookieParser());
 app.use('/api', ProductRoutes);
 app.use('/api', userRoutes);
 app.use('/api', fileRoutes);
+app.use('/api', shoppingRoutes);
 
 
 

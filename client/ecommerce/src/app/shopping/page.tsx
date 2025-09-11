@@ -43,7 +43,7 @@ return (
         <br />
 
         <div className="flex flex-wrap w-[150px] rounded-2xl items-center justify-center ml-auto bg-white p-2">
-        <h1 className="text-2xl font-bold ">Total: {calculartotal()}$ </h1>
+        <h1 className="text-2xl font-bold ">Total: {calculartotal()} $ </h1>
         </div>
       </div>
     </div>

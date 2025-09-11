@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../public/LogoLAcroixStyles.png";
@@ -11,10 +11,8 @@ import { CiMenuKebab } from "react-icons/ci";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
-import { selectFilter } from "@/app/features/filter/FilterSelector";
-import { FaFilter } from "react-icons/fa";
 import { selectTheme } from "@/app/features/theme/themeSelector";
-import { selectUsername } from "../features/auth/authSelectors";
+import { selectRole , selectUsername } from "../features/auth/authSelectors";
 import { Themetype } from "../features/theme/themeTypes";
 import { setTheme } from "@/app/features/theme/themeSlice";
 import { MdNoteAdd } from "react-icons/md";
@@ -24,12 +22,11 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { themeBgMap, themeBgOpa } from "@/app/themeStyles";
 import { useRouter } from "next/navigation";
-import { GiConsoleController } from "react-icons/gi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import FilterBar from "./Filters";
-import { useProfileQuery } from "@/app/services/api/usersApi";
-import { setUser } from "@/app/features/auth/authSlice";
+
+
 
 
 export default function Navbar() {
@@ -37,19 +34,13 @@ export default function Navbar() {
   const [menuFiltros, setMenuFiltros] = useState(false);
   const itemsC = useSelector(selectItemsc);
   const theme = useSelector(selectTheme);
-  const UserS = useSelector(selectUsername);
-  const UserFilters = useSelector(selectFilter);
+  const Username = useSelector(selectUsername);
+  const UserRole = useSelector(selectRole);
   const dispatch = useDispatch<AppDispatch>();
   const bgClass = themeBgMap[theme];
   const bgClassOpa = themeBgOpa[theme];
   const router = useRouter();
-  const { data: profile, isLoading, error } = useProfileQuery();
 
-
-  useEffect(() => {
-    if(profile)
-       dispatch( setUser ({ isAuthenticated: true, user: profile.user, username: profile.username})) ;
-  }, [profile,dispatch]);
 
   useEffect(() => {
     document.body.classList.remove("bg-woman", "bg-men", "bg-boy", "bg-all");
@@ -185,7 +176,7 @@ export default function Navbar() {
 
       {/* Auth + Carrito en desktop */}
 
-      {!UserS && (
+      {UserRole!=="ADMIN" && (
         <div className="hidden md:flex items-center gap-4  text-white mr-6">
           <Link
             href="/login"
@@ -209,16 +200,17 @@ export default function Navbar() {
 
 
 
-      {UserS && (
+        
         <div className="flex flex-wrap gap-4">
+           {Username && (
           <Link
             href="/profile"
             className="flex items-center gap-2 ml-4 sm:ml-0 hover:underline"
           >
             <FaUserCircle size={25} />
-            {UserS}
-          </Link>
-
+            {Username}
+          </Link>)}
+          {UserRole==="ADMIN"  && (<>
           <Link
               href={{
               pathname: "/newproduct",
@@ -236,9 +228,9 @@ export default function Navbar() {
           >
             <GoSignOut size={25} />
             {"Salir"}
-          </Link>
+          </Link> </>)}
         </div>
-      )}
+      
 
       <Link
         href="/shopping"
@@ -334,7 +326,7 @@ export default function Navbar() {
             </label>
           </div>
 
-          {UserS && <Link
+          {UserRole==="ADMIN"  && <Link
             href={{
               pathname: "/newproduct",
               query: { mode: "create" }
@@ -351,7 +343,7 @@ export default function Navbar() {
           <div className="md:flex items-center gap-4 ml-auto  text-black mr-6">
             <Link
               href="/login"
-              className="flex items-center mt-4 gap-2 hover:underline"
+              className="flex items-center mt-4 gap-2  bg-white rounded shadow-2xl w-full p-2  hover:underline"
               onClick={() => setMenuOpen(false)}
             >
               <CiLogin />
@@ -359,7 +351,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/registro"
-              className="flex items-center gap-2 mt-4 hover:underline"
+              className="flex items-center gap-2 mt-4  bg-white rounded shadow-2xl w-full p-2  hover:underline"
               onClick={() => setMenuOpen(false)}
             >
               <RxInput />
@@ -369,7 +361,7 @@ export default function Navbar() {
             <Link
               href="/logout"
               onClick={() => setMenuOpen(false)}
-              className="flex flex-wrap items-center my-4 gap-2 hover:underline"
+              className="flex flex-wrap items-center my-4 gap-2 bg-white rounded shadow-2xl w-full p-2 hover:underline"
             >
               <GoSignOut size={25} />
               {"Salir"}

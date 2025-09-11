@@ -26,7 +26,8 @@ export default function Login () {
       try {
         
         const response = await Login(data).unwrap();
-        dispatch( setUser ({ isAuthenticated: true, user: response.user, username: response.username})) ;
+        console.log(response)
+        dispatch( setUser ({ isAuthenticated: true, user: response.user, username: response.username , role: response.role})) ;
 
         router.push("/");
       } catch (error) {

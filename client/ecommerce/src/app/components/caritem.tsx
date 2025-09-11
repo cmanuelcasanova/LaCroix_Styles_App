@@ -81,7 +81,7 @@ export const Caritem = ({
 </div>
       <div className="flex flex-col items-center justify-center ">
         <h1 className="px-2">Precio: </h1>
-        <h1 className="font-bold text-3xl px-2">{precio * cant} $</h1>
+        <h1 className="font-bold text-2xl px-2">{precio * cant} $</h1>
       </div>
     </div>
   );

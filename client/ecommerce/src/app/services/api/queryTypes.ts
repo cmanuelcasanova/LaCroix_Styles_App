@@ -40,6 +40,7 @@ export interface AuthResponse {
   userId: string;
   username: string;
   user: string;
+  role: string
 }
 
 export interface LoginData {
@@ -56,5 +57,14 @@ export interface RegisterData {
 export interface SecData {
   id: number;
   name: string;
+  
+}
+
+export interface ShoppingData {
+  title: string;
+  talla: string;
+  cantidad: number;
+  precio: number;
+  userId: number;
   
 }

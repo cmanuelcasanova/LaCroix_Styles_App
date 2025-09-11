@@ -2,6 +2,7 @@
 
 import { FaCheckCircle } from "react-icons/fa";
 import { MdDangerous } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 
 type MoldeProps = {
@@ -17,6 +18,9 @@ tipo: boolean;
 
 
 export default function AlertModal( { onClose , tipo }: MoldeProps) {
+
+const router = useRouter();
+
   return (
     <div className="fixed inset-0 z-10 bg-black/40 blackdrop-blur-sm flex flex-col justify-center items-center w-dvw sm:w-full h-full sm:h-full">
          <div className="bg-white p-5 rounded-2xl shadow-lg flex flex-col justify-center items-center gap-2 w-[300px] h-[400px]">
@@ -32,7 +36,7 @@ export default function AlertModal( { onClose , tipo }: MoldeProps) {
             
             <button
               className= {`btn btn-light w-full rounded p-2 mt-4 ${tipo ? "bg-green-400" : "bg-red-600"}`}
-              onClick={onClose}
+              onClick={()=> {onClose(); router.push("/") }}
             >
               Aceptar
             </button>

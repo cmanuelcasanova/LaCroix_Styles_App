@@ -13,10 +13,10 @@ import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { selectUsername } from "../features/auth/authSelectors";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
-import { useRemoveItemMutation } from "@/app/services/api/productsApi.ts";
-import { useDeletePhotoMutation } from "../services/api/productsApi.ts";
+import { useRemoveItemMutation , useDeletePhotoMutation } from "@/app/services/api/productsApi";
 import  ConfirmationtModal  from "@/app/components/confirmation"
 import Link from "next/link";
+import { useCreateItemCarMutation } from "@/app/services/api/ShoppingApi"
 
 type CardProps = {
   id: number;
@@ -47,6 +47,7 @@ export default function Card({
   const [deletePhoto] = useDeletePhotoMutation();
   const [modal, setModal] = useState<boolean>(false);
   const [borrar, setBorrar] = useState<boolean>(false);
+  const [addItemCar] = useCreateItemCarMutation ();
 
 
   useEffect(() => {
@@ -69,6 +70,26 @@ export default function Card({
         })
       );
       setCarrito(true);
+
+      try {
+        addItemCar({
+        title: title,
+        talla: talla,
+        cantidad: 1,
+        precio: precio,
+        userId: 1
+      }).unwrap();
+    }catch(error){console.log(error)}
+
+    
+
+
+
+
+
+
+
+
     } else {
       dispatch(removeItem(id));
       setCarrito(false);
