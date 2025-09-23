@@ -65,6 +65,20 @@ export interface ShoppingData {
   talla: string;
   cantidad: number;
   precio: number;
+  productId: number;
+  
+}
+
+export interface ShoppingDataQuery {
+  id: number,
+  title: string;
+  talla: string;
+  cantidad: number;
+  precio: number;
+  productId: number;
   userId: number;
+  Product: {imageUrl: string}
+
+
   
 }

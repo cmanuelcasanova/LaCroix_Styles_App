@@ -1,16 +1,11 @@
 import { baseApi } from "./baseApi";
-import { ShoppingData } from './queryTypes';
+import { ShoppingData, ShoppingDataQuery } from './queryTypes';
 
 
 export const shoppingApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllItemsCar: builder.query<void,void>({
+    getAllItemsCar: builder.query<ShoppingDataQuery[],void>({
       query: () => `/auth/shopping`,
-      providesTags: ["Shopping"],
-    }),
-
-    getItemsCar: builder.query<void, {id:string}>({
-      query: ({id}) => `/auth/shopping/${id}`,
       providesTags: ["Shopping"],
     }),
 
@@ -19,6 +14,14 @@ export const shoppingApi = baseApi.injectEndpoints({
         url: "/auth/shopping",
         method: "POST",
         body: credentials,
+      }),
+      invalidatesTags: ["Shopping"],
+    }),
+    deleteItemCar: builder.mutation<void, {productId:number}>({
+      query: ({productId}) => ({
+        url: `/auth/shopping/${productId}`,
+        method: "DELETE",
+        
       }),
       invalidatesTags: ["Shopping"],
     }),
@@ -32,7 +35,7 @@ export const shoppingApi = baseApi.injectEndpoints({
 export const {
  useCreateItemCarMutation,
  useGetAllItemsCarQuery,
- useGetItemsCarQuery
+ useDeleteItemCarMutation
 
 } = shoppingApi;
 

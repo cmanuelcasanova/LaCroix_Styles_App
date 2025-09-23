@@ -11,12 +11,12 @@ import { CiMenuKebab } from "react-icons/ci";
 import { AppDispatch } from "../store";
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
-import { selectUsername } from "../features/auth/authSelectors";
+import { selectUsername } from  "@/app/features/auth/authSelectors"
 import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useRemoveItemMutation , useDeletePhotoMutation } from "@/app/services/api/productsApi";
 import  ConfirmationtModal  from "@/app/components/confirmation"
 import Link from "next/link";
-import { useCreateItemCarMutation } from "@/app/services/api/ShoppingApi"
+import { useCreateItemCarMutation , useDeleteItemCarMutation } from "@/app/services/api/ShoppingApi"
 
 type CardProps = {
   id: number;
@@ -42,12 +42,13 @@ export default function Card({
   const themeTextCard = themeText[theme];
   const itemsC = useSelector(selectItemsc);
   const [detail, setDetails] = useState<boolean>(false);
-  const UserS = useSelector(selectUsername);
+  const User = useSelector(selectUsername);
   const [DeleteItem] = useRemoveItemMutation();
   const [deletePhoto] = useDeletePhotoMutation();
   const [modal, setModal] = useState<boolean>(false);
   const [borrar, setBorrar] = useState<boolean>(false);
   const [addItemCar] = useCreateItemCarMutation ();
+  const [deleteItemCar] = useDeleteItemCarMutation();
 
 
   useEffect(() => {
@@ -69,31 +70,35 @@ export default function Card({
           talla: talla,
         })
       );
+      
       setCarrito(true);
 
-      try {
-        addItemCar({
-        title: title,
-        talla: talla,
-        cantidad: 1,
-        precio: precio,
-        userId: 1
-      }).unwrap();
-    }catch(error){console.log(error)}
-
-    
-
-
-
-
-
-
-
-
+      if (User) {
+          try {
+          
+            addItemCar({
+            title: title,
+            talla: talla,
+            cantidad: 1,
+            precio: precio,
+            productId: id
+          }).unwrap();
+        }catch(error){console.log(error)}
+      }
     } else {
       dispatch(removeItem(id));
       setCarrito(false);
+      
+      if (User) {
+      try {
+      
+        deleteItemCar({productId: id}).unwrap();
+        }catch(error){console.log(error)}
+      }
+
+
     }
+
   };
 
 
@@ -145,7 +150,7 @@ export default function Card({
             info...
           </Link>
 
-          {UserS && (
+          {User && (
             <>
               <Link
                 href={{

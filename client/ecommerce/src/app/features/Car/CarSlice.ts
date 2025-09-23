@@ -15,7 +15,9 @@ export const CarSlice = createSlice({
   initialState,
   reducers: {
     addItem: (state, action: PayloadAction<Car>) => {
-      state.list.push(action.payload);
+
+      const repeat = state.list.some( item => item.id == action.payload.id)
+      if(!repeat){ state.list.push(action.payload)};
     },
     removeItem: (state, action: PayloadAction<number>) => {
       state.list = state.list.filter((item) => item.id !== action.payload);

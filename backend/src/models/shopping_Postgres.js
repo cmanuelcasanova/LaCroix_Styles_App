@@ -23,6 +23,10 @@ export const ShoppingModel = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    productId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -35,6 +39,7 @@ export const ShoppingModel = (sequelize) => {
   
   Shopping.associate = (models) => {
     Shopping.belongsTo(models.User, { foreignKey: 'userId' });
+    Shopping.belongsTo(models.Product, { foreignKey: 'productId' });
   };
 
   return Shopping;

@@ -16,10 +16,12 @@ import { TbArrowBackUp } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useDispatch } from "react-redux";
+import { selectUsername } from  "@/app/features/auth/authSelectors"
 import { addItem, removeItem} from "@/app/features/Car/CarSlice";
 import { selectRole } from "@/app/features/auth/authSelectors";
 import { useRemoveItemMutation , useDeletePhotoMutation , useGetItemQuery} from "@/app/services/api/productsApi";
 import  ConfirmationtModal  from "@/app/components/confirmation"
+import { useCreateItemCarMutation , useDeleteItemCarMutation } from "@/app/services/api/ShoppingApi"
 
 
 
@@ -44,6 +46,9 @@ export default function Item({ id }: itemProps) {
   const [deletePhoto] = useDeletePhotoMutation();
   const [modal, setModal] = useState<boolean>(false);
   const [borrar, setBorrar] = useState<boolean>(false);
+  const [addItemCar] = useCreateItemCarMutation ();
+  const [deleteItemCar] = useDeleteItemCarMutation();
+  const user = useSelector(selectUsername);
 
   const {
     data: item,
@@ -92,10 +97,28 @@ export default function Item({ id }: itemProps) {
       
     dispatch(addItem({ id: item.id, cant: 1, precio: item.precio, imgUrl: item.imageUrl, title: item.title, talla: item.talla })) 
     setCarrito(true)
+    if (user) {
+      try {
+        addItemCar({
+        title: item.title,
+        talla: item.talla,
+        cantidad: 1,
+        precio: item.precio,
+        productId: item.id
+      }).unwrap();
+    }catch(error){console.log(error)}
+  }
+
     }else{
 
        dispatch(removeItem(item.id))
       setCarrito(false)
+       if (user) {
+      try {
+      
+        deleteItemCar({productId: item.id}).unwrap();
+        }catch(error){console.log(error)}
+       }
     }
   
   };

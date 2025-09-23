@@ -16,7 +16,6 @@ export const SecModel = (sequelize) => {
   
   Seccion.associate = (models) => {
     Seccion.hasMany(models.Product, { foreignKey: 'seccionId' });
-    Seccion.hasMany(models.Tag, { foreignKey: 'seccionId' });
 
   };
 

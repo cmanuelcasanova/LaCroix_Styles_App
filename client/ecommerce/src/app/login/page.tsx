@@ -2,11 +2,16 @@
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useLoginMutation } from "@/app/services/api/usersApi";
-
+import { useGetAllItemsCarQuery } from "@/app/services/api/ShoppingApi";
 import { setUser } from "@/app/features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { addItem } from "@/app/features/Car/CarSlice";
+import { selectItemsc } from "@/app/features/Car/CarSelector";
+import { useSelector } from "react-redux";
+import { useCreateItemCarMutation } from "@/app/services/api/ShoppingApi"
 
 
 type FormData = {
@@ -14,37 +19,101 @@ type FormData = {
   password: string;
 };
 
-export default function Login () {
+export default function Login() {
   const { register, handleSubmit } = useForm<FormData>();
   const dispatch = useDispatch<AppDispatch>();
+  const { data: itemsCarBD, refetch } = useGetAllItemsCarQuery();
+  const router = useRouter();
+  const [Login] = useLoginMutation();
+  const itemsCarrito = useSelector(selectItemsc);
+  const [addItemBD] = useCreateItemCarMutation ();
 
- const router = useRouter();
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      const response = await Login(data).unwrap();
+      console.log(response);
+      dispatch(
+        setUser({
+          isAuthenticated: true,
+          user: response.user,
+          username: response.username,
+          role: response.role,
+        })
+      );
+      await refetch();
+      console.log(itemsCarBD);
+      router.push("/");
+    } catch (error) {
+      console.error("Error en el Login:", error);
+      alert("Error al Loguearse, Reintente");
+    }
+  });
 
-   const [Login] = useLoginMutation();
-  
-    const onSubmit = handleSubmit(async (data) => {
-      try {
-        
-        const response = await Login(data).unwrap();
-        console.log(response)
-        dispatch( setUser ({ isAuthenticated: true, user: response.user, username: response.username , role: response.role})) ;
+  useEffect(() => {
+    if (itemsCarBD) {
+      console.log(itemsCarBD);
 
-        router.push("/");
-      } catch (error) {
-        console.error("Error en el Login:", error);
-        alert("Error al Loguearse, Reintente")
+      if (itemsCarBD.length>0) {
+          
+         itemsCarBD.forEach(element => {
+
+          dispatch(
+                  addItem({
+                    id: element.productId,
+                    cant: 1,
+                    precio: element.precio,
+                    imgUrl: element.Product.imageUrl,
+                    title: element.title,
+                    talla: element.talla,
+                  })
+                );
+
+        });
+
+
       }
-    });
+    }
+
+    if(itemsCarrito.length>0) {
+
+      itemsCarrito.forEach(element => {
+
+        
+          try {
+          
+            addItemBD({
+            title: element.title,
+            talla: element.talla,
+            cantidad: element.cant,
+            precio: element.precio,
+            productId: element.id
+          }).unwrap();
+        }catch(error){console.log(error)}
+      
+
+
+
+      } )
+
+
+
+
+    }
+
+
+
+  }, [itemsCarBD, dispatch,itemsCarrito,addItemBD ]);
 
   return (
     <div className="flex justify-center items-center min-h-screen mx-4 mt-10 ">
       <div className="h-140 w-100 border bg-white border-[#202b38] p-2 rounded-3xl hover:border-[#677483] transition-colors duration-800">
         <h1 className="  text-4xl pl-4 mt-12">Sing in</h1>
 
-
-
         <div className="text-[#8092a1] flex flex-col p-4 pt-10">
-          <form onSubmit={onSubmit} className="w-full flex flex-col items center">
+          <form
+            onSubmit={onSubmit}
+            className="w-full flex flex-col items center"
+          >
             <label className="flex flex-col mb-4">
               Email
               <input
@@ -81,22 +150,20 @@ export default function Login () {
               >
                 Login
               </button>
-
-             
             </div>
 
-             <label className="mt-20 ">
-                <h1 className="mt-20 flex flex-warp gap-2 text-sm ">
-                  Dont have an account?{" "}
-                  <Link href="/signup">
-                    {" "}
-                    <h1 className="font-extrabold text-[#ff288b]">Sign Up</h1>
-                  </Link>{" "}
-                </h1>
-              </label>
+            <label className="mt-20 ">
+              <h1 className="mt-20 flex flex-warp gap-2 text-sm ">
+                Dont have an account?{" "}
+                <Link href="/signup">
+                  {" "}
+                  <h1 className="font-extrabold text-[#ff288b]">Sign Up</h1>
+                </Link>{" "}
+              </h1>
+            </label>
           </form>
         </div>
       </div>
     </div>
   );
-};
+}

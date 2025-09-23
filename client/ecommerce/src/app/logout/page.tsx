@@ -7,6 +7,7 @@ import { logout as logout_Auth} from "@/app/features/auth/authSlice";
 import { AppDispatch } from "../store";
 import { useDispatch } from "react-redux";
 import { baseApi  } from "@/app/services/api/baseApi"
+import { clearItems } from "@/app/features/Car/CarSlice";
 
 
 export default function Logout() {
@@ -22,6 +23,7 @@ export default function Logout() {
         dispatch(  logout_Auth()) ;
         localStorage.removeItem('token');
         dispatch(baseApi.util.resetApiState());
+        dispatch(clearItems())
       } catch (error) {
         console.error("Error al cerrar sesión:", error);
       } finally {
