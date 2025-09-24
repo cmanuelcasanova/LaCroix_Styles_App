@@ -5,6 +5,8 @@ import { IoRemoveCircle } from "react-icons/io5";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { removeItem, updateItem } from "@/app/features/Car/CarSlice";
+import { useDeleteItemCarMutation , useUpdateItemCarMutation } from "@/app/services/api/ShoppingApi"
+
 
 type caritem = {
   id: number;
@@ -23,26 +25,39 @@ export const Caritem = ({
   imgurl,
   cant,
 }: caritem) => {
+  
   const dispatch = useDispatch();
-
   const imgurlmin = imgurl.replace("LaCroix/", "LaCroix/tr:h-100/");
-
+  const [deleteItemCar] = useDeleteItemCarMutation();
+  const [updateItemCarBD] = useUpdateItemCarMutation();
  
 
   const reduce = () => {
     if (cant > 1) {
       dispatch(updateItem({ id: id, cant: cant - 1,precio: precio  }));
+
+      try {
+        updateItemCarBD({productId: id, tipo:'SUB'}).unwrap();
+      }catch(error){console.log(error)}
     }
     }
 
   const addm = () => {
 
       dispatch(updateItem({ id: id, cant: cant + 1 , precio: precio }));
+      try {
+        updateItemCarBD({productId: id, tipo:'ADD'}).unwrap();
+      }catch(error){console.log(error)}
     
   };
 
   const remove = () => {
     dispatch(removeItem(id));
+    
+    try {
+        deleteItemCar({productId: id}).unwrap();
+        }catch(error){console.log(error)}
+      
   };
 
   return (

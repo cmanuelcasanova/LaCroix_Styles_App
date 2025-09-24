@@ -25,7 +25,15 @@ export const shoppingApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Shopping"],
     }),
-
+    
+    UpdateItemCar: builder.mutation<void, {productId:number, tipo: string }>({
+      query: ({productId , tipo}) => ({
+        url: `/auth/shopping/${productId}`,
+        method: "PATCH",
+        body: {tipo},
+      }),
+      invalidatesTags: ["Shopping"],
+    }),
 
 
   }),
@@ -35,7 +43,8 @@ export const shoppingApi = baseApi.injectEndpoints({
 export const {
  useCreateItemCarMutation,
  useGetAllItemsCarQuery,
- useDeleteItemCarMutation
+ useDeleteItemCarMutation,
+ useUpdateItemCarMutation
 
 } = shoppingApi;
 

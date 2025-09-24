@@ -41,7 +41,6 @@ export default function Login() {
         })
       );
       await refetch();
-      console.log(itemsCarBD);
       router.push("/");
     } catch (error) {
       console.error("Error en el Login:", error);
@@ -51,7 +50,7 @@ export default function Login() {
 
   useEffect(() => {
     if (itemsCarBD) {
-      console.log(itemsCarBD);
+    
 
       if (itemsCarBD.length>0) {
           
@@ -60,7 +59,7 @@ export default function Login() {
           dispatch(
                   addItem({
                     id: element.productId,
-                    cant: 1,
+                    cant: element.cantidad,
                     precio: element.precio,
                     imgUrl: element.Product.imageUrl,
                     title: element.title,

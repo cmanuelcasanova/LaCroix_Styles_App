@@ -1,12 +1,12 @@
 
 export interface qdata {
     title: string,
-    seccionId: number
+    seccionId: number,
     imageUrl:string,
-    talla:string
-    color: string
-    category: string
-    precio:number
+    talla:string[],
+    color: string,
+    category: string,
+    precio:number,
     userId: string | null
 }
 
@@ -15,7 +15,7 @@ export interface qdataUpdate {
     title: string,
     seccionId: number
     imageUrl:string,
-    talla:string
+    talla:string[]
     color: string
     category: string
     precio:number
@@ -27,7 +27,7 @@ export interface product {
     title: string,
     seccionId: number
     imageUrl:string,
-    talla:string
+    Tallas:{name:string}[]
     precio:number
     category: string
     color: string
@@ -40,7 +40,7 @@ export interface AuthResponse {
   userId: string;
   username: string;
   user: string;
-  role: string
+  role: string;
 }
 
 export interface LoginData {

@@ -1,28 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { useDispatch } from "react-redux";
-import { addItem, removeItem } from "@/app/features/Car/CarSlice";
 import { useEffect, useState } from "react";
-import { FaCartShopping } from "react-icons/fa6";
-import { TbShoppingCartOff } from "react-icons/tb";
 import { themeBgMap, themeBgMapHOpacity, themeText } from "@/app/themeStyles";
 import { CiMenuKebab } from "react-icons/ci";
-import { AppDispatch } from "../store";
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { selectUsername } from  "@/app/features/auth/authSelectors"
-import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useRemoveItemMutation , useDeletePhotoMutation } from "@/app/services/api/productsApi";
 import  ConfirmationtModal  from "@/app/components/confirmation"
 import Link from "next/link";
-import { useCreateItemCarMutation , useDeleteItemCarMutation } from "@/app/services/api/ShoppingApi"
+
 
 type CardProps = {
   id: number;
   title: string;
   imageUrl: string;
-  talla: string;
+  talla: {name:string}[];
   precio: number;
   onClick?: () => void;
 };
@@ -34,73 +28,21 @@ export default function Card({
   talla,
   id,
 }: CardProps) {
-  const dispatch = useDispatch<AppDispatch>();
-  const [carrito, setCarrito] = useState<boolean>(false);
+
   const theme = useSelector(selectTheme);
   const bgClass = themeBgMap[theme];
   const bgClassHOpa = themeBgMapHOpacity[theme];
   const themeTextCard = themeText[theme];
-  const itemsC = useSelector(selectItemsc);
   const [detail, setDetails] = useState<boolean>(false);
   const User = useSelector(selectUsername);
   const [DeleteItem] = useRemoveItemMutation();
   const [deletePhoto] = useDeletePhotoMutation();
   const [modal, setModal] = useState<boolean>(false);
   const [borrar, setBorrar] = useState<boolean>(false);
-  const [addItemCar] = useCreateItemCarMutation ();
-  const [deleteItemCar] = useDeleteItemCarMutation();
+  
 
-
-  useEffect(() => {
-    const find = itemsC.find((num) => num.id === id);
-    if (find) {
-      setCarrito(true);
-    }
-  }, [itemsC, id]);
-
-  const handleAdd = () => {
-    if (!carrito) {
-      dispatch(
-        addItem({
-          id: id,
-          cant: 1,
-          precio: precio,
-          imgUrl: imageUrl,
-          title: title,
-          talla: talla,
-        })
-      );
-      
-      setCarrito(true);
-
-      if (User) {
-          try {
-          
-            addItemCar({
-            title: title,
-            talla: talla,
-            cantidad: 1,
-            precio: precio,
-            productId: id
-          }).unwrap();
-        }catch(error){console.log(error)}
-      }
-    } else {
-      dispatch(removeItem(id));
-      setCarrito(false);
-      
-      if (User) {
-      try {
-      
-        deleteItemCar({productId: id}).unwrap();
-        }catch(error){console.log(error)}
-      }
-
-
-    }
-
-  };
-
+  
+  
 
    useEffect(() => {
     try {
@@ -182,12 +124,12 @@ export default function Card({
         <span className="font-bold">
           Precio: <span className="text-black">$ {precio}</span>{" "}
         </span>
-        <span className="font-bold">
-          Talla: <span className="text-black">{talla} </span>
+        <span className="font-bold flex flex-wrap gap-2">
+          Talla: <span className="text-black flex flex-wrap gap-2"> { talla.map ((item , index) => <span key={index} className="bg-gray-300 rounded-full flex flex-wrap items-center justify-center h-[25px] w-[25px]"> {item.name} </span>) } </span>
         </span>
       </div>
 
-      <Link href={`/itemview/${id}`}>
+      <Link href={`/itemview/${id}`} className="mb-4">
         <Image
           className="rounded"
           src={imageUrl}
@@ -198,25 +140,7 @@ export default function Card({
         />
       </Link>
 
-      <div className="flex flex-wrap items-center justify-around gap-8 pt-4 ">
-        <button
-          onClick={handleAdd}
-          className={`flex flex-wrap items-center justify-center gap-2 text-white font-bold rounded px-4 py-1 ${bgClassHOpa} ${
-            carrito ? "bg-gray-500" : `bg-${bgClass}`
-          }  active:scale-95 transition-transform duration-150 ease-in-out`}
-        >
-          {carrito ? (
-            <>
-              {" "}
-              Quitar carrito <TbShoppingCartOff />{" "}
-            </>
-          ) : (
-            <>
-              Añadir carrito <FaCartShopping />{" "}
-            </>
-          )}
-        </button>
-      </div>
+      
     </div>
   
   );

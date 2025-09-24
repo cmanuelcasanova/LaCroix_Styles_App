@@ -20,6 +20,8 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { logout as logout_Auth} from "@/app/features/auth/authSlice";
+import { MultiValue, ActionMeta } from "react-select";
+
 
 
 
@@ -48,7 +50,7 @@ export default function NewProduct() {
   const router = useRouter();
   const [seccion, setSeccion] = useState<OptionType | null>(null);
   const [categoria, setCategoria] = useState<OptionTypeG | null>(null);
-  const [talla, setTalla] = useState< OptionTypeG | null>(null);
+  const [talla, setTalla] = useState< OptionTypeG[] | null>([]);
   const [foto, setFoto] = useState<string | null>(null);
   const [modal, setModal] = useState<boolean>(false);
   const [tipo,setTipo] = useState<boolean>(false)
@@ -81,7 +83,7 @@ useEffect(() => {
     setFoto(item?.imageUrl)
     setImagenUrl(item?.imageUrl)
     
-    setTalla ({label: TALLAS.find((c)=> item?.talla === c.value )?.label ?? item?.talla, value:item?.talla})
+    //setTalla (item?.talla )
     setColor ({label: item?.color, value: COLOR_PALETTE.find((c)=> item?.color === c.label )?.label ?? item?.color})
     setActualizar(true)
     if(item.category!==undefined) {
@@ -169,7 +171,7 @@ useEffect(() => {
         imageUrl: imagenUrl,
         seccionId: seccion.value,
         category: categoria.value,
-        talla: talla.value,
+        talla: talla.map(t => t.value),
         precio: data.precio,
         color: color.label,
         userId: profile.userId
@@ -184,7 +186,7 @@ useEffect(() => {
         imageUrl: imagenUrl,
         seccionId: seccion.value,
         category: categoria.value,
-        talla: talla.value,
+        talla: [],
         precio: data.precio,
         color: color.label,
         userId: profile.userId
@@ -233,9 +235,6 @@ const handleChangeG = (selectedOption:  OptionTypeG | null, actionMeta: { name?:
     case 'categoria':
       setCategoria(selectedOption);
       break;
-    case 'talla':
-      setTalla(selectedOption);
-      break;
     case 'color':
       setColor(selectedOption);
       break;
@@ -243,6 +242,15 @@ const handleChangeG = (selectedOption:  OptionTypeG | null, actionMeta: { name?:
       console.warn('Campo no reconocido:', actionMeta.name);
   }
 };
+
+
+const handleChangeTallas = (
+  selectedOptions: MultiValue<OptionTypeG>
+) => {
+  setTalla([...selectedOptions]);
+};
+
+
 
 const getCategoryOptions = (seccionValue: number | undefined) => {
   switch (seccionValue) {
@@ -352,6 +360,7 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
             
           />
 
+
           <label className="" htmlFor="talla">
             Talla
           </label>
@@ -363,12 +372,16 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
             inputId="talla"
             name="talla"
             value={talla}
-            onChange={handleChangeG}
+            onChange={handleChangeTallas}
             options={TALLAS}
+            isMulti
             placeholder="Selecciona una Talla"
             required
             
           />
+
+
+
           <label className="" htmlFor="color">
             Color
           </label>

@@ -1,10 +1,25 @@
 import { db } from "../models/index.js";
+import { Op } from "sequelize";
+
 
 export const createProduct = async (req, res) => {
+
+  
   try {
     
     const { title, imageUrl, talla, precio,userId, seccionId,color, category } = req.body;
-    const product = await db.Product.create({ title, imageUrl, talla, precio, userId, seccionId,color, category });
+    const product = await db.Product.create({ title, imageUrl, precio, userId, seccionId,color, category });
+    const tallas = await db.Talla.findAll({ where: {name: {[Op.in]: talla }  }});
+    
+    const ids = tallas.map(t => t.id);
+
+    for (const tallaId of ids) {
+      await db.Product_Talla.create({ProductId: product.id, TallaId: tallaId });
+    }
+
+
+
+    
     res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear Producto:", err.message);
@@ -25,6 +40,13 @@ export const getProduct = async (req, res) => {
       attributes: ['id', 'name'],
     },
 
+   {
+    model: db.Talla,
+    attributes: ['name'],
+    through: { attributes: [] }  
+  }
+
+
   ],
     });
     res.status(201).json(product);
@@ -37,7 +59,11 @@ export const getProduct = async (req, res) => {
 export const findProduct = async (req, res) => {
   try {
     
-    const product = await db.Product.findByPk(req.params.id);
+    const product = await db.Product.findByPk(req.params.id, { include: [ {
+    model: db.Talla,
+    attributes: ['name'],
+    through: { attributes: [] }  
+  }]}) ;
     res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);

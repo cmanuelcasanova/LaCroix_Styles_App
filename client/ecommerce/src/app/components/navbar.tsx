@@ -64,6 +64,7 @@ export default function Navbar() {
 
   const cartCount = itemsC.length;
 
+
   return (
     <nav
       className={`px-4 py-1 flex items-center w-screen justify-between fixed top-0 z-50 text-white font-bold ${bgClassOpa}`}

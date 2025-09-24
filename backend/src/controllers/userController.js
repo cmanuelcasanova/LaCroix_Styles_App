@@ -116,7 +116,7 @@ export const getprofile = async (req, res) => {
       username: user.username,
       userId: user.id,
       email: user.email,
-      email: user.role,
+      role: user.role,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });

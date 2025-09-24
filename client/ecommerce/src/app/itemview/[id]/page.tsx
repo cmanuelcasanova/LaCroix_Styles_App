@@ -49,6 +49,7 @@ export default function Item({ id }: itemProps) {
   const [addItemCar] = useCreateItemCarMutation ();
   const [deleteItemCar] = useDeleteItemCarMutation();
   const user = useSelector(selectUsername);
+  const [selectedTallas, setSelectedTallas] = useState<string[]>([])
 
   const {
     data: item,
@@ -80,6 +81,7 @@ export default function Item({ id }: itemProps) {
     
   };
 
+  console.log(item)
   useEffect(() => {
     const find = itemsC.find((num) => num.id === item?.id);
     if (find) {
@@ -153,9 +155,13 @@ export default function Item({ id }: itemProps) {
 
         <h1 className="mr-auto mt-4 mb-2"> TALLA: </h1>
 
-        <div className="flex flex-col items-center justify-center h-[40px] w-[40px] rounded-full mr-auto font-bold bg-gray-300 ">
-          {item.talla}
-        </div>
+        <div className="flex flex-wrap gap-2 mr-auto">
+        {   item.Tallas.map( (element, index) =>   
+        <div key={index} className="flex flex-col items-center justify-center h-[40px] w-[40px] rounded-full mr-auto font-bold bg-gray-300 ">
+          { element.name}
+        </div>)
+        }
+      </div>
 
         <h1 className="mr-auto mt-4 mb-2"> DETALLES: </h1>
 

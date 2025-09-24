@@ -20,10 +20,6 @@ export const ProductModel = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    talla: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     color: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -47,6 +43,8 @@ export const ProductModel = (sequelize) => {
     Product.belongsTo(models.User, { foreignKey: 'userId' });
     Product.belongsTo(models.Seccion, { foreignKey: 'seccionId' });
     Product.hasMany(models.Shopping, { foreignKey: 'productId' }); 
+    Product.belongsToMany(models.Talla, { through: models.Product_Talla });
+
   };
 
   return Product;

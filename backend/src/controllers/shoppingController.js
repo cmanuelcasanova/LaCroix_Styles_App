@@ -26,7 +26,7 @@ export const createShopping = async (req, res) => {
   try {
     const { title, talla, cantidad, precio ,productId } = req.body;
     const ItemCar = await db.Shopping.findOrCreate
-    ({where:{ title, talla, cantidad , precio, userId:req.user.id, productId},
+    ({where:{ userId:req.user.id, productId},
 
       default:{ title, talla, cantidad , precio } }
     );
@@ -52,3 +52,23 @@ export const deleteItems = async (req, res) => {
 };
 
 
+
+export const updateItems = async (req, res) => {
+
+   try {
+    const item = await db.Shopping.findOne( {where: { 
+      userId: req.user.id,
+      productId: req.params.productId} });
+    if (item) {
+     
+      if(req.body.tipo ==='ADD') {item.cantidad = item.cantidad + 1;}
+      if(req.body.tipo ==='SUB') {item.cantidad = item.cantidad - 1;}
+      await item.save();
+    }
+
+    res.status(204).send(true);
+  } catch (err) {
+    console.error("❌ Error al Actualizar Item del Carrito:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -43,7 +43,8 @@ export const TALLAS: OptionType[] = [
 ];
 
 export const CATEGORY: OptionType[] = [
-  { value: "", label: "XS" },
+   { value: "Unique", label: "Unique" },
+  { value: "XS", label: "XS" },
   { value: "S", label: "S" },
   { value: "M", label: "M" },
   { value: "L", label: "L" },

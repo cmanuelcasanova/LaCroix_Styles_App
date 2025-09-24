@@ -1,7 +1,7 @@
 "use client";
 import Card from "./components/card";
 import ImageSlider from "./components/ImageSlider";
-import { useGetItemsQuery } from './services/api/productsApi.ts'
+import { useGetItemsQuery } from '@/app/services/api/productsApi'
 import  ErrorConection  from "../app/components/errorConection"
 import LoadingModal from "./components/Loadingpage";
 import { useSelector } from "react-redux";
@@ -39,8 +39,9 @@ export default function Home() {
  const [allProducts, setAllProducts] = useState<product[] | undefined>([]);
  const [filteredProducts, setFilteredProducts] = useState<product[] | undefined>([]);
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
-const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile } = useProfileQuery();
+ const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile } = useProfileQuery();
 
+ console.log(Productos)
 
   useEffect(() => {
    
@@ -150,7 +151,7 @@ if (error) return <ErrorConection />;
             key={product.id}
             title={product.title}
             imageUrl={product.imageUrl}
-            talla={product.talla}
+            talla={product.Tallas}
             precio={Number(product.precio)}
             id={(product.id)}
           />
