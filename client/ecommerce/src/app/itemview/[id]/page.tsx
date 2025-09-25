@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-
+import { VscPassFilled } from "react-icons/vsc";
 import { useState, useEffect} from "react";
 import LoadingModal from "../../components/Loadingpage";
 import { useParams } from "next/navigation";
 import { skipToken } from "@reduxjs/toolkit/query";
+import toast, { Toaster } from 'react-hot-toast';
 import { themeBg , themeBgMapHOpacity } from "@/app/themeStyles";
 import { COLOR_PALETTE } from "@/app/components/params"
 import { useSelector } from "react-redux";
@@ -26,12 +27,9 @@ import { useCreateItemCarMutation , useDeleteItemCarMutation } from "@/app/servi
 
 
 
-interface itemProps {
-  id: string;
-}
 
-export default function Item({ id }: itemProps) {
-  //const theme = useSelector(selectTheme);
+
+export default function Item() {
   const params = useParams();
   const id_item = params?.id?.toString();
   const UserRole = useSelector(selectRole);
@@ -46,8 +44,8 @@ export default function Item({ id }: itemProps) {
   const [deletePhoto] = useDeletePhotoMutation();
   const [modal, setModal] = useState<boolean>(false);
   const [borrar, setBorrar] = useState<boolean>(false);
-  const [addItemCar] = useCreateItemCarMutation ();
-  const [deleteItemCar] = useDeleteItemCarMutation();
+  const [addItemCarBD] = useCreateItemCarMutation ();
+  const [deleteItemCarBD] = useDeleteItemCarMutation();
   const user = useSelector(selectUsername);
   const [selectedTallas, setSelectedTallas] = useState<string[]>([])
 
@@ -81,55 +79,78 @@ export default function Item({ id }: itemProps) {
     
   };
 
-  console.log(item)
-  useEffect(() => {
-    const find = itemsC.find((num) => num.id === item?.id);
-    if (find) {
-      setCarrito(true);
-    }
-  }, [itemsC, item?.id]);
+
+
 
   if (isLoading || isFetching) return <LoadingModal />;
   if (error || !item) return <p>Artículo no encontrado</p>;
 
   const handleAdd = () => {
     
+    if(selectedTallas.length==0){
+
+      toast('Debe seleccionar talla...')
+      return
+    }
+
     if(!carrito){ 
  
-      
-    dispatch(addItem({ id: item.id, cant: 1, precio: item.precio, imgUrl: item.imageUrl, title: item.title, talla: item.talla })) 
-    setCarrito(true)
+      toast( '​🟢​ Agregado al carrito')
+      selectedTallas.forEach ( t =>  { 
+    dispatch(addItem({ id: item.id + t, idProduct:item.id, cant: 1, precio: item.precio, imgUrl: item.imageUrl, title: item.title, talla: t })) 
+      })
+
+    setSelectedTallas([])
     if (user) {
-      try {
-        addItemCar({
-        title: item.title,
-        talla: item.talla,
-        cantidad: 1,
-        precio: item.precio,
-        productId: item.id
-      }).unwrap();
-    }catch(error){console.log(error)}
+       
+      selectedTallas.forEach ( t =>  { 
+        try {
+          addItemCarBD({
+          title: item.title,
+          talla: t,
+          cantidad: 1,
+          precio: item.precio,
+          productId: item.id
+        }).unwrap();
+
+      }catch(error){console.log(error)}
+
+    })
   }
 
     }else{
-
-       dispatch(removeItem(item.id))
+       selectedTallas.forEach (t => {
+       dispatch(removeItem(item.id + t))
+       
+      })
       setCarrito(false)
+      setSelectedTallas([])
        if (user) {
       try {
       
-        deleteItemCar({productId: item.id}).unwrap();
+        deleteItemCarBD({productId: item.id}).unwrap();
         }catch(error){console.log(error)}
        }
     }
   
   };
 
+
+  const tonglechange = (item:string) => {
+
+    if(!selectedTallas.includes(item)){ 
+      setSelectedTallas([...selectedTallas,item])}
+      else{ 
+        setSelectedTallas(prevItems => prevItems.filter(j => j!== item));
+       }
+
+  }
   
 
   return (
+    
     <div className={`flex flex-col items-center justify-center `}>
-
+        <Toaster />
         {modal && <ConfirmationtModal onClose={() => setModal(false)} confirm={() => {setBorrar(true)}} />}
       <div className="bg-white flex flex-col items-center shadow-2xl mt-20 rounded-2xl p-4 mb-6 mx-4 w-dwv">
         <Image
@@ -156,12 +177,17 @@ export default function Item({ id }: itemProps) {
         <h1 className="mr-auto mt-4 mb-2"> TALLA: </h1>
 
         <div className="flex flex-wrap gap-2 mr-auto">
-        {   item.Tallas.map( (element, index) =>   
-        <div key={index} className="flex flex-col items-center justify-center h-[40px] w-[40px] rounded-full mr-auto font-bold bg-gray-300 ">
-          { element.name}
-        </div>)
-        }
-      </div>
+          {item.Tallas.map( (element, index) =>   
+            <div 
+                key={index} 
+                className={`flex flex-col items-center justify-center h-[40px] w-[40px] rounded-full mr-auto font-bold ${(selectedTallas.includes(element.name)) ? "bg-green-300 hover:bg-green-200  ": "bg-gray-300 hover:bg-gray-200"} `}
+                onClick={()=>tonglechange (element.name)}
+                >
+              
+                { element.name}
+            </div>)
+          }
+        </div>
 
         <h1 className="mr-auto mt-4 mb-2"> DETALLES: </h1>
 
@@ -174,19 +200,11 @@ export default function Item({ id }: itemProps) {
 
         <button
           onClick={handleAdd}
-          className={` ${carrito ? 'bg-gray-500' : tBg} rounded text-white w-full p-2 flex items-center gap-2 justify-center ${tBgH} active:scale-95 transition-transform duration-150 ease-in-out`}
+          className={`rounded ${tBg} text-white w-full p-2 flex items-center gap-2 justify-center ${tBgH} active:scale-95 transition-transform duration-150 ease-in-out`}
         >
-          {" "}
-          {carrito ? (
-            <>
-              {" "}
-              Quitar carrito <TbShoppingCartOff className="" />{" "}
-            </>
-          ) : (
-            <>
-              Añadir carrito <FaCartShopping className="" />{" "}
-            </>
-          )}{" "}
+                      
+              Añadir carrito <FaCartShopping className="" />
+          
         </button>
 
         {UserRole==="ADMIN" && <>

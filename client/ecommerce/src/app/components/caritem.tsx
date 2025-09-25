@@ -6,12 +6,13 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { removeItem, updateItem } from "@/app/features/Car/CarSlice";
 import { useDeleteItemCarMutation , useUpdateItemCarMutation } from "@/app/services/api/ShoppingApi"
-
+import Link from "next/link";
 
 type caritem = {
-  id: number;
+  id: string;
   title: string;
   precio: number;
+  idProduct: number;
   talla: string;
   imgurl: string;
   cant: number;
@@ -20,6 +21,7 @@ type caritem = {
 export const Caritem = ({
   id,
   title,
+  idProduct,
   precio,
   talla,
   imgurl,
@@ -62,13 +64,16 @@ export const Caritem = ({
 
   return (
     <div className="flex flex-wrap justify-center items-center rounded-2xl bg-white w-dvw h-[120px] sm:w-full mb-4">
-      <Image
-        src={imgurlmin}
-        height={100}
-        width={100}
-        alt="Logo"
-        className="object-contain rounded-l-2xl p-2"
-      />
+      
+       <Link href={`/itemview/${idProduct}`} className="">
+        <Image
+          src={imgurlmin}
+          height={100}
+          width={100}
+          alt="Logo"
+          className="object-contain rounded-l-2xl p-2"
+        />
+      </Link>
 
       <div className="flex flex-col sm:flex-row sm:flex-wrap sm:w-[400px] items-start ml-2 py-6 justify-start sm:gap-4 sm:pr-6">
         <div className="sm:mr-auto mr-10">

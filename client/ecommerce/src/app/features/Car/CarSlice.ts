@@ -15,17 +15,27 @@ export const CarSlice = createSlice({
   initialState,
   reducers: {
     addItem: (state, action: PayloadAction<Car>) => {
-
-      const repeat = state.list.some( item => item.id == action.payload.id)
-      if(!repeat){ state.list.push(action.payload)};
+      const repeat = state.list.some( item => (item.id === action.payload.id) )
+      
+      if(!repeat){ state.list.push(action.payload)
+      }else{ 
+          
+        const item = state.list.find((item) => item.id === action.payload.id);
+        if (item) {
+          item.cant = item.cant+1;
+        }
+      }
+      
     },
-    removeItem: (state, action: PayloadAction<number>) => {
+   
+  
+    removeItem: (state, action: PayloadAction<string>) => {
       state.list = state.list.filter((item) => item.id !== action.payload);
     },
     clearItems: (state) => {
       state.list = [];
     },
-    updateItem: (state, action: PayloadAction<{ id: number; cant: number; precio: number }>) => {
+    updateItem: (state, action: PayloadAction<{ id: string; cant: number; precio: number }>) => {
       const { id, cant, precio } = action.payload;
       const item = state.list.find((item) => item.id === id);
       if (item) {

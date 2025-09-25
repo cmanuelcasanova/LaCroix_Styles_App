@@ -41,7 +41,7 @@ export default function Home() {
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
  const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile } = useProfileQuery();
 
- console.log(Productos)
+
 
   useEffect(() => {
    

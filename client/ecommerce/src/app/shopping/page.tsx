@@ -30,6 +30,7 @@ return (
             <Caritem
               key={product.id}
               title={product.title}
+              idProduct={product.idProduct}
               talla={product.talla}
               precio={product.precio}
               id={product.id}
