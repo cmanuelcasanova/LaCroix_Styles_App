@@ -6,4 +6,5 @@ export interface Car {
   precio: number
   imgUrl: string
   talla: string
+  mode: string
 }

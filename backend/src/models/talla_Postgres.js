@@ -19,6 +19,7 @@ export const TallaModel = (sequelize) => {
 
   Talla.associate = (models) => {
     Talla.belongsToMany(models.Product, { through: models.Product_Talla });
+    Talla.hasMany(models.Shopping, { foreignKey: 'tallaId' });
   };
 
   return Talla;

@@ -162,7 +162,7 @@ export default function Navbar() {
 
               </div>
 
-              <FilterBar />
+              <FilterBar onClose={()=> setMenuFiltros(false)}/>
 
 
              

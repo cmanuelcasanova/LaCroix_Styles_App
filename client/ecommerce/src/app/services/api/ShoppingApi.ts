@@ -17,20 +17,21 @@ export const shoppingApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Shopping"],
     }),
-    deleteItemCar: builder.mutation<void, {productId:number}>({
-      query: ({productId}) => ({
+    deleteItemCar: builder.mutation<void, {productId:number,talla:string}>({
+      query: ({productId, talla}) => ({
         url: `/auth/shopping/${productId}`,
         method: "DELETE",
+         body: {talla},
         
       }),
       invalidatesTags: ["Shopping"],
     }),
     
-    UpdateItemCar: builder.mutation<void, {productId:number, tipo: string }>({
-      query: ({productId , tipo}) => ({
+    UpdateItemCar: builder.mutation<void, {productId:number, talla:string, tipo: string }>({
+      query: ({productId , tipo, talla}) => ({
         url: `/auth/shopping/${productId}`,
         method: "PATCH",
-        body: {tipo},
+        body: {tipo,talla},
       }),
       invalidatesTags: ["Shopping"],
     }),

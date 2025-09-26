@@ -1,33 +1,31 @@
 "use client";
 
 import Image from "next/image";
-import { VscPassFilled } from "react-icons/vsc";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import LoadingModal from "../../components/Loadingpage";
 import { useParams } from "next/navigation";
 import { skipToken } from "@reduxjs/toolkit/query";
-import toast, { Toaster } from 'react-hot-toast';
-import { themeBg , themeBgMapHOpacity } from "@/app/themeStyles";
-import { COLOR_PALETTE } from "@/app/components/params"
+import toast, { Toaster } from "react-hot-toast";
+import { themeBg, themeBgMapHOpacity } from "@/app/themeStyles";
+import { COLOR_PALETTE } from "@/app/components/params";
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { FaCartShopping } from "react-icons/fa6";
-import { TbShoppingCartOff } from "react-icons/tb";
 import { TbArrowBackUp } from "react-icons/tb";
 import { useRouter } from "next/navigation";
-import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useDispatch } from "react-redux";
-import { selectUsername } from  "@/app/features/auth/authSelectors"
-import { addItem, removeItem} from "@/app/features/Car/CarSlice";
+import { selectUsername } from "@/app/features/auth/authSelectors";
+import { addItem } from "@/app/features/Car/CarSlice";
 import { selectRole } from "@/app/features/auth/authSelectors";
-import { useRemoveItemMutation , useDeletePhotoMutation , useGetItemQuery} from "@/app/services/api/productsApi";
-import  ConfirmationtModal  from "@/app/components/confirmation"
-import { useCreateItemCarMutation , useDeleteItemCarMutation } from "@/app/services/api/ShoppingApi"
-
-
-
-
-
+import {
+  useRemoveItemMutation,
+  useDeletePhotoMutation,
+  useGetItemQuery,
+} from "@/app/services/api/productsApi";
+import ConfirmationtModal from "@/app/components/confirmation";
+import {
+  useCreateItemCarMutation,
+} from "@/app/services/api/ShoppingApi";
 
 export default function Item() {
   const params = useParams();
@@ -36,18 +34,15 @@ export default function Item() {
   const theme = useSelector(selectTheme);
   const tBg = themeBg[theme];
   const tBgH = themeBgMapHOpacity[theme];
-  const [carrito, setCarrito] = useState<boolean>(false);
   const router = useRouter();
-  const itemsC = useSelector(selectItemsc);
   const dispatch = useDispatch();
   const [DeleteItem] = useRemoveItemMutation();
   const [deletePhoto] = useDeletePhotoMutation();
   const [modal, setModal] = useState<boolean>(false);
   const [borrar, setBorrar] = useState<boolean>(false);
-  const [addItemCarBD] = useCreateItemCarMutation ();
-  const [deleteItemCarBD] = useDeleteItemCarMutation();
+  const [addItemCarBD] = useCreateItemCarMutation();
   const user = useSelector(selectUsername);
-  const [selectedTallas, setSelectedTallas] = useState<string[]>([])
+  const [selectedTallas, setSelectedTallas] = useState<string[]>([]);
 
   const {
     data: item,
@@ -56,102 +51,86 @@ export default function Item() {
     isFetching,
   } = useGetItemQuery(id_item ? { id: id_item } : skipToken);
 
-  
   useEffect(() => {
-      try {
-  
-        if(borrar && item?.id) {
-  
-           DeleteItem({ id: item?.id }).unwrap();
-           deletePhoto({ name: item.imageUrl.split("/").pop() }).unwrap();
-           router.push("/");
-        }
-      } catch (err) {
-        console.log(err);
+    try {
+      if (borrar && item?.id) {
+        DeleteItem({ id: item?.id }).unwrap();
+        deletePhoto({ name: item.imageUrl.split("/").pop() }).unwrap();
+        router.push("/");
       }
-      }, [borrar,DeleteItem, deletePhoto, item?.id, item?.imageUrl,router]);
-  
-  
+    } catch (err) {
+      console.log(err);
+    }
+  }, [borrar, DeleteItem, deletePhoto, item?.id, item?.imageUrl, router]);
+
   const handleDelete = async () => {
-
-      setModal(true)
-
-    
+    setModal(true);
   };
-
-
-
 
   if (isLoading || isFetching) return <LoadingModal />;
   if (error || !item) return <p>Artículo no encontrado</p>;
 
   const handleAdd = () => {
-    
-    if(selectedTallas.length==0){
-
-      toast('Debe seleccionar talla...')
-      return
+    if (selectedTallas.length == 0) {
+      toast("Debe seleccionar talla...");
+      return;
     }
 
-    if(!carrito){ 
- 
-      toast( '​🟢​ Agregado al carrito')
-      selectedTallas.forEach ( t =>  { 
-    dispatch(addItem({ id: item.id + t, idProduct:item.id, cant: 1, precio: item.precio, imgUrl: item.imageUrl, title: item.title, talla: t })) 
-      })
-
-    setSelectedTallas([])
-    if (user) {
-       
-      selectedTallas.forEach ( t =>  { 
-        try {
-          addItemCarBD({
+    toast("​🟢​ Agregado al carrito");
+    selectedTallas.forEach((t) => {
+      dispatch(
+        addItem({
+          id: item.id + t,
+          idProduct: item.id,
+          cant: 1,
+          precio: item.precio,
+          imgUrl: item.imageUrl,
           title: item.title,
           talla: t,
-          cantidad: 1,
-          precio: item.precio,
-          productId: item.id
-        }).unwrap();
+          mode: "user",
+        })
+      );
+    });
 
-      }catch(error){console.log(error)}
-
-    })
-  }
-
-    }else{
-       selectedTallas.forEach (t => {
-       dispatch(removeItem(item.id + t))
-       
-      })
-      setCarrito(false)
-      setSelectedTallas([])
-       if (user) {
-      try {
-      
-        deleteItemCarBD({productId: item.id}).unwrap();
-        }catch(error){console.log(error)}
-       }
+    if (user) {
+      console.log(item);
+      selectedTallas.forEach((t) => {
+        try {
+          addItemCarBD({
+            title: item.title,
+            talla: t,
+            cantidad: 1,
+            precio: item.precio,
+            productId: item.id,
+            mode: "user",
+          }).unwrap();
+        } catch (error) {
+          console.log(error);
+        }
+      });
     }
-  
+    setSelectedTallas([]);
   };
 
-
-  const tonglechange = (item:string) => {
-
-    if(!selectedTallas.includes(item)){ 
-      setSelectedTallas([...selectedTallas,item])}
-      else{ 
-        setSelectedTallas(prevItems => prevItems.filter(j => j!== item));
-       }
-
-  }
-  
+  const tonglechange = (item: string) => {
+    if (!selectedTallas.includes(item)) {
+      setSelectedTallas([...selectedTallas, item]);
+    } else {
+      setSelectedTallas((prevItems) => prevItems.filter((j) => j !== item));
+    }
+  };
 
   return (
-    
     <div className={`flex flex-col items-center justify-center `}>
-        <Toaster />
-        {modal && <ConfirmationtModal onClose={() => setModal(false)} confirm={() => {setBorrar(true)}} />}
+      <Toaster />
+      {modal && (
+        <ConfirmationtModal
+          onClose={() => setModal(false)}
+          confirm={() => {
+            setBorrar(true);
+          }}
+        />
+      )}
       <div className="bg-white flex flex-col items-center shadow-2xl mt-20 rounded-2xl p-4 mb-6 mx-4 w-dwv">
         <Image
           className="rounded-b-2xl shadow-2xl p-1 rounded-t-2xl"
@@ -171,22 +150,28 @@ export default function Item() {
 
         <div
           className="h-[30px] w-[30px] border-black border-2 mr-auto"
-          style={{ background:  COLOR_PALETTE.find((c)=> item.color === c.label )?.value }}
+          style={{
+            background: COLOR_PALETTE.find((c) => item.color === c.label)
+              ?.value,
+          }}
         ></div>
 
         <h1 className="mr-auto mt-4 mb-2"> TALLA: </h1>
 
         <div className="flex flex-wrap gap-2 mr-auto">
-          {item.Tallas.map( (element, index) =>   
-            <div 
-                key={index} 
-                className={`flex flex-col items-center justify-center h-[40px] w-[40px] rounded-full mr-auto font-bold ${(selectedTallas.includes(element.name)) ? "bg-green-300 hover:bg-green-200  ": "bg-gray-300 hover:bg-gray-200"} `}
-                onClick={()=>tonglechange (element.name)}
-                >
-              
-                { element.name}
-            </div>)
-          }
+          {item.Tallas.map((element, index) => (
+            <div
+              key={index}
+              className={`flex flex-col items-center justify-center h-[40px] w-[40px] rounded-full mr-auto font-bold ${
+                selectedTallas.includes(element.name)
+                  ? "bg-green-300 hover:bg-green-200  "
+                  : "bg-gray-300 hover:bg-gray-200"
+              } `}
+              onClick={() => tonglechange(element.name)}
+            >
+              {element.name}
+            </div>
+          ))}
         </div>
 
         <h1 className="mr-auto mt-4 mb-2"> DETALLES: </h1>
@@ -202,28 +187,32 @@ export default function Item() {
           onClick={handleAdd}
           className={`rounded ${tBg} text-white w-full p-2 flex items-center gap-2 justify-center ${tBgH} active:scale-95 transition-transform duration-150 ease-in-out`}
         >
-                      
-              Añadir carrito <FaCartShopping className="" />
-          
+          Añadir carrito <FaCartShopping className="" />
         </button>
 
-        {UserRole==="ADMIN" && <>
-        <button
-          onClick={ ()=> {router.push(`/newproduct?mode=edit&id=${item.id}`);}}
-          className= "bg-green-300 mt-4  rounded text-white w-full p-2 flex items-center gap-2 justify-center active:scale-95 transition-transform duration-150 ease-in-out"
-        > Actualizar Producto 
-        </button>
-        
-        <button
-          onClick={ ()=> {handleDelete()}}
-          className= "bg-red-400 mt-4  rounded text-white w-full p-2 flex items-center gap-2 justify-center active:scale-95 transition-transform duration-150 ease-in-out"
-        > Eliminar Producto 
-        </button>
-        </>
-        
-        
-        }
+        {UserRole === "ADMIN" && (
+          <>
+            <button
+              onClick={() => {
+                router.push(`/newproduct?mode=edit&id=${item.id}`);
+              }}
+              className="bg-green-300 mt-4  rounded text-white w-full p-2 flex items-center gap-2 justify-center active:scale-95 transition-transform duration-150 ease-in-out"
+            >
+              {" "}
+              Actualizar Producto
+            </button>
 
+            <button
+              onClick={() => {
+                handleDelete();
+              }}
+              className="bg-red-400 mt-4  rounded text-white w-full p-2 flex items-center gap-2 justify-center active:scale-95 transition-transform duration-150 ease-in-out"
+            >
+              {" "}
+              Eliminar Producto
+            </button>
+          </>
+        )}
       </div>
 
       <button

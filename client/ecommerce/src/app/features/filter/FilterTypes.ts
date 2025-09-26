@@ -10,4 +10,8 @@ export interface FilterState {
   color: filteritem[],
  
   talla: filteritem[],
+
+  price_min: number,
+
+  price_max: number
 }

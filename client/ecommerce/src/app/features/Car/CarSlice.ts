@@ -21,7 +21,7 @@ export const CarSlice = createSlice({
       }else{ 
           
         const item = state.list.find((item) => item.id === action.payload.id);
-        if (item) {
+        if (item && action.payload.mode==='user') {
           item.cant = item.cant+1;
         }
       }

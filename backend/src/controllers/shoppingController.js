@@ -10,6 +10,10 @@ export const getShopping = async (req, res) => {
     {
       model: db.Product,
       attributes: ['imageUrl'], 
+    },
+    {
+      model: db.Talla,
+      attributes: ['name'], 
     }]
     });
     res.status(201).json(Items);
@@ -22,28 +26,56 @@ export const getShopping = async (req, res) => {
 
 export const createShopping = async (req, res) => {
 
-  
   try {
-    const { title, talla, cantidad, precio ,productId } = req.body;
-    const ItemCar = await db.Shopping.findOrCreate
-    ({where:{ userId:req.user.id, productId},
 
-      default:{ title, talla, cantidad , precio } }
-    );
-    res.status(201).json(ItemCar);
-  } catch (err) {
-    console.error("❌ Error al crear Item en Carro:", err.message);
+    const { title, talla, cantidad, precio ,productId, mode } = req.body;
+    const tallaRecord = await db.Talla.findOne({ where: { name: talla } });
+    if (!tallaRecord) return res.status(400).json({ error: "Talla no válida" });
+
+    const existing = await db.Shopping.findOne({where: { userId:req.user.id , productId: productId, tallaId: tallaRecord.id }});
+
+
+    if (!existing) {
+    
+      const nuevo = await db.Shopping.create({userId:req.user.id, productId, tallaId: tallaRecord.id, title, cantidad, precio });
+      
+
+      return res.status(201).json(nuevo);
+    }else{
+
+      if(mode==='user'){
+         existing.cantidad = existing.cantidad + 1;
+        await existing.save();
+        return res.status(200).json(existing);
+      }
+      if(mode==='sync'){
+        return res.status(200).json({ message: "Ítem ya sincronizado, no se duplicó" });
+      }
+
+      return res.status(400).json({ error: "Modo no reconocido" });
+    }
+  }catch (err){
+    console.error("❌ Error al crear Item del Carrito:", err.message);
     res.status(500).json({ error: err.message });
   }
 };
 
 export const deleteItems = async (req, res) => {
 
+ 
+
+    const {talla} = req.body;
+    const tallaRecord = await db.Talla.findOne({ where: { name: talla } });
+    
+
+    if (!tallaRecord) return res.status(400).json({ error: "Talla no válida" });
    
    try {
     const item = await db.Shopping.destroy({ where: { 
       userId: req.user.id,
-      productId: req.params.productId} });
+      productId: req.params.productId,
+      tallaId: tallaRecord.id
+    } });
     res.status(204).send();
   } catch (err) {
     console.error("❌ Error al eliminar Item del Carrito:", err.message);
@@ -55,14 +87,20 @@ export const deleteItems = async (req, res) => {
 
 export const updateItems = async (req, res) => {
 
+    const {talla , tipo} = req.body;
+    const tallaRecord = await db.Talla.findOne({ where: { name: talla } });
+    if (!tallaRecord) return res.status(400).json({ error: "Talla no válida" });
+
    try {
     const item = await db.Shopping.findOne( {where: { 
       userId: req.user.id,
-      productId: req.params.productId} });
+      productId: req.params.productId,
+      tallaId: tallaRecord.id
+    } });
     if (item) {
      
-      if(req.body.tipo ==='ADD') {item.cantidad = item.cantidad + 1;}
-      if(req.body.tipo ==='SUB') {item.cantidad = item.cantidad - 1;}
+      if(tipo ==='ADD') {item.cantidad = item.cantidad + 1;}
+      if(tipo ==='SUB') {item.cantidad = item.cantidad - 1;}
       await item.save();
     }
 

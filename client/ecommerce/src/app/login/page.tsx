@@ -12,6 +12,7 @@ import { addItem } from "@/app/features/Car/CarSlice";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useSelector } from "react-redux";
 import { useCreateItemCarMutation } from "@/app/services/api/ShoppingApi"
+import { useState } from "react";
 
 
 type FormData = {
@@ -27,6 +28,8 @@ export default function Login() {
   const [Login] = useLoginMutation();
   const itemsCarrito = useSelector(selectItemsc);
   const [addItemBD] = useCreateItemCarMutation ();
+  const [mergeRTK,setMergeRTK] = useState<boolean>(false);
+  const [mergeDB,setMergeDB] = useState<boolean>(false);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -49,31 +52,33 @@ export default function Login() {
   });
 
   useEffect(() => {
-    if (itemsCarBD) {
+    if (itemsCarBD && !mergeRTK) {
     
-
+      //console.log(itemsCarBD)
       if (itemsCarBD.length>0) {
           
          itemsCarBD.forEach(element => {
 
           dispatch(
                   addItem({
-                    id: element.productId,
+                    id: element.productId+element.Talla.name,
+                    idProduct: element.productId,
                     cant: element.cantidad,
                     precio: element.precio,
                     imgUrl: element.Product.imageUrl,
                     title: element.title,
-                    talla: element.talla,
+                    talla: element.Talla.name,
+                    mode: 'sync'
                   })
                 );
 
         });
 
-
+        setMergeRTK(true)
       }
     }
 
-    if(itemsCarrito.length>0) {
+    if(itemsCarrito.length>0 && !mergeDB) {
 
       itemsCarrito.forEach(element => {
 
@@ -85,7 +90,8 @@ export default function Login() {
             talla: element.talla,
             cantidad: element.cant,
             precio: element.precio,
-            productId: element.id
+            productId: element.idProduct,
+            mode:'sync'
           }).unwrap();
         }catch(error){console.log(error)}
       
@@ -95,13 +101,14 @@ export default function Login() {
       } )
 
 
-
+       setMergeDB(true)
 
     }
 
+   
 
 
-  }, [itemsCarBD, dispatch,itemsCarrito,addItemBD ]);
+  }, [itemsCarBD, dispatch,itemsCarrito,addItemBD, mergeRTK, mergeDB ]);
 
   return (
     <div className="flex justify-center items-center min-h-screen mx-4 mt-10 ">

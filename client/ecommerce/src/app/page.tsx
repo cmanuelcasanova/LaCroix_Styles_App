@@ -24,7 +24,9 @@ type filteritems = {
 
   categoria: filteritem[],
   talla:filteritem[],
-  color:filteritem[]
+  color:filteritem[],
+  price_min:number,
+  price_max:number
 
 }
 
@@ -70,7 +72,8 @@ useEffect( ()=> {
    if (!filteredProducts || !filteredProducts || filteredProducts.length === 0) return;
 
   
-    const filterget: filteritems = {categoria:[],talla:[],color:[]}
+    const filterget: filteritems = {categoria:[],talla:[],color:[],price_min:0,price_max:1000}
+
 
 
     filteredProducts?.forEach((item) =>{
@@ -91,15 +94,24 @@ useEffect( ()=> {
         filterget.color.push({name: item.color, cant:1})
       }
 
-      const tal = filterget.talla.find( i => i.name === item.talla)
+      item.Tallas.forEach( t =>   {
+        
+        const tal = filterget.talla.find( i => i.name === t.name)
 
-      if (tal) {
+         if (tal) {
         tal.cant = tal.cant + 1
-      }else {
-        filterget.talla.push({name: item.talla, cant:1})
-      }
+         }else {
+        filterget.talla.push({name: t.name, cant:1})
+        }
+
+      }  )
+
+
+
+
+
     })
-    dispatch(addFilters( {category: filterget.categoria , color: filterget.color, talla: filterget.talla   }  ))
+    dispatch(addFilters( {category: filterget.categoria , color: filterget.color, talla: filterget.talla,price_min:0,price_max:1000   }  ))
     dispatch(setItems( filteredProducts.length))
 
 
@@ -115,11 +127,12 @@ useEffect( ( ) => {
 
   const matchCategory = UserFilters.category.length === 0 || UserFilters.category.some(i => i === pro.category);
   const matchColor = UserFilters.color.length === 0 || UserFilters.color.some(i => i === pro.color);
-  const matchTalla = UserFilters.talla.length === 0 || UserFilters.talla.some(i => i === pro.talla);
-  
+  const matchTalla = UserFilters.talla.length === 0 || pro.Tallas.some (i => UserFilters.talla.includes(i.name));
+
 
   return matchCategory && matchColor && matchTalla;
 });
+
 setFilteredProducts(filteredItemsbyFilters)
 
 },[ allProducts , UserFilters.category ,UserFilters.talla , UserFilters.color  ])

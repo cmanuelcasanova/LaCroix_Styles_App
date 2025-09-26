@@ -39,7 +39,7 @@ export const Caritem = ({
       dispatch(updateItem({ id: id, cant: cant - 1,precio: precio  }));
 
       try {
-        updateItemCarBD({productId: id, tipo:'SUB'}).unwrap();
+        updateItemCarBD({productId: idProduct, talla: talla,  tipo:'SUB'}).unwrap();
       }catch(error){console.log(error)}
     }
     }
@@ -48,7 +48,7 @@ export const Caritem = ({
 
       dispatch(updateItem({ id: id, cant: cant + 1 , precio: precio }));
       try {
-        updateItemCarBD({productId: id, tipo:'ADD'}).unwrap();
+        updateItemCarBD({productId: idProduct, talla: talla , tipo:'ADD'}).unwrap();
       }catch(error){console.log(error)}
     
   };
@@ -57,7 +57,7 @@ export const Caritem = ({
     dispatch(removeItem(id));
     
     try {
-        deleteItemCar({productId: id}).unwrap();
+        deleteItemCar({productId:idProduct , talla:talla }).unwrap();
         }catch(error){console.log(error)}
       
   };

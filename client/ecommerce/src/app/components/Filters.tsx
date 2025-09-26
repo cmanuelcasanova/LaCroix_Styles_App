@@ -6,11 +6,15 @@ import { COLOR_PALETTE } from "@/app/components/params"
 import { selectItems } from "@/app/features/items/itemsSelectors"
 import { addSelectFilters , deleteSelectFilters , clearSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
 import { selectedFiltersG } from "@/app/features/selectedFilter/selectedFilterSelector"
-
 import { useDispatch } from "react-redux";
 
+type MoldeProps = {
 
-export default function FilterBar() {
+onClose: () => void;
+}
+
+
+export default function FilterBar( { onClose }: MoldeProps  ) {
   const [category, setCategory] = useState<boolean>(false);
   const [color, setColor] = useState<boolean>(false);
   const [talla, setTalla] = useState<boolean>(false);
@@ -54,7 +58,7 @@ export default function FilterBar() {
                     type="checkbox" 
                     className="h-4 w-4"
                     checked={ SelectedFilters.category.includes ( product.name )  } 
-                    onChange={e => dispatch( e.target.checked ? addSelectFilters({category: product.name}) :  deleteSelectFilters ({name: "category", value: product.name})   )} />
+                    onChange={e => dispatch( e.target.checked ? addSelectFilters({category: product.name}) :  deleteSelectFilters ({name: "category", value: product.name}) , onClose() )  } />
               </div>
             ))}
           </div>
@@ -84,7 +88,7 @@ export default function FilterBar() {
                 type="checkbox" 
                 className="h-4 w-4" 
                 checked={ SelectedFilters.color.includes ( product.name)  } 
-                onChange={e => dispatch( e.target.checked ? addSelectFilters({color: product.name}) :  deleteSelectFilters ({name: "color", value: product.name})   )}/>
+                onChange={e => dispatch( e.target.checked ? addSelectFilters({color: product.name}) :  deleteSelectFilters ({name: "color", value: product.name})  ,onClose() )}/>
               </div>
             ))}
           </div>
@@ -112,7 +116,7 @@ export default function FilterBar() {
                 type="checkbox" 
                 className="h-4 w-4" 
                 checked={ SelectedFilters.talla.includes ( product.name )  } 
-                onChange={e => dispatch( e.target.checked ? addSelectFilters({talla: product.name }) :  deleteSelectFilters ({name: "talla", value: product.name})   )}
+                onChange={e => dispatch( e.target.checked ? addSelectFilters({talla: product.name }) :  deleteSelectFilters ({name: "talla", value: product.name}) , onClose()  )}
                  />
               </div>
             ))}
@@ -133,8 +137,8 @@ export default function FilterBar() {
 
            
            
-                <><span>Min: </span><input type="text" className="border-2 w-[70px]"/></>
-                <><span>Max: </span><input type="text" className="border-2 w-[70px]"/></>
+                <div className="flex flex-wrap gap-2"><span>Min: </span><input type="text" className="border-2 w-[60px] text-center"/> <button> ✔️​</button></div>
+                <div className="flex flex-wrap gap-2"><span>Max: </span><input type="text" className="border-2 w-[60px] text-center"/> <button> ✔️​</button></div>
             
           
           </div>
