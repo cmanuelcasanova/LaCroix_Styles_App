@@ -34,7 +34,7 @@ export default function Login() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const response = await Login(data).unwrap();
-      console.log(response);
+   
       dispatch(
         setUser({
           isAuthenticated: true,

@@ -24,6 +24,7 @@ import { themeBgMap, themeBgOpa } from "@/app/themeStyles";
 import { useRouter } from "next/navigation";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
+import { selectHasFilters } from "@/app/features/selectedFilter/selectedFilterSelector"
 import FilterBar from "./Filters";
 
 
@@ -40,6 +41,7 @@ export default function Navbar() {
   const bgClass = themeBgMap[theme];
   const bgClassOpa = themeBgOpa[theme];
   const router = useRouter();
+  const HadFilters = useSelector( selectHasFilters )  ;
 
 
   useEffect(() => {
@@ -139,7 +141,7 @@ export default function Navbar() {
           {/* Filtros  */}
 
           <button
-            className="text-white ml-4"
+            className={`text-white ml-4 shadows-black ${HadFilters ? "bg-white/50 rounded-full p-[7px]" : "" }  `}
             onClick={() => setMenuFiltros(!menuFiltros)}
           >
             <TbAdjustmentsHorizontal size={25} />

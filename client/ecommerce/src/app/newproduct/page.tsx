@@ -83,7 +83,9 @@ useEffect(() => {
     setFoto(item?.imageUrl)
     setImagenUrl(item?.imageUrl)
     
-    //setTalla (item?.talla )
+    const tallasup = item?.Tallas.map(i => ( {value: i.name , label: i.name }) )
+    setTalla( tallasup)
+
     setColor ({label: item?.color, value: COLOR_PALETTE.find((c)=> item?.color === c.label )?.label ?? item?.color})
     setActualizar(true)
     if(item.category!==undefined) {
@@ -418,14 +420,25 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
             />
           </label>
 
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center gap-2 mt-4 text-white">
             <button
               type="submit"
-              className={`bg-${bgClass} w-[180px] rounded-md mb-4 mt-4 h-10 mx-auto text-black font-semibold active:scale-95
+              className={`bg-${bgClass} w-[180px] rounded-md mb-4 mt-4 h-10 mx-auto  font-semibold active:scale-95
                  transition-colors duration-300 ease-in-out hover:bg-[#677483] cursor-pointer`}
             >
-              { actualizar ? 'Actualizar Producto' : 'Registrar Producto' }
+              { actualizar ? 'Actualizar' : 'Registrar Producto' }
             </button>
+         
+            <button
+              onClick={() => router.push("/")}
+              className={`bg-gray-300 text-black w-[180px] rounded-md mb-4 mt-4 h-10 mx-auto font-semibold active:scale-95
+                 transition-colors duration-300 ease-in-out hover:bg-[#677483] cursor-pointer`}
+            >
+               Cancelar 
+            </button>
+         
+         
+         
           </div>
         </form>
       </div>

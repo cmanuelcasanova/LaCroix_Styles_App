@@ -111,8 +111,8 @@ useEffect( ()=> {
 
 
     })
-    dispatch(addFilters( {category: filterget.categoria , color: filterget.color, talla: filterget.talla,price_min:0,price_max:1000   }  ))
-    dispatch(setItems( filteredProducts.length))
+    dispatch(addFilters( {category: filterget.categoria , color: filterget.color, talla: filterget.talla   }  ))
+    
 
 
 
@@ -128,18 +128,25 @@ useEffect( ( ) => {
   const matchCategory = UserFilters.category.length === 0 || UserFilters.category.some(i => i === pro.category);
   const matchColor = UserFilters.color.length === 0 || UserFilters.color.some(i => i === pro.color);
   const matchTalla = UserFilters.talla.length === 0 || pro.Tallas.some (i => UserFilters.talla.includes(i.name));
+  const matchpreciomin = pro.precio >= UserFilters.preciomin  
+  const matchpreciomax = pro.precio <= UserFilters.preciomax  
 
-
-  return matchCategory && matchColor && matchTalla;
+ 
+  return matchCategory && matchColor && matchTalla && matchpreciomin && matchpreciomax;
 });
+
+
 
 setFilteredProducts(filteredItemsbyFilters)
 
-},[ allProducts , UserFilters.category ,UserFilters.talla , UserFilters.color  ])
+
+},[ allProducts , UserFilters.category ,UserFilters.talla , UserFilters.color, UserFilters.preciomin , UserFilters.preciomax   ])
   
 
+useEffect( ( ) => {  
 
-
+  if(filteredProducts) dispatch(setItems( filteredProducts.length))
+},[dispatch,filteredProducts])
 
 
 

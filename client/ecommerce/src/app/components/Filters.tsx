@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { selectFilter } from "@/app/features/filter/FilterSelector";
 import { useSelector } from "react-redux";
-import { COLOR_PALETTE } from "@/app/components/params"
 import { selectItems } from "@/app/features/items/itemsSelectors"
 import { addSelectFilters , deleteSelectFilters , clearSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
-import { selectedFiltersG } from "@/app/features/selectedFilter/selectedFilterSelector"
+import { selectedFiltersG , selectHasFilters } from "@/app/features/selectedFilter/selectedFilterSelector"
 import { useDispatch } from "react-redux";
 
 type MoldeProps = {
@@ -19,20 +18,29 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
   const [color, setColor] = useState<boolean>(false);
   const [talla, setTalla] = useState<boolean>(false);
   const [precio, setPrecio] = useState<boolean>(false);
-  const [ applyFilter , setApplyFilter] = useState<boolean>(false)
-   const totalProductos = useSelector(selectItems);
-    const SelectedFilters = useSelector( selectedFiltersG )  ;
-   const dispatch = useDispatch();
+  const totalProductos = useSelector(selectItems);
+  const SelectedFilters = useSelector( selectedFiltersG )  ;
+  const HadFilters = useSelector( selectHasFilters )  ;
+  const dispatch = useDispatch();
+  const [pmin,setPmin] = useState<string>("")
+  const [pmax,setPmax] = useState<string>("")
   
 
   const Filtros = useSelector(selectFilter);
 
+  console.log(HadFilters)
+  useEffect( ( ) => {   
+  if( SelectedFilters.preciomin !== 0 ) { setPmin( SelectedFilters.preciomin.toString())   }
+  if( SelectedFilters.preciomax !== 1000 ) { setPmax( SelectedFilters.preciomax.toString())   }
+  },[SelectedFilters])
+  
+  
   return (
-    <div>
+    <div> 
 
-      {(SelectedFilters.category.length>0 || SelectedFilters.color.length>0 || SelectedFilters.talla.length>0) && <button 
+      {HadFilters && <button 
       className= "p-2 mb-4 ml-auto bg-white text-black rounded"
-      onClick={() => dispatch( clearSelectFilters()) }
+      onClick={() => dispatch( clearSelectFilters(), setPmin(""), setPmax("")) }
       > Limpiar Filtros  
       
       
@@ -137,8 +145,15 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
 
            
            
-                <div className="flex flex-wrap gap-2"><span>Min: </span><input type="text" className="border-2 w-[60px] text-center"/> <button> ✔️​</button></div>
-                <div className="flex flex-wrap gap-2"><span>Max: </span><input type="text" className="border-2 w-[60px] text-center"/> <button> ✔️​</button></div>
+                <div className="flex flex-wrap gap-2"><span>Min: </span>
+                  <input type="text" value={pmin} onChange={e => setPmin(e.target.value)}  className="border-2 w-[60px] text-center"/>
+                  <button onClick={ ()=> dispatch(addSelectFilters({preciomin: Number(pmin)})) }> ✔️​</button>
+                </div>
+
+                <div className="flex flex-wrap gap-2"><span>Max: </span>
+                  <input type="text" value={pmax} onChange={e => setPmax(e.target.value)} className="border-2 w-[60px] text-center"/>
+                  <button onClick={ ()=> dispatch(addSelectFilters({preciomax: Number(pmax)})) }> ✔️​</button>
+                </div>
             
           
           </div>

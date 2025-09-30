@@ -15,12 +15,14 @@ export const SeletedFilterSlice = createSlice({
   name: "SelectedFilters",
   initialState,
   reducers: {
-    addSelectFilters: (state, action: PayloadAction< {category?:string; color?:string; talla?: string}>) => {
-      const { category , color , talla } = action.payload
+    addSelectFilters: (state, action: PayloadAction< {category?:string; color?:string; talla?: string, preciomin?:number, preciomax?:number }>) => {
+      const { category , color , talla, preciomin, preciomax } = action.payload
       
       if (category && !state.category.includes(category)) state.category.push(category);
       if(color && !state.color.includes(color)) state.color.push(color)
       if(talla && !state.talla.includes(talla)) state.talla.push(talla)
+      if(preciomin) state.preciomin= preciomin
+      if(preciomax) state.preciomax= preciomax
     },
 
     deleteSelectFilters: (state, action: PayloadAction< { name: string; value:string }>) => {
@@ -37,6 +39,8 @@ export const SeletedFilterSlice = createSlice({
       state.category = [];
       state.talla = [];
       state.color = [];
+      state.preciomin = 0;
+      state.preciomax = 1000;
 
     },
     

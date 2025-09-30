@@ -41,6 +41,9 @@ export interface AuthResponse {
   username: string;
   user: string;
   role: string;
+  email: string;
+  createdAt: string
+  updatedAt: string
 }
 
 export interface LoginData {

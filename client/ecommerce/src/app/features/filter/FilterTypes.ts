@@ -11,7 +11,4 @@ export interface FilterState {
  
   talla: filteritem[],
 
-  price_min: number,
-
-  price_max: number
 }
