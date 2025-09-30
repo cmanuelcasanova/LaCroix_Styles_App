@@ -57,16 +57,16 @@ export const login = async (req, res) => {
     logStep('Datos incompletos', req.body);
     return res.status(400).json({ message: "Email y contraseña requeridos" });
   }
-console.log("1111")
+
   try {
     const user = await db.User.findOne({ where: { email } });
     logStep('Usuario encontrado', user ? { id: user.id, email: user.email } : 'No encontrado');
-    console.log("2222")
+   
     if (!user)
       return res.status(400).json({ message: "Usuario no encontrado" });
-    console.log("3333")
+
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log("44444")
+
     logStep('Password match', isMatch);
 
     if (!isMatch)

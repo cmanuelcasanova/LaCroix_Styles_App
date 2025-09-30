@@ -19,9 +19,10 @@ export default function Logout() {
     const handleLogout = async () => {
       try {
         
-        await logout().unwrap(); // 👈 importante para capturar errores
+        await logout().unwrap(); 
         dispatch(  logout_Auth()) ;
         localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
         dispatch(baseApi.util.resetApiState());
         dispatch(clearItems())
       } catch (error) {
@@ -34,5 +35,5 @@ export default function Logout() {
     handleLogout();
   }, [logout, router, dispatch]);
 
-  return null; // No necesitas renderizar nada
+  return null; 
 }
