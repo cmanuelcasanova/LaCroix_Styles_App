@@ -12,6 +12,7 @@ import { addItem } from "@/app/features/Car/CarSlice";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useSelector } from "react-redux";
 import { useCreateItemCarMutation } from "@/app/services/api/ShoppingApi"
+import { selectUsername } from "@/app/features/auth/authSelectors";
 import { useState } from "react";
 
 
@@ -23,13 +24,15 @@ type FormData = {
 export default function Login() {
   const { register, handleSubmit } = useForm<FormData>();
   const dispatch = useDispatch<AppDispatch>();
-  const { data: itemsCarBD, refetch } = useGetAllItemsCarQuery();
+  const Username = useSelector(selectUsername);
+  const { data: itemsCarBD, refetch } = useGetAllItemsCarQuery(undefined, {skip: !Username});
   const router = useRouter();
   const [Login] = useLoginMutation();
   const itemsCarrito = useSelector(selectItemsc);
   const [addItemBD] = useCreateItemCarMutation ();
   const [mergeRTK,setMergeRTK] = useState<boolean>(false);
   const [mergeDB,setMergeDB] = useState<boolean>(false);
+
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -43,7 +46,12 @@ export default function Login() {
           role: response.role,
         })
       );
-      await refetch();
+
+      if (Username && refetch) {
+        await refetch();
+      }
+
+    
       router.push("/");
     } catch (error) {
       console.error("Error en el Login:", error);

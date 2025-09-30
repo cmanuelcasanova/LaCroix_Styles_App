@@ -16,6 +16,7 @@ import { filteritem } from "@/app/features/filter/FilterTypes"
 import { product } from "@/app/services/api/queryTypes" 
 import { setUser } from "@/app/features/auth/authSlice";
 import { useProfileQuery } from "@/app/services/api/usersApi";
+import { selectUsername } from "@/app/features/auth/authSelectors";
 
 
 
@@ -36,12 +37,13 @@ type filteritems = {
 
 export default function Home() {
  const theme = useSelector(selectTheme);
+ const Username = useSelector(selectUsername);
  const dispatch = useDispatch<AppDispatch>();
  const UserFilters = useSelector(selectedFiltersG);
  const [allProducts, setAllProducts] = useState<product[] | undefined>([]);
  const [filteredProducts, setFilteredProducts] = useState<product[] | undefined>([]);
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
- const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile } = useProfileQuery();
+ const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile } = useProfileQuery(undefined, {skip: !Username});
 
 
 
