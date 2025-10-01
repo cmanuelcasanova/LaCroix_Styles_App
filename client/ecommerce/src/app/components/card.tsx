@@ -70,7 +70,7 @@ export default function Card({
   return (
 
 
-    <div className="bg-white relative flex flex-col items-center shadow-2xl rounded-2xl p-4 mb-6 mx-4 w-[300px]">
+    <div className="bg-white relative flex flex-col items-center shadow-2xl rounded-2xl p-4 mb-6 mx-4 w-[300px] h-[450px] ">
       
       {modal && <ConfirmationtModal onClose={() => setModal(false)} confirm={() => {setBorrar(true)}} />}
       
@@ -129,9 +129,9 @@ export default function Card({
         </span>
       </div>
 
-      <Link href={`/itemview/${id}`} className="mb-4">
+      <Link href={`/itemview/${id}`} className="mb-4 overflow-hidden ">
         <Image
-          className="rounded"
+          className="rounded object-cover"
           src={imageUrl}
           alt="Image"
           width={400}
