@@ -17,6 +17,11 @@ import { product } from "@/app/services/api/queryTypes"
 import { setUser } from "@/app/features/auth/authSlice";
 import { useProfileQuery } from "@/app/services/api/usersApi";
 import { selectUsername } from "@/app/features/auth/authSelectors";
+import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
+import { themeBg } from "@/app/themeStyles"
+import { set } from "react-hook-form";
+
 
 
 
@@ -36,14 +41,27 @@ type filteritems = {
 
 
 export default function Home() {
+ const itemsforpage = 9
  const theme = useSelector(selectTheme);
  const Username = useSelector(selectUsername);
  const dispatch = useDispatch<AppDispatch>();
+ const bgClass = themeBg[theme]
+ const [paginf, setPagInf] = useState<number>(0)
+ const [pagsup, setPagSup] = useState<number>(itemsforpage)
+ const [currentPage, setCurrentPage] = useState<number>(0)
+ const [totalpaginas, setTotalpaginas] = useState<number>(0)
  const UserFilters = useSelector(selectedFiltersG);
  const [allProducts, setAllProducts] = useState<product[] | undefined>([]);
  const [filteredProducts, setFilteredProducts] = useState<product[] | undefined>([]);
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
  const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile } = useProfileQuery(undefined, {skip: !Username});
+
+
+useEffect (() => {
+
+if (filteredProducts) setTotalpaginas(Math.ceil(filteredProducts.length / itemsforpage))
+
+},[filteredProducts])
 
 
 
@@ -151,13 +169,44 @@ useEffect( ( ) => {
 },[dispatch,filteredProducts])
 
 
+useEffect(()=> {
+
+  setPagInf (  (itemsforpage*currentPage)  )
+  setPagSup (  (itemsforpage*(currentPage+1))  )
+
+},[currentPage])
 
 
 if (isLoading || isFetching) return <LoadingModal />;
 if (error) return <ErrorConection />;
 
 
-  return (
+
+
+const handleft = () => {
+ 
+  if( currentPage > 0 ) setCurrentPage( prev => prev - 1 )
+
+}
+
+const handright = () => {
+
+  console.log("boton +")
+
+  if( currentPage +1 < totalpaginas ) setCurrentPage( prev => prev +1) 
+  
+}
+
+const handleClick = (i:number) => {
+
+  setCurrentPage(i)
+
+
+}
+
+
+
+return (
     <div className="flex flex-col items-center justify-center">
       
 
@@ -166,7 +215,7 @@ if (error) return <ErrorConection />;
       <h1 className="font-bold text-3xl my-8 "> Shopping with US </h1>
 
       <section className="flex flex-wrap items-center sm:justify-start w-[350px] sm:w-[1000px]">
-        { filteredProducts  ?.map((product) => (
+        { filteredProducts  ?.slice(paginf,pagsup).map((product) => (
           
 
           <Card
@@ -180,6 +229,11 @@ if (error) return <ErrorConection />;
         ))}
       </section>
 
+      <div className="flex flex-wrap gap-2 mt-10 text-gray-500">
+        <button className="bg-white p-2 rounded-2xl shadow mr-4" disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
+        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } p-2 rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
+        <button className="bg-white p-2 rounded-2xl shadow ml-4" disabled={currentPage+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
+      </div>
 
     </div>
   );

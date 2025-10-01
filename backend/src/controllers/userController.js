@@ -2,31 +2,11 @@ import { db } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-// Obtener __dirname en ES Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Ruta del log fuera de src
-
-const logPath = path.join(__dirname, '../../logs/loging.log');
-
-const logStep = (label, data) => {
-  fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${label}: ${JSON.stringify(data)}\n`);
-};
-
-
-
 
 export const createUser = async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
-    // Verifica si el usuario ya existe
     const existingUser = await db.User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: "El usuario ya existe" });
@@ -49,31 +29,26 @@ export const createUser = async (req, res) => {
 
 export const login = async (req, res) => {
 
-   logStep('Inicio login', req.body);
-
   const { email, password } = req.body;
 
   if (!email || !password) {
-    logStep('Datos incompletos', req.body);
     return res.status(400).json({ message: "Email y contraseña requeridos" });
   }
 
   try {
     const user = await db.User.findOne({ where: { email } });
-    logStep('Usuario encontrado', user ? { id: user.id, email: user.email } : 'No encontrado');
-   
+    
     if (!user)
       return res.status(400).json({ message: "Usuario no encontrado" });
 
     const isMatch = await bcrypt.compare(password, user.password);
 
-    logStep('Password match', isMatch);
 
     if (!isMatch)
       return res.status(400).json({ message: "Contraseña incorrecta" });
 
     const token = generateToken(user.id, user.role);
-    logStep('Token generado', token);
+
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -82,8 +57,7 @@ export const login = async (req, res) => {
       maxAge: 1000 * 60 * 60,
     });
 
-    logStep('Cookie enviada', { userId: user.id });
-
+    
     res.status(200).json({
       message: "Login exitoso",
       user: user.id,
@@ -91,9 +65,8 @@ export const login = async (req, res) => {
       role: user.role
     });
 
-    logStep('Respuesta enviada', { userId: user.id });
+    
   } catch (err) {
-    logStep('Error en login', err.message);
     res.status(500).json({ message: "Error en el servidor" });
   }
 
@@ -101,7 +74,7 @@ export const login = async (req, res) => {
 
 export const getprofile = async (req, res) => {
   try {
-    const userId = req.user.id; // viene del token decodificado por authMiddleware
+    const userId = req.user.id; 
 
     const user = await db.User.findOne({
       where: { id: userId },
