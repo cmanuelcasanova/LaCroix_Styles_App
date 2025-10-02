@@ -20,7 +20,9 @@ import { selectUsername } from "@/app/features/auth/authSelectors";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { themeBg } from "@/app/themeStyles"
-import { set } from "react-hook-form";
+import { PiEmptyBold } from "react-icons/pi";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import { addSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
 
 
 
@@ -144,15 +146,16 @@ useEffect( ()=> {
 useEffect( ( ) => {   
  const filteredItemsbyFilters = allProducts?.filter((pro) => {
 
-
+  
   const matchCategory = UserFilters.category.length === 0 || UserFilters.category.some(i => i === pro.category);
   const matchColor = UserFilters.color.length === 0 || UserFilters.color.some(i => i === pro.color);
   const matchTalla = UserFilters.talla.length === 0 || pro.Tallas.some (i => UserFilters.talla.includes(i.name));
   const matchpreciomin = pro.precio >= UserFilters.preciomin  
-  const matchpreciomax = pro.precio <= UserFilters.preciomax  
+  const matchpreciomax = pro.precio <= UserFilters.preciomax 
+  const matchSearch = UserFilters.search.length === 0 || pro.title.toLowerCase().includes(UserFilters.search.toLowerCase())
 
  
-  return matchCategory && matchColor && matchTalla && matchpreciomin && matchpreciomax;
+  return matchCategory && matchColor && matchTalla && matchpreciomin && matchpreciomax && matchSearch;
 });
 
 
@@ -160,7 +163,7 @@ useEffect( ( ) => {
 setFilteredProducts(filteredItemsbyFilters)
 
 
-},[ allProducts , UserFilters.category ,UserFilters.talla , UserFilters.color, UserFilters.preciomin , UserFilters.preciomax   ])
+},[ allProducts , UserFilters.category ,UserFilters.talla , UserFilters.color, UserFilters.preciomin , UserFilters.preciomax ,UserFilters.search  ])
   
 
 useEffect( ( ) => {  
@@ -214,6 +217,15 @@ return (
 
       <h1 className="font-bold text-3xl my-8 "> Shopping with US </h1>
 
+     
+      { UserFilters.search &&
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-6 ">
+          <h1 className="font-extrabold text-black "  >  {`Resultados de la busqueda:  " ${UserFilters.search} " `}</h1>
+          <IoIosCloseCircleOutline size={20} className="bg-gray-600 rounded-full text-white" onClick={()=> dispatch(addSelectFilters({search: ""})) }/>
+       </div>
+      }
+
+      {filteredProducts && filteredProducts?.length > 0 ? 
       <section className="flex flex-wrap items-center sm:justify-start w-[350px] sm:w-[1000px]">
         { filteredProducts  ?.slice(paginf,pagsup).map((product) => (
           
@@ -228,6 +240,12 @@ return (
           />
         ))}
       </section>
+      : <div className="flex flex-col items-center justify-center my-8"> 
+          <PiEmptyBold size={70} className="text-gray-600"/>
+          <h1> No hay resultados</h1>
+        </div>
+        }
+
 
       <div className="flex flex-wrap gap-2 mt-10 text-gray-500">
         <button className="bg-white p-2 rounded-2xl shadow mr-4" disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>

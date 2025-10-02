@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../public/LogoLAcroixStyles.png";
@@ -26,6 +26,10 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import { selectHasFilters } from "@/app/features/selectedFilter/selectedFilterSelector"
 import FilterBar from "./Filters";
+import { addSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
+import { IoMdCloseCircle } from "react-icons/io";
+import { selectedFiltersG } from "@/app/features/selectedFilter/selectedFilterSelector"
+
 
 
 
@@ -42,6 +46,10 @@ export default function Navbar() {
   const bgClassOpa = themeBgOpa[theme];
   const router = useRouter();
   const HadFilters = useSelector( selectHasFilters )  ;
+  const [viewsearch, setViewSearch] = useState<boolean>(false) 
+  const [textsearch , setTextSearch] = useState<string>("")
+  const UserFilters = useSelector(selectedFiltersG);
+  const inputRef = useRef<HTMLInputElement>(null); 
 
 
   useEffect(() => {
@@ -65,6 +73,22 @@ export default function Navbar() {
   }, [theme]);
 
   const cartCount = itemsC.length;
+
+useEffect(() => {
+ 
+  if (viewsearch && inputRef.current) {
+    inputRef.current.focus();
+  }
+}, [viewsearch]);
+
+
+useEffect(() => {
+ 
+  setTextSearch(UserFilters.search)
+  
+  
+}, [UserFilters.search]);
+
 
 
   return (
@@ -123,22 +147,40 @@ export default function Navbar() {
       </div>
 
       {/* Buscador centrado solo en desktop */}
-      <div className="hidden md:block self-center items-center">
+      <div className="hidden md:block self-center items-center rounded-r-sm">
         <label
-          className={`bg-${bgClass} flex items-center font-normal pr-2 gap-1 rounded-r-sm`}
+          className={`bg-${bgClass} flex items-center font-normal rounded-r-sm`}
         >
           <input
             type="text"
             placeholder="Buscar productos..."
             className="bg-white border-white rounded-l-sm text-gray-700 w-[250px] px-4 py-1 focus:outline-none"
-          />
-          <FaSearch />
+            value={textsearch}
+            onChange={(e)=> setTextSearch(e.target.value)}
+         />
+          
+           { UserFilters.search &&   
+              <button 
+                className="bg-gray-300 w-8 h-8 flex flex-col justify-center items-center"
+                onClick={()=> dispatch(addSelectFilters({search: ""}), setTextSearch(""),setViewSearch(false))}
+              >  <IoMdCloseCircle size={15} /> </button>
+              }
+              
+              <button 
+              className="bg-[#fe9ccf] w-8 h-8 flex flex-col justify-center items-center rounded-r-sm"
+              onClick={()=> {dispatch(addSelectFilters({search: textsearch})  ); setViewSearch(false)}}
+              >  <FaSearch size={15} /> 
+              </button>
+
+
+
         </label>
       </div>
 
 
 
-          {/* Filtros  */}
+
+          {/* Filtros Icono Barras  */}
 
           <button
             className={`text-white ml-4 shadows-black ${HadFilters ? "bg-white/50 rounded-full p-[7px]" : "" }  `}
@@ -146,6 +188,9 @@ export default function Navbar() {
           >
             <TbAdjustmentsHorizontal size={25} />
           </button>
+
+
+
 
           {/* Menú móvil en bloque */}
           {menuFiltros && (
@@ -235,9 +280,54 @@ export default function Navbar() {
         </div>
       
 
+
+
+
+          {/* Busqueda Nueva Icono Lupa  */}
+
+          <button 
+            className="sm:hidden ml-auto relative"
+            onClick={
+              ()=> {setViewSearch(prev => !prev);
+         
+    
+            }}>
+            <FaSearch size={22} />
+          </button>
+          
+          { viewsearch && 
+          
+            <div className="flex flex-nowrap border-1 border-black inset-x-0 items-center justify-center absolute w-full top-full">
+              
+              <input 
+                type="text"
+                className="bg-white  inset-x-0  h-10 text-black p-2 w-full"
+                placeholder="Buscar..."
+                value={textsearch}
+                ref={inputRef}
+                onChange={(e)=> setTextSearch(e.target.value)}
+              >
+              </input>
+
+              { UserFilters.search &&   <button 
+                className="bg-gray-300 w-10 h-10 flex flex-col justify-center items-center"
+                onClick={()=> dispatch(addSelectFilters({search: ""}), setTextSearch(""),setViewSearch(false))}
+              >  <IoMdCloseCircle size={22} /> </button>
+              }
+              <button 
+              className="bg-[#fe9ccf] w-10 h-10 flex flex-col justify-center items-center"
+              onClick={()=> {dispatch(addSelectFilters({search: textsearch})  ); setViewSearch(false)}}
+              >  <FaSearch size={22} /> </button>
+            </div>
+          }
+
+          
+
+            {/* Carrito Icono */}
+
       <Link
         href="/shopping"
-        className="relative ml-auto sm:ml-4 mr-4 sm:mr-10 "
+        className="relative ml-4 sm:ml-4 mr-4 sm:mr-10 "
         onClick={() => setMenuOpen(false)}
       >
         <FaCartShopping
@@ -317,17 +407,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Buscador móvil */}
-          <div className={`mb-4 border-${bgClass} border-2`}>
-            <label className="bg-pink-100 flex items-center pr-2 gap-1 rounded">
-              <input
-                type="text"
-                placeholder="Buscar..."
-                className="bg-white text-gray-700 px-3 py-1 rounded-l  focus:outline-none w-full"
-              />
-              <FaSearch />
-            </label>
-          </div>
 
           {UserRole==="ADMIN"  && <Link
             href={{
