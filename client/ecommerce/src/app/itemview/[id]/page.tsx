@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import LoadingModal from "../../components/Loadingpage";
 import { useParams } from "next/navigation";
@@ -17,6 +16,8 @@ import { useDispatch } from "react-redux";
 import { selectUsername } from "@/app/features/auth/authSelectors";
 import { addItem } from "@/app/features/Car/CarSlice";
 import { selectRole } from "@/app/features/auth/authSelectors";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css"
 import {
   useRemoveItemMutation,
   useDeletePhotoMutation,
@@ -120,6 +121,15 @@ export default function Item() {
     }
   };
 
+  const  images = [ {
+
+    original: item.imageUrl,
+    thumbnail: item.imageUrl.replace("LaCroix/", "LaCroix/tr:h-100/")
+    
+
+
+  }]
+
   return (
     <div className={`flex flex-col items-center justify-center `}>
       <Toaster />
@@ -132,14 +142,10 @@ export default function Item() {
         />
       )}
       <div className="bg-white flex flex-col items-center shadow-2xl mt-20 rounded-2xl p-4 mb-6 mx-4 w-dwv">
-        <Image
-          className="rounded-b-2xl shadow-2xl p-1 rounded-t-2xl"
-          src={item.imageUrl}
-          alt="Image"
-          width={400}
-          height={700}
-          priority
-        />
+        
+       
+          <ImageGallery items={ images }/>
+       
 
         <div className="flex flex-wrap justify-around items-center gap-4 mt-6 text-2xl font-extrabold w-full">
           <h1 className="mr-auto"> {item.title} </h1>

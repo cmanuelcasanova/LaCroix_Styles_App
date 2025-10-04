@@ -23,6 +23,7 @@ import { themeBg } from "@/app/themeStyles"
 import { PiEmptyBold } from "react-icons/pi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { addSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
+import { useGetHomeImagesQuery } from "@/app/services/api/fileApi"
 
 
 
@@ -56,6 +57,8 @@ export default function Home() {
  const [allProducts, setAllProducts] = useState<product[] | undefined>([]);
  const [filteredProducts, setFilteredProducts] = useState<product[] | undefined>([]);
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
+ const { data: HomeImages } = useGetHomeImagesQuery();
+ const [ images, setImages ] = useState<string[]>([])
  const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile } = useProfileQuery(undefined, {skip: !Username});
 
 
@@ -65,6 +68,16 @@ if (filteredProducts) setTotalpaginas(Math.ceil(filteredProducts.length / itemsf
 
 },[filteredProducts])
 
+
+useEffect(() => {
+
+  if(HomeImages) {
+
+    setImages(HomeImages.map( i => i.imageurl  ))
+
+  }
+
+},[HomeImages])
 
 
   useEffect(() => {
@@ -180,7 +193,7 @@ useEffect(()=> {
 },[currentPage])
 
 
-if (isLoading || isFetching) return <LoadingModal />;
+if (isLoading || isFetching ) return <LoadingModal />;
 if (error) return <ErrorConection />;
 
 
@@ -213,7 +226,7 @@ return (
     <div className="flex flex-col items-center justify-center">
       
 
-      <ImageSlider />
+      <ImageSlider imageUrls={images}/>
 
       <h1 className="font-bold text-3xl my-8 "> Shopping with US </h1>
 

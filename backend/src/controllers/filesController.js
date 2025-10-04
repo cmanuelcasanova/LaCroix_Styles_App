@@ -1,4 +1,5 @@
 import {imagekit}  from '../utils/imagekit.js'
+import { db } from "../models/index.js";
 import multer from 'multer';
 
 const upload = multer();
@@ -56,4 +57,17 @@ if (!filePath || typeof filePath !== "string") {
   }
 
 };
+
+export const homeslice = async (req, res) => {
+
+  
+  try {
+    const imageshome = await db.homeslice.findAll({});
+    res.status(201).json(imageshome);
+  } catch (err) {
+    console.error("❌ Error al consultar las Imagenes:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 

@@ -6,6 +6,7 @@ import { SecModel } from './seccion_Postgres.js';
 import { ShoppingModel } from './shopping_Postgres.js';
 import { TallaModel } from './talla_Postgres.js';
 import { Product_Talla_Model } from './product_talla_Postgres.js';
+import { homeslice_model } from './homeslices.js'
 
 const db = {};
 
@@ -16,6 +17,7 @@ db.Seccion = SecModel(sequelize);
 db.Shopping = ShoppingModel(sequelize);
 db.Talla = TallaModel(sequelize);
 db.Product_Talla = Product_Talla_Model(sequelize)
+db.homeslice = homeslice_model(sequelize)
 
 
 

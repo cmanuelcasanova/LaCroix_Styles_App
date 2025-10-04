@@ -86,3 +86,9 @@ export interface ShoppingDataQuery {
 
   
 }
+
+
+export interface ImagesBD {
+  id: number;
+  imageurl: string;
+}

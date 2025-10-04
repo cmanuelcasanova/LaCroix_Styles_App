@@ -54,6 +54,7 @@ export default function NewProduct() {
   const [talla, setTalla] = useState< OptionTypeG[] | null>([]);
   const [foto, setFoto] = useState<string | null>(null);
   const [modal, setModal] = useState<boolean>(false);
+  const [Uploading, setUploading] = useState<boolean>(false);
   const [tipo,setTipo] = useState<boolean>(false)
   const [actualizar,setActualizar] = useState<boolean>(false)
   const [imagenUrl, setImagenUrl] = useState<string>("");
@@ -69,6 +70,7 @@ export default function NewProduct() {
   const mode = searchParams.get("mode");
   const id_item =  searchParams.get("id");
   const dispatch = useDispatch<AppDispatch>();
+  const [fotoFile, setFotofile] = useState<File | null>(null)
   
   
   
@@ -128,12 +130,7 @@ useEffect(() => {
     if (file) {
       const previewUrl = URL.createObjectURL(file);
       setFoto(previewUrl);
-      try {
-        const resurl = await upLoadphoto({ image: file }).unwrap();
-        setImagenUrl(resurl.url);
-      } catch (err) {
-        console.error("Error al agregar producto:", err);
-      }
+      setFotofile(file)
     }
 
   };
@@ -142,7 +139,7 @@ useEffect(() => {
   const onSubmit = handleSubmit(async (data) => {
     
     
-    
+    setUploading(true)
     if (!seccion) {
       alert("Por favor selecciona una seccion");
       return;
@@ -167,11 +164,25 @@ useEffect(() => {
       return;
     }
 
+    if (!fotoFile) {
+      alert("Debe seleccionar una foto");
+      return;
+    }
+
     try {
       if (!actualizar) {
+
+      { /*  Subiendo Foto al Servidor ImageFile.Io*/}
+
+      const resurl = await upLoadphoto({ image: fotoFile }).unwrap();
+
+
+
+      {/*  Creando nuevo producto en Backend   */ }
+
       await addItem({
         title: data.titulo,
-        imageUrl: imagenUrl,
+        imageUrl: resurl.url,
         seccionId: seccion.value,
         category: categoria.value,
         talla: talla.map(t => t.value),
@@ -219,6 +230,8 @@ useEffect(() => {
       setModal(true)
       setTipo(false)
     }
+
+    setUploading(false)
   });
 
 const options: OptionType[] = sec?.map(secc => ({
@@ -278,6 +291,7 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
     <div className="flex flex-col items-center p-4 ">
 
       {modal && <AlertModal onClose={() => setModal(false)} tipo={tipo}  />}
+      {Uploading && <LoadingModal />}
       <div className={`w-[700px] h-[1000px] flex flex-col items-center rounded-2xl mt-20  px-8 ${actualizar ? 'bg-green-200' : 'bg-white' }`}>
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
 

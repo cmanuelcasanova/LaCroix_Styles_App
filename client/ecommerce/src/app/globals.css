@@ -20,3 +20,20 @@ body {
 .bg-all {
   @apply bg-gradient-to-b from-[#ff8ec9] via-white via-70% to-[#fed3e7];
 }
+
+
+.image-gallery-content,
+.image-gallery-slide-wrapper,
+.image-gallery-slides {
+    height: 100%;
+}
+
+.image-gallery-slide .image-gallery-image {
+    /* 🎯 Prioridad alta para anular estilos internos */
+    width: 100% !important; 
+    height: 100% !important;
+    
+    /* 🎯 Crucial: Esto asegura que la imagen llene el espacio de alto y ancho definido,
+       recortando partes si el aspecto ratio no coincide. */
+    object-fit: cover !important; 
+}

@@ -50,6 +50,7 @@ export default function Navbar() {
   const [textsearch , setTextSearch] = useState<string>("")
   const UserFilters = useSelector(selectedFiltersG);
   const inputRef = useRef<HTMLInputElement>(null); 
+ 
 
 
   useEffect(() => {
@@ -88,6 +89,9 @@ useEffect(() => {
   
   
 }, [UserFilters.search]);
+
+
+
 
 
 
