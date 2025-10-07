@@ -28,6 +28,13 @@ import {
   useCreateItemCarMutation,
 } from "@/app/services/api/ShoppingApi";
 
+interface imagenes {
+
+    original: string,
+    thumbnail: string
+}
+
+
 export default function Item() {
   const params = useParams();
   const id_item = params?.id?.toString();
@@ -44,6 +51,10 @@ export default function Item() {
   const [addItemCarBD] = useCreateItemCarMutation();
   const user = useSelector(selectUsername);
   const [selectedTallas, setSelectedTallas] = useState<string[]>([]);
+  const [ImagenesArray, setImagenesArray] = useState<imagenes[]>([]);
+
+
+
 
   const {
     data: item,
@@ -56,13 +67,36 @@ export default function Item() {
     try {
       if (borrar && item?.id) {
         DeleteItem({ id: item?.id }).unwrap();
-        deletePhoto({ name: item.imageUrl.split("/").pop() }).unwrap();
+
+        item.product_images.forEach ( i => { deletePhoto({ name: i.imageurl.split("/").pop() }).unwrap(); })
+       
         router.push("/");
       }
     } catch (err) {
       console.log(err);
     }
-  }, [borrar, DeleteItem, deletePhoto, item?.id, item?.imageUrl, router]);
+  }, [borrar, DeleteItem, deletePhoto, item?.id, router, item?.product_images]);
+
+
+    useEffect(() => {
+  
+      if(item) {
+          const  images = item.product_images.map ( i => {
+
+
+          return ( {  original: i.imageurl,
+              thumbnail: i.imageurl.replace("LaCroix/", "LaCroix/tr:h-100/")  } )
+
+          })
+
+        setImagenesArray(images)
+      }
+
+
+    }, [item]);
+
+
+
 
   const handleDelete = async () => {
     setModal(true);
@@ -85,7 +119,7 @@ export default function Item() {
           idProduct: item.id,
           cant: 1,
           precio: item.precio,
-          imgUrl: item.imageUrl,
+          imgUrl: item.product_images[0].imageurl,
           title: item.title,
           talla: t,
           mode: "user",
@@ -121,14 +155,8 @@ export default function Item() {
     }
   };
 
-  const  images = [ {
-
-    original: item.imageUrl,
-    thumbnail: item.imageUrl.replace("LaCroix/", "LaCroix/tr:h-100/")
-    
 
 
-  }]
 
   return (
     <div className={`flex flex-col items-center justify-center `}>
@@ -144,7 +172,7 @@ export default function Item() {
       <div className="bg-white flex flex-col items-center shadow-2xl mt-20 rounded-2xl p-4 mb-6 mx-4 w-dwv">
         
        
-          <ImageGallery items={ images }/>
+          <ImageGallery items={ ImagenesArray }  additionalClass="custom-gallery-ItemView"/>
        
 
         <div className="flex flex-wrap justify-around items-center gap-4 mt-6 text-2xl font-extrabold w-full">

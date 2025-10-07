@@ -246,10 +246,11 @@ return (
           <Card
             key={product.id}
             title={product.title}
-            imageUrl={product.imageUrl}
+            imageUrl={ product.product_images[0].imageurl}
             talla={product.Tallas}
             precio={Number(product.precio)}
             id={(product.id)}
+            totalimages={product.product_images.length}
           />
         ))}
       </section>

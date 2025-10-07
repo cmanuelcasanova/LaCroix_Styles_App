@@ -1,27 +1,42 @@
 import {imagekit}  from '../utils/imagekit.js'
 import { db } from "../models/index.js";
-import multer from 'multer';
 
-const upload = multer();
+
+
 export const uploadfiles = async (req, res) => {
+  
+ 
+  
   try {
 
-    
-    const fileBuffer = req.file?.buffer;
-    const fileName = req.file?.originalname;
+    const result = await Promise.all( req.files.map ( async item => {
 
-    if (!fileBuffer || !fileName) {
-      return res.status(400).json({ error: 'No se recibió archivo válido' });
-    }
 
-    
-    const result = await imagekit.upload({
-      file: fileBuffer,
-      fileName,
-      folder: `${process.env.IMAGEKIT_FOLDER}`, // opcional: organiza tus imágenes en carpetas
-    });
+      const order= item.fieldname.split("-");
+      const fileBuffer = item.buffer;
+      const fileName = item.originalname;
+      
+      if (!fileBuffer || !fileName) {
+        return res.status(400).json({ error: 'No se recibió archivo válido' });
+      }
 
-    return res.status(200).json({ url: result.url });
+      const temp = await imagekit.upload({
+        file: fileBuffer,
+        fileName,
+        folder: `${process.env.IMAGEKIT_FOLDER}`, 
+      });
+
+      return { url: temp.url , order: Number(order[1]) }
+
+
+    }   ) )
+
+
+
+
+    return res.status(200).json(result);
+
+
   } catch (err) {
     console.error('❌ Error al subir imagen:', err.message);
     return res.status(500).json({ error: 'Error interno al subir imagen' });

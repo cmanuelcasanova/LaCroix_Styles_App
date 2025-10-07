@@ -20,8 +20,13 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { logout as logout_Auth} from "@/app/features/auth/authSlice";
+import ThumbImages from "@/app/components/thumbImage"
 import { MultiValue } from "react-select";
-
+import { GoStarFill } from "react-icons/go";
+import { UploadImagesBD  } from "@/app/services/api/queryTypes"
+import { resumePluginState } from "next/dist/build/build-context";
+import { join } from "path";
+ 
 
 
 
@@ -43,6 +48,18 @@ type OptionTypeG = {
   value: string;
   label: string;
 };
+
+type ImageStatus = 'NEW' | 'EXISTING' | 'DELETED' | 'TEMP';
+
+interface ImagewithPriority  {
+
+  order: number;
+  filedata: File | null;
+  Url: string;
+  status: ImageStatus
+
+
+}
 
 
 
@@ -71,6 +88,9 @@ export default function NewProduct() {
   const id_item =  searchParams.get("id");
   const dispatch = useDispatch<AppDispatch>();
   const [fotoFile, setFotofile] = useState<File | null>(null)
+  const [ArrayFiles, setArrayFiles] = useState<File[]>([])
+  const [ArrayImages, setArrayImages] = useState< ImagewithPriority[]>([])
+  
   
   
   
@@ -83,8 +103,16 @@ useEffect(() => {
     
     setValue('titulo',item?.title)
     setValue('precio', item?.precio)
-    setFoto(item?.imageUrl)
-    setImagenUrl(item?.imageUrl)
+    setFoto(item?.product_images[0].imageurl)
+    setImagenUrl(item?.product_images[0].imageurl)
+
+    const ImagesUp = item.product_images.map ( i => {
+
+      return ( {filedata: null,  Url: i.imageurl, order: i.order,  status: 'EXISTING' as ImageStatus }   )
+         
+    }  )
+
+    setArrayImages(ImagesUp)
     
     const tallasup = item?.Tallas.map(i => ( {value: i.name , label: i.name }) )
     setTalla( tallasup)
@@ -121,17 +149,50 @@ useEffect(() => {
     }
   }, [error, router]);
 
+
+  useEffect(() => {
+
+    if(ArrayImages.length > 0){
+      setFoto(ArrayImages[0].Url);
+      setFotofile(ArrayImages[0].filedata)
+    }
+
+  }, [ArrayImages]);
+
+
+
+
   if (isLoading) return <LoadingModal />;
   if (!profile ) {dispatch( logout_Auth()) ; return null };
   if (profile.role!== "ADMIN") router.push("/login");
 
+
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setFoto(previewUrl);
-      setFotofile(file)
+  
+    if(e.target.files) {
+      
+      const totalArrayImages = ArrayImages.length
+      
+      const arraytarget:File[] = Array.from(e.target.files)
+      const NewArrayImages:ImagewithPriority[] = arraytarget.map ( (item, index) => {
+
+          const offfset = index + totalArrayImages
+          return ( { filedata: item , Url: URL.createObjectURL(item), order: offfset , status: 'NEW' as ImageStatus }  )
+
+
+      }  )
+
+
+      setArrayFiles( prev => [...prev, ...arraytarget])
+      setArrayImages  ( prev => [...prev, ...NewArrayImages])
+    
+    
     }
+
+
+
+
 
   };
 
@@ -164,25 +225,31 @@ useEffect(() => {
       return;
     }
 
-    if (!fotoFile) {
-      alert("Debe seleccionar una foto");
-      return;
-    }
 
     try {
       if (!actualizar) {
 
       { /*  Subiendo Foto al Servidor ImageFile.Io*/}
 
-      const resurl = await upLoadphoto({ image: fotoFile }).unwrap();
 
+
+    const FilesImagesArray = ArrayImages.filter(f => f.status === 'NEW' ).map( i => { 
+          
+            return { fileImagen: i.filedata, order: i.order}
+      })
+
+    const result = await upLoadphoto(FilesImagesArray).unwrap(); 
+
+    
+
+    
 
 
       {/*  Creando nuevo producto en Backend   */ }
 
       await addItem({
         title: data.titulo,
-        imageUrl: resurl.url,
+        imagesUrl: result,
         seccionId: seccion.value,
         category: categoria.value,
         talla: talla.map(t => t.value),
@@ -283,7 +350,125 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
   }
 };
 
+const filtrarArrayFile = (valor :string | undefined) => {
+
+  let isMain=false
+  let order_erase:number
+  if(valor) {
+    const newArray = ArrayImages.filter ( i => {
+      
+      if(i.filedata?.name !== valor) {
+        return i
+      }else{ 
+        
+        order_erase=i.order
+        if(i.order===0) isMain=true
+        return false
+      } 
+    }
+    )
+
+    if(isMain) {
+      const newArray2 = newArray.map ( i => {
+        i.order = i.order-1
+        return i
+      })
+      setArrayImages(newArray2)
+    }else{
+
+      const newArray2 = newArray.map ( i => {
+        if(i.order > order_erase) {i.order = i.order-1}
+        return i
+      })
+
+      setArrayImages(newArray2)
+    }
+
+    if(newArray.length===0) setFoto(null)
+ }
+}
+
+
+
+
+
+
+const setMainItem = (indice:number) => {
+
+
+    const newArraySafe = ArrayImages.map(item => {
+
+        if (item.order === 0) {
+            return { ...item, order: indice }; 
+        }
+
+        else if (item.order === indice) {
+            return { ...item, order: 0 }; // 
+        }
+        else {
+            return item; 
+        }
+    });
+
+    newArraySafe.sort((a, b) => a.order - b.order);
+    setArrayImages(newArraySafe);
+
+}
+
+const setMoveItem = (indice:number, away:string) => {
+
+
+      if (away==='L') {
+        const newArraySafe = ArrayImages.map(item => {
+
+            if (item.order === indice-1) {
+                return { ...item, order: indice }; 
+            }
+
+            else if (item.order === indice) {
+                return { ...item, order: indice-1 }; // 
+            }
+            else {
+                return item; 
+            }
+        });
+
+        newArraySafe.sort((a, b) => a.order - b.order);
+        setArrayImages(newArraySafe);
+    
+    }else{
+
+        const newArraySafe = ArrayImages.map(item => {
+
+          if (item.order === indice ) {
+              if(indice+1 !== ArrayImages.length) {return { ...item, order: indice+1 }}else{return {...item}}; 
+          }
+
+          else if (item.order === indice+1) {
+              return { ...item, order: indice }; // 
+          }
+          else {
+              return item; 
+          }
+      });
+
+      newArraySafe.sort((a, b) => a.order - b.order);
+      setArrayImages(newArraySafe);
+
+
+    
+
+
+  }
+}
+
+
+
+
+
   
+
+console.log(ArrayImages)
 
   return (
 
@@ -292,16 +477,16 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
 
       {modal && <AlertModal onClose={() => setModal(false)} tipo={tipo}  />}
       {Uploading && <LoadingModal />}
-      <div className={`w-[700px] h-[1000px] flex flex-col items-center rounded-2xl mt-20  px-8 ${actualizar ? 'bg-green-200' : 'bg-white' }`}>
+      <div className={`w-[700px] h-[1000px] flex flex-col overflow-auto items-center rounded-2xl mt-20  px-8 ${actualizar ? 'bg-green-200' : 'bg-white' }`}>
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
 
         
         <div className="w-[300px] h-[400px] flex flex-col items-center justify-center rounded-2xl bg-gray-300 ">
           
           
-          <label className="flex flex-col justify-center items-center">
+          <label className="flex flex-col h-[500px] justify-center items-center">
             <span>
-              {foto ? (
+              {foto ? ( <>
                 <Image
                   src={foto}
                   alt={"Foto precargada"}
@@ -309,6 +494,8 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
                   height={400}
                   className="object-cover h-full sm:h-max p-2 rounded-2xl"
                 />
+
+                 <div className="flex flex-wrap items-center justify-center gap-2 w-full "> <GoStarFill size={25} className="text-yellow-300 bg-white rounded-full "/> <h1>Foto Principal</h1></div></>
               ) : (
                 <div>
                   <MdOutlineAddAPhoto size={120} />
@@ -322,9 +509,43 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
               accept="image/png, image/gif, image/jpeg"
               className="hidden"
               onChange={handleFileChange}
+              multiple
             />
           </label>
         </div>
+
+
+
+
+        {/*  Card Miniaturas Imagenes  */}
+            
+        { ArrayImages.length > 0 && 
+          <div className="w-[300px] h-[400px] mt-6 pb-6 flex flex-wrap items-center justify-around rounded-2xl bg-gray-300 ">
+                
+                { ArrayImages.length > 0 && 
+                  ArrayImages.map ( (i,ind) =>  
+                  <ThumbImages 
+                    key={ind} 
+                    image={i.Url} 
+                    index={i.order}  
+                    deleteItem={ ()=>filtrarArrayFile(i.filedata?.name) }
+                    status = { i.status }
+                    setLeft={() => setMoveItem(i.order,'L')}
+                    setMain={ () => setMainItem(i.order) } 
+                    setRight={()=> setMoveItem(i.order,'R')}
+                    
+                     
+                    
+                    /> )
+                }
+          </div>
+        }
+           
+
+
+
+   
+
 
         <form onSubmit={onSubmit} className="w-[300px] mt-10">
           <label className="flex flex-col mb-4">

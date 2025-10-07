@@ -7,19 +7,21 @@ export const createProduct = async (req, res) => {
   
   try {
     
-    const { title, imageUrl, talla, precio,userId, seccionId,color, category } = req.body;
-    const product = await db.Product.create({ title, imageUrl, precio, userId, seccionId,color, category });
+    const { title, imagesUrl, talla, precio,userId, seccionId,color, category } = req.body;
+    const product = await db.Product.create({ title, precio, userId, seccionId,color, category });
     const tallas = await db.Talla.findAll({ where: {name: {[Op.in]: talla }  }});
     
-    const ids = tallas.map(t => t.id);
-
-    for (const tallaId of ids) {
+    const idsT = tallas.map(t => t.id);
+    for (const tallaId of idsT) {
       await db.Product_Talla.create({ProductId: product.id, TallaId: tallaId });
     }
 
+  
+    for (const Imagen of imagesUrl) {
+   
+      await db.product_images.create({productId: product.id, imageurl: Imagen.url, order: Imagen.order   });
+    }
 
-
-    
     res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear Producto:", err.message);
@@ -44,7 +46,15 @@ export const getProduct = async (req, res) => {
     model: db.Talla,
     attributes: ['name'],
     through: { attributes: [] }  
-  }
+  },
+      
+  {
+    model: db.product_images,
+    attributes: ['imageurl', 'order'],
+    separate: true,
+    order: [['order', 'ASC']],
+
+  },
 
 
   ],
@@ -59,11 +69,23 @@ export const getProduct = async (req, res) => {
 export const findProduct = async (req, res) => {
   try {
     
-    const product = await db.Product.findByPk(req.params.id, { include: [ {
-    model: db.Talla,
-    attributes: ['name'],
-    through: { attributes: [] }  
-  }]}) ;
+    const product = await db.Product.findByPk(req.params.id, { 
+      include: [ 
+        {
+          model: db.Talla,
+          attributes: ['name'],
+          through: { attributes: [] },
+        },
+
+        {
+          model: db.product_images,
+          attributes: ['imageurl', 'order'],
+          separate: true,
+          order: [['order', 'ASC']],
+        },
+
+
+]}) ;
     res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);

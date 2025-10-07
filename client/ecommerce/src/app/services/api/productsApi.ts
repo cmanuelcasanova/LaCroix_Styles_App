@@ -1,5 +1,5 @@
 import { baseApi } from "@/app/services/api/baseApi";
-import { qdata, SecData , product, qdataUpdate } from "./queryTypes";
+import { qdata, SecData , product, qdataUpdate, UploadImagesBD, DownloadImagesBD} from "./queryTypes";
 
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -38,11 +38,13 @@ export const productsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
-    upLoadphoto: builder.mutation<{ url: string }, { image: File }>({
-      query: ({ image }) => {
+    upLoadphoto: builder.mutation<DownloadImagesBD[], UploadImagesBD[]>({
+      query: ( data ) => {
         const formData = new FormData();
-        formData.append("image", image); 
-
+        data.map( i =>  { 
+          if(i.fileImagen) formData.append(`Image-${i.order}`, i.fileImagen)
+        }) ;  
+        
         return {
           url: "/auth/upload",
           method: "POST",

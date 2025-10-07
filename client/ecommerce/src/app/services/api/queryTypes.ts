@@ -2,7 +2,7 @@
 export interface qdata {
     title: string,
     seccionId: number,
-    imageUrl:string,
+    imagesUrl:DownloadImagesBD[],
     talla:string[],
     color: string,
     category: string,
@@ -26,7 +26,9 @@ export interface product {
     id:number,  
     title: string,
     seccionId: number
-    imageUrl:string,
+    product_images:{
+      imageurl:string,
+      order: number}[],
     Tallas:{name:string}[]
     precio:number
     category: string
@@ -80,7 +82,9 @@ export interface ShoppingDataQuery {
   precio: number;
   productId: number;
   userId: number;
-  Product: {imageUrl: string}
+  product_images:{
+      imageurl:string,
+      order: number}[],
   Talla: {name: string}
 
 
@@ -92,3 +96,15 @@ export interface ImagesBD {
   id: number;
   imageurl: string;
 }
+
+export interface UploadImagesBD {
+  fileImagen: File | null;
+  order: number;
+}
+
+
+export interface DownloadImagesBD {
+  url: string;
+  order: number;
+}
+

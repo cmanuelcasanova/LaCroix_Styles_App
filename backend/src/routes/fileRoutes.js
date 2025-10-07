@@ -9,7 +9,7 @@ const upload = multer();
 
 
 router.get("/auth/homeslice", homeslice);
-router.post("/auth/upload", authMiddleware , upload.single('image'), uploadfiles);
+router.post("/auth/upload", authMiddleware , upload.any(), uploadfiles);
 router.delete("/auth/delete", deleteImage );
 
 export default router;

@@ -9,6 +9,7 @@ import { selectTheme } from "@/app/features/theme/themeSelector";
 import { selectUsername } from  "@/app/features/auth/authSelectors"
 import { useRemoveItemMutation , useDeletePhotoMutation } from "@/app/services/api/productsApi";
 import  ConfirmationtModal  from "@/app/components/confirmation"
+import { MdOutlinePhotoCamera } from "react-icons/md";
 import Link from "next/link";
 
 
@@ -16,6 +17,7 @@ type CardProps = {
   id: number;
   title: string;
   imageUrl: string;
+  totalimages: number
   talla: {name:string}[];
   precio: number;
   onClick?: () => void;
@@ -27,6 +29,7 @@ export default function Card({
   precio,
   talla,
   id,
+  totalimages,
 }: CardProps) {
 
   const theme = useSelector(selectTheme);
@@ -129,7 +132,7 @@ export default function Card({
         </span>
       </div>
 
-      <Link href={`/itemview/${id}`} className="mb-4 overflow-hidden ">
+      <Link href={`/itemview/${id}`} className="mb-2 overflow-hidden ">
         <Image
           className="rounded object-cover"
           src={imageUrl}
@@ -140,6 +143,7 @@ export default function Card({
         />
       </Link>
 
+      <div className="flex flex-wrap items-center justify-center ml-auto bg-[#ff8ec9] rounded-2xl px-2"><MdOutlinePhotoCamera size={20} /> ({totalimages}) </div>
       
     </div>
   

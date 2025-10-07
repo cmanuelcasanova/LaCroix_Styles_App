@@ -73,7 +73,7 @@ export default function Login() {
                     idProduct: element.productId,
                     cant: element.cantidad,
                     precio: element.precio,
-                    imgUrl: element.Product.imageUrl,
+                    imgUrl: element.product_images[0].imageurl,
                     title: element.title,
                     talla: element.Talla.name,
                     mode: 'sync'

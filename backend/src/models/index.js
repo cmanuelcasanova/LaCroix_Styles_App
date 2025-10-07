@@ -7,6 +7,7 @@ import { ShoppingModel } from './shopping_Postgres.js';
 import { TallaModel } from './talla_Postgres.js';
 import { Product_Talla_Model } from './product_talla_Postgres.js';
 import { homeslice_model } from './homeslices.js'
+import { Product_Images_model } from './product_images.js'
 
 const db = {};
 
@@ -18,6 +19,7 @@ db.Shopping = ShoppingModel(sequelize);
 db.Talla = TallaModel(sequelize);
 db.Product_Talla = Product_Talla_Model(sequelize)
 db.homeslice = homeslice_model(sequelize)
+db.product_images = Product_Images_model(sequelize)
 
 
 

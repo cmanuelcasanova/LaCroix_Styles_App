@@ -426,7 +426,7 @@ useEffect(() => {
           </Link>
           }         
 
-          <div className="md:flex items-center gap-4 ml-auto  text-black mr-6">
+          <div className="md:flex items-center gap-4 ml-auto  text-black ">
             <Link
               href="/login"
               className="flex items-center mt-4 gap-2  bg-white rounded shadow-2xl w-full p-2  hover:underline"

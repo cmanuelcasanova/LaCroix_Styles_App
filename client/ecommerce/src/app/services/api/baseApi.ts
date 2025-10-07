@@ -9,5 +9,7 @@ export const baseApi = createApi({
   }),
   tagTypes: ['Product', 'User','Shopping', 'fileApi'],
   endpoints: () => ({}),
+  keepUnusedDataFor: process.env.NODE_ENV === 'development' ? 0 : 60,
+
 });
 

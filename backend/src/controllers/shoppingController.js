@@ -8,9 +8,14 @@ export const getShopping = async (req, res) => {
     const Items = await db.Shopping.findAll({ where: {userId:req.user.id}, 
       include: [
     {
-      model: db.Product,
-      attributes: ['imageUrl'], 
-    },
+      model: db.Product, 
+       include: [
+        {
+        model: db.product_images,
+        attributes: ['imageurl', 'order'],
+        separate: true,
+        order: [['order', 'ASC']],
+    }]},
     {
       model: db.Talla,
       attributes: ['name'], 

@@ -37,3 +37,25 @@ body {
        recortando partes si el aspecto ratio no coincide. */
     object-fit: cover !important; 
 }
+
+
+.image-gallery-thumbnail {
+  height: 80px; /* o el valor que prefieras */
+  object-fit: cover;
+}
+
+.image-gallery-slide-wrapper .custom-gallery-ItemView{
+  height: 400px; /* altura fija para todas las imágenes */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.image-gallery-image .custom-gallery-ItemVie {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain; /* o cover si quieres recorte */
+}
+
+
