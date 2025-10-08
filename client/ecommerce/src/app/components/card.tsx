@@ -53,7 +53,8 @@ export default function Card({
       if(borrar) {
 
          DeleteItem({ id: id }).unwrap();
-         deletePhoto({ name: imageUrl.split("/").pop() }).unwrap();
+
+         deletePhoto({ name: imageUrl.split("/").pop() , id: id} ).unwrap();
       }
     } catch (err) {
       console.log(err);

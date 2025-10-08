@@ -230,7 +230,7 @@ const handleClick = (i:number) => {
 }
 
 
-
+console.log(filteredProducts)
 return (
     <div className="flex flex-col items-center justify-center">
       
