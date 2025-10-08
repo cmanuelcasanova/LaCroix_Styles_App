@@ -235,7 +235,7 @@ return (
     <div className="flex flex-col items-center justify-center">
       
 
-      {/*<ImageSlider imageUrls={images}/> */}
+      <ImageSlider imageUrls={images}/> 
 
       <h1 className="font-bold text-3xl my-8 "> Shopping with US </h1>
 

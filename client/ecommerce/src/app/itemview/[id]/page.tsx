@@ -172,7 +172,7 @@ export default function Item() {
       <div className="bg-white flex flex-col items-center shadow-2xl mt-20 rounded-2xl p-4 mb-6 mx-4 w-dwv">
         
        
-          {/*<ImageGallery items={ ImagenesArray }  additionalClass="custom-gallery-ItemView"/>*/}
+          <ImageGallery items={ ImagenesArray }  additionalClass="custom-gallery-ItemView"/>
        
 
         <div className="flex flex-wrap justify-around items-center gap-4 mt-6 text-2xl font-extrabold w-full">
