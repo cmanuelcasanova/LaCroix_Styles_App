@@ -79,7 +79,7 @@ export const findProduct = async (req, res) => {
 
         {
           model: db.product_images,
-          attributes: ['imageurl', 'order'],
+          attributes: ['id','imageurl', 'order'],
           separate: true,
           order: [['order', 'ASC']],
         },
@@ -106,8 +106,16 @@ export const deleteProduct = async (req, res) => {
 export const UpdateProduct = async (req, res) => {
   try {
     
-    const { title, imageUrl, talla, precio,userId, seccionId,color, category, id } = req.body;
-    const product = await db.Product.update({ title, imageUrl, talla, precio, userId, seccionId,color, category }, {where: {id}});
+    const { title, imagesUrl, talla, precio,userId, seccionId,color, category, id } = req.body;
+    const product = await db.Product.update({ title, talla, precio, userId, seccionId,color, category }, {where: {id}});
+    
+      
+    for (const Imagen of imagesUrl) {
+   
+      await db.product_images.create({productId: id, imageurl: Imagen.url, order: Imagen.order   });
+    }
+    
+    
     res.status(201).json(product);
   } catch (err) {
     console.error("❌ Error al crear tarea:", err.message);

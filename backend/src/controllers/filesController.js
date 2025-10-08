@@ -45,6 +45,10 @@ export const uploadfiles = async (req, res) => {
 
 
 export const deleteImage = async (req, res) => {
+
+
+  const idreq = Number(req.query.id)
+ 
  
   const filePath = req.query.filePath?.toString().trim();
 
@@ -66,6 +70,10 @@ if (!filePath || typeof filePath !== "string") {
  
   try{
     await imagekit.deleteFile(fileId);
+
+    const deleteimagentable = await db.product_images.destroy({ where: { id: idreq}  } );
+
+
     return res.status(200).json({ message: "Imagen Borrada" });
   } catch {
     return res.status(401).json({ message: "Error al borrar Imagen" });

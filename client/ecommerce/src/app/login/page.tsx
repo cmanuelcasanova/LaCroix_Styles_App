@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useLoginMutation } from "@/app/services/api/usersApi";
-import { useGetAllItemsCarQuery } from "@/app/services/api/ShoppingApi";
+import { useLazyGetAllItemsCarQuery } from "@/app/services/api/ShoppingApi";
 import { setUser } from "@/app/features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
@@ -12,8 +12,8 @@ import { addItem } from "@/app/features/Car/CarSlice";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useSelector } from "react-redux";
 import { useCreateItemCarMutation } from "@/app/services/api/ShoppingApi"
-import { selectUsername } from "@/app/features/auth/authSelectors";
 import { useState } from "react";
+
 
 
 type FormData = {
@@ -24,15 +24,13 @@ type FormData = {
 export default function Login() {
   const { register, handleSubmit } = useForm<FormData>();
   const dispatch = useDispatch<AppDispatch>();
-  const Username = useSelector(selectUsername);
-  const { data: itemsCarBD, refetch } = useGetAllItemsCarQuery(undefined, {skip: !Username});
+  const [play_LazyGetItemsCar, { data: itemsCarBD }] = useLazyGetAllItemsCarQuery();
   const router = useRouter();
   const [Login] = useLoginMutation();
   const itemsCarrito = useSelector(selectItemsc);
   const [addItemBD] = useCreateItemCarMutation ();
   const [mergeRTK,setMergeRTK] = useState<boolean>(false);
   const [mergeDB,setMergeDB] = useState<boolean>(false);
-
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -47,11 +45,9 @@ export default function Login() {
         })
       );
 
-      if (Username && refetch) {
-        await refetch();
-      }
+      if(response.username) {await play_LazyGetItemsCar();}
 
-    
+
       router.push("/");
     } catch (error) {
       console.error("Error en el Login:", error);
@@ -62,8 +58,10 @@ export default function Login() {
   useEffect(() => {
     if (itemsCarBD && !mergeRTK) {
     
-      //console.log(itemsCarBD)
+  
       if (itemsCarBD.length>0) {
+
+        
           
          itemsCarBD.forEach(element => {
 
@@ -73,7 +71,7 @@ export default function Login() {
                     idProduct: element.productId,
                     cant: element.cantidad,
                     precio: element.precio,
-                    imgUrl: element.product_images[0].imageurl,
+                    imgUrl: element.Product.product_images[0].imageurl,
                     title: element.title,
                     talla: element.Talla.name,
                     mode: 'sync'
@@ -117,6 +115,7 @@ export default function Login() {
 
 
   }, [itemsCarBD, dispatch,itemsCarrito,addItemBD, mergeRTK, mergeDB ]);
+
 
   return (
     <div className="flex justify-center items-center min-h-screen mx-4 mt-10 ">

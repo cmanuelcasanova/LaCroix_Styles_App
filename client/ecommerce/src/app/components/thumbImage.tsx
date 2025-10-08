@@ -5,6 +5,7 @@ import { GoStarFill } from "react-icons/go";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdFiberNew } from "react-icons/md";
+import { useState, useEffect } from "react";
 interface thumbImageProps {
 
     image: string
@@ -20,6 +21,27 @@ interface thumbImageProps {
 
 
 export default function ThumbImages( {image, index, deleteItem, setMain, setLeft,setRight, status}: thumbImageProps ){
+
+  const [imagen_small , setImagen_Small] = useState<string>("")
+
+
+
+  useEffect(() => {
+
+  switch (status) {
+    case 'NEW':
+      setImagen_Small(image)
+      break;
+    case 'EXISTING':
+      setImagen_Small(image.replace("LaCroix/", "LaCroix/tr:h-100/"))
+      break;
+    default:
+      break;
+  }
+
+  }, [image, status])
+  
+
 
 
 
@@ -42,13 +64,14 @@ export default function ThumbImages( {image, index, deleteItem, setMain, setLeft
           className="ml-auto text-[#ff95cb] z-10 bg-white rounded-full " 
           onClick={() => deleteItem()}    />}   
 
+        { imagen_small &&
         <Image
-            src={image}
+            src={imagen_small}
             alt={"Foto precargada"}
-            width={20}
-            height={20}
-            className="object-cover absolute h-full w-full sm:h-max rounded-2xl "
-        />
+            width={100}
+            height={100}
+            className="object-contain absolute h-full w-full sm:h-max rounded-2xl "
+        />}
                       
         <div className="flex flex-wrap w-full justify-between items-center  z-10">
              {index!==0 && <IoIosArrowBack size={25} onClick={()=>setLeft()} className="bg-white rounded-full" />}

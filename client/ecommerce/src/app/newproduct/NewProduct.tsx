@@ -4,7 +4,7 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery, useUpdateProductMutation } from "../services/api/productsApi";
+import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery, useUpdateProductMutation, useDeletePhotoMutation } from "../services/api/productsApi";
 import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter , useSearchParams } from "next/navigation";
 import Select from "react-select";
@@ -52,7 +52,7 @@ type OptionTypeG = {
 type ImageStatus = 'NEW' | 'EXISTING' | 'DELETED' | 'TEMP';
 
 interface ImagewithPriority  {
-
+  id: number | null;
   order: number;
   filedata: File | null;
   Url: string;
@@ -87,9 +87,11 @@ export default function NewProduct() {
   const mode = searchParams.get("mode");
   const id_item =  searchParams.get("id");
   const dispatch = useDispatch<AppDispatch>();
+  const [fotoscargadas, setFotosCargadas] = useState<boolean>(false)
   const [fotoFile, setFotofile] = useState<File | null>(null)
   const [ArrayFiles, setArrayFiles] = useState<File[]>([])
   const [ArrayImages, setArrayImages] = useState< ImagewithPriority[]>([])
+  const [deletePhoto] = useDeletePhotoMutation();
   
   
   
@@ -105,10 +107,11 @@ useEffect(() => {
     setValue('precio', item?.precio)
     setFoto(item?.product_images[0].imageurl)
     setImagenUrl(item?.product_images[0].imageurl)
+    setFotosCargadas(true)
 
     const ImagesUp = item.product_images.map ( i => {
 
-      return ( {filedata: null,  Url: i.imageurl, order: i.order,  status: 'EXISTING' as ImageStatus }   )
+      return ( {filedata: null, id:i.id, Url: i.imageurl, order: i.order,  status: 'EXISTING' as ImageStatus }   )
          
     }  )
 
@@ -152,14 +155,26 @@ useEffect(() => {
 
   useEffect(() => {
 
-    if(ArrayImages.length > 0){
+    
+    if(fotoscargadas) {      
       setFoto(ArrayImages[0].Url);
       setFotofile(ArrayImages[0].filedata)
+    }else{
+      setFoto(null);
+      setFotofile(null)
     }
 
+  }, [fotoscargadas, ArrayImages]);
+
+ useEffect(() => {
+
+  if(ArrayImages.length>0){
+  const newArray = ArrayImages.filter( f => f.status !== 'DELETED' )
+    if(newArray.length!==0) {      
+      setFotosCargadas(true)
+    }else{setFotosCargadas(false)}
+  }
   }, [ArrayImages]);
-
-
 
 
   if (isLoading) return <LoadingModal />;
@@ -178,7 +193,7 @@ useEffect(() => {
       const NewArrayImages:ImagewithPriority[] = arraytarget.map ( (item, index) => {
 
           const offfset = index + totalArrayImages
-          return ( { filedata: item , Url: URL.createObjectURL(item), order: offfset , status: 'NEW' as ImageStatus }  )
+          return ( { id:null, filedata: item , Url: URL.createObjectURL(item), order: offfset , status: 'NEW' as ImageStatus }  )
 
 
       }  )
@@ -186,6 +201,8 @@ useEffect(() => {
 
       setArrayFiles( prev => [...prev, ...arraytarget])
       setArrayImages  ( prev => [...prev, ...NewArrayImages])
+      e.target.value = '';
+
     
     
     }
@@ -260,11 +277,28 @@ useEffect(() => {
 
     }else{
 
+    
+      const FilesImagesArray = ArrayImages.filter(f => f.status === 'NEW' ).map( i => { 
+          
+            return { fileImagen: i.filedata, order: i.order}
+      })
+
+     const result = await upLoadphoto(FilesImagesArray).unwrap(); 
+
+    
+     ArrayImages.filter( f => f.status === 'DELETED' ).map( async i => { 
+        try {
+          if(i.id) await deletePhoto({ name: i.Url.split("/").pop() , id:i.id}).unwrap();
+        } catch (err) {}
+    })
+
+
+
   
      await UpdateProduct({
         id:item?.id,
         title: data.titulo,
-        imageUrl: imagenUrl,
+        imagesUrl: result,
         seccionId: seccion.value,
         category: categoria.value,
         talla: [],
@@ -350,29 +384,57 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
   }
 };
 
-const filtrarArrayFile = (valor :string | undefined) => {
+const filtrarArrayFile = (order_find :number | undefined, status: string) => {
 
+  
+  
+  
   let isMain=false
   let order_erase:number
-  if(valor) {
+
+ 
     const newArray = ArrayImages.filter ( i => {
       
-      if(i.filedata?.name !== valor) {
+      if(i.order !== order_find) {
+        
         return i
       }else{ 
+
         
-        order_erase=i.order
-        if(i.order===0) isMain=true
-        return false
-      } 
+        switch (status) {
+          case 'EXISTING':
+            order_erase=i.order;
+            if(i.order===0) isMain=true;
+            i.order=100
+            i.status='DELETED'
+            return true;
+            
+                  
+            case 'NEW':
+             order_erase=i.order
+             if(i.order===0) isMain=true
+             return false
+            
+            
+            case 'DELETED':
+            return i
+            
+        
+            default:
+            break;
+        }
+      }
     }
     )
+
+   
 
     if(isMain) {
       const newArray2 = newArray.map ( i => {
         i.order = i.order-1
         return i
       })
+      newArray2.sort((a, b) => a.order - b.order);
       setArrayImages(newArray2)
     }else{
 
@@ -380,12 +442,13 @@ const filtrarArrayFile = (valor :string | undefined) => {
         if(i.order > order_erase) {i.order = i.order-1}
         return i
       })
-
+      newArray2.sort((a, b) => a.order - b.order);
       setArrayImages(newArray2)
     }
-
-    if(newArray.length===0) setFoto(null)
- }
+    
+    const newArray3 = newArray.filter( f => f.status !== 'DELETED' )
+    if(newArray3.length===0) setFotosCargadas(false)
+ 
 }
 
 
@@ -470,6 +533,7 @@ const setMoveItem = (indice:number, away:string) => {
 
 console.log(ArrayImages)
 
+
   return (
 
 
@@ -481,18 +545,18 @@ console.log(ArrayImages)
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
 
         
-        <div className="w-[300px] h-[400px] flex flex-col items-center justify-center rounded-2xl bg-gray-300 ">
+        <div className="w-[300px] h-[400px] flex flex-col items-center rounded-2xl bg-gray-300 ">
           
           
           <label className="flex flex-col h-[500px] justify-center items-center">
-            <span>
+            <span className="h-[400px] flex flex-col items-center justify-center">
               {foto ? ( <>
                 <Image
                   src={foto}
                   alt={"Foto precargada"}
                   width={300}
                   height={400}
-                  className="object-cover h-full sm:h-max p-2 rounded-2xl"
+                  className="object-contain h-[350px] sm:h-[400px] p-2 rounded-2xl"
                 />
 
                  <div className="flex flex-wrap items-center justify-center gap-2 w-full "> <GoStarFill size={25} className="text-yellow-300 bg-white rounded-full "/> <h1>Foto Principal</h1></div></>
@@ -519,25 +583,27 @@ console.log(ArrayImages)
 
         {/*  Card Miniaturas Imagenes  */}
             
-        { ArrayImages.length > 0 && 
-          <div className="w-[300px] h-[400px] mt-6 pb-6 flex flex-wrap items-center justify-around rounded-2xl bg-gray-300 ">
+        { fotoscargadas && 
+          <div className="w-[300px] h-[400px] my-2 py-2 flex flex-wrap items-center justify-around rounded-2xl bg-gray-300 ">
                 
-                { ArrayImages.length > 0 && 
-                  ArrayImages.map ( (i,ind) =>  
+             {
+                  ArrayImages.filter (f => f.status!=='DELETED').map ( (i,ind) =>  
+
+                
                   <ThumbImages 
                     key={ind} 
                     image={i.Url} 
                     index={i.order}  
-                    deleteItem={ ()=>filtrarArrayFile(i.filedata?.name) }
+                    deleteItem={ ()=>filtrarArrayFile(i.order, i.status) }
                     status = { i.status }
                     setLeft={() => setMoveItem(i.order,'L')}
                     setMain={ () => setMainItem(i.order) } 
                     setRight={()=> setMoveItem(i.order,'R')}
                     
-                     
-                    
-                    /> )
-                }
+                  
+                  
+                    />  )  
+            }
           </div>
         }
            
@@ -665,18 +731,25 @@ console.log(ArrayImages)
               { actualizar ? 'Actualizar' : 'Registrar Producto' }
             </button>
          
-            <button
-              onClick={() => router.push("/")}
-              className={`bg-gray-300 text-black w-[180px] rounded-md mb-4 mt-4 h-10 mx-auto font-semibold active:scale-95
+            
+         
+         
+          </div>
+        </form>
+
+        <button
+              onClick={() => {
+                if(item){
+                 router.push(`/itemview/${item.id}`)
+                }else{router.push("/")}
+              
+              }}
+              className={`bg-gray-300 text-black w-[180px] rounded-md mb-4 p-2 h-15 mx-auto font-semibold active:scale-95
                  transition-colors duration-300 ease-in-out hover:bg-[#677483] cursor-pointer`}
             >
                Cancelar 
             </button>
          
-         
-         
-          </div>
-        </form>
       </div>
     </div>
   );

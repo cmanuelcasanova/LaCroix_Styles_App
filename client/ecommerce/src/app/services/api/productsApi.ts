@@ -55,10 +55,11 @@ export const productsApi = baseApi.injectEndpoints({
       invalidatesTags: ["Product"],
     }),
 
-    deletePhoto: builder.mutation<void, { name: string | undefined }>({
-      query: ({ name }) => {
+    deletePhoto: builder.mutation<void, { name: string | undefined, id:number }>({
+      query: ({ name , id}) => {
+        console.log(id)
         return {
-          url: `/auth/delete?filePath=${name} `,
+          url: `/auth/delete?filePath=${name}&id=${id}`,
           method: "DELETE",
         };
       },

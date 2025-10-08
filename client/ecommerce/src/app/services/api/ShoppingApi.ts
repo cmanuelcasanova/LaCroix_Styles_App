@@ -43,6 +43,7 @@ export const shoppingApi = baseApi.injectEndpoints({
 
 export const {
  useCreateItemCarMutation,
+ useLazyGetAllItemsCarQuery,
  useGetAllItemsCarQuery,
  useDeleteItemCarMutation,
  useUpdateItemCarMutation

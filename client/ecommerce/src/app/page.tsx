@@ -15,7 +15,7 @@ import { useState , useEffect } from "react";
 import { filteritem } from "@/app/features/filter/FilterTypes"
 import { product } from "@/app/services/api/queryTypes" 
 import { setUser } from "@/app/features/auth/authSlice";
-import { useProfileQuery } from "@/app/services/api/usersApi";
+import { useProfileQuery , useLazyProfileQuery } from "@/app/services/api/usersApi";
 import { selectUsername } from "@/app/features/auth/authSelectors";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
@@ -59,14 +59,22 @@ export default function Home() {
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
  const { data: HomeImages } = useGetHomeImagesQuery();
  const [ images, setImages ] = useState<string[]>([])
- const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile } = useProfileQuery(undefined, {skip: !Username});
-
+ //const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile, error: error_profile } = useProfileQuery();
+ const [play_LazyGetProfile, { data: profile,isLoading: Loading_Profile, isFetching:Fetching_Profile, error: error_profile }] = useLazyProfileQuery();
 
 useEffect (() => {
 
 if (filteredProducts) setTotalpaginas(Math.ceil(filteredProducts.length / itemsforpage))
 
 },[filteredProducts])
+
+
+useEffect(() => {
+  if (Username) {
+    play_LazyGetProfile(); 
+  }
+}, [Username,play_LazyGetProfile]);
+
 
 
 useEffect(() => {
@@ -194,6 +202,7 @@ useEffect(()=> {
 
 
 if (isLoading || isFetching ) return <LoadingModal />;
+
 if (error) return <ErrorConection />;
 
 

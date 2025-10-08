@@ -8,7 +8,7 @@ export const getShopping = async (req, res) => {
     const Items = await db.Shopping.findAll({ where: {userId:req.user.id}, 
       include: [
     {
-      model: db.Product, 
+      model: db.Product,  attributes: ['id'],
        include: [
         {
         model: db.product_images,

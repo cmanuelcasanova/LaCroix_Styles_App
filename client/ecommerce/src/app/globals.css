@@ -42,6 +42,7 @@ body {
 .image-gallery-thumbnail {
   height: 80px; /* o el valor que prefieras */
   object-fit: cover;
+  margin-top: 30px;
 }
 
 .image-gallery-slide-wrapper .custom-gallery-ItemView{
@@ -50,6 +51,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+
 }
 
 .image-gallery-image .custom-gallery-ItemVie {

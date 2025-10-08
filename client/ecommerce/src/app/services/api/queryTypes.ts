@@ -14,7 +14,7 @@ export interface qdataUpdate {
     id: number | undefined,
     title: string,
     seccionId: number
-    imageUrl:string,
+    imagesUrl:DownloadImagesBD[],
     talla:string[]
     color: string
     category: string
@@ -27,6 +27,7 @@ export interface product {
     title: string,
     seccionId: number
     product_images:{
+      id:number
       imageurl:string,
       order: number}[],
     Tallas:{name:string}[]
@@ -75,21 +76,35 @@ export interface ShoppingData {
   
 }
 
+
+export interface ProductImage {
+  imageurl: string;
+  order: number;
+}
+
+export interface Product {
+  id: number;
+  product_images: ProductImage[];
+}
+
+export interface Talla {
+  name: string;
+}
+
 export interface ShoppingDataQuery {
-  id: number,
+  id: number;
   title: string;
+  tallaId: number;
   cantidad: number;
   precio: number;
   productId: number;
   userId: number;
-  product_images:{
-      imageurl:string,
-      order: number}[],
-  Talla: {name: string}
-
-
-  
+  createdAt: string;
+  updatedAt: string;
+  Product: Product;
+  Talla: Talla;
 }
+
 
 
 export interface ImagesBD {
