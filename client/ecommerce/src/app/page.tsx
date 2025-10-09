@@ -11,11 +11,11 @@ import { addFilters } from "@/app/features/filter/FilterSlice"
 import { setItems } from "@/app/features/items/itemsSlice" 
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../app/store";
-import { useState , useEffect } from "react";
+import { useState , useEffect , useRef } from "react";
 import { filteritem } from "@/app/features/filter/FilterTypes"
 import { product } from "@/app/services/api/queryTypes" 
 import { setUser } from "@/app/features/auth/authSlice";
-import { useProfileQuery , useLazyProfileQuery } from "@/app/services/api/usersApi";
+import { useLazyProfileQuery } from "@/app/services/api/usersApi";
 import { selectUsername } from "@/app/features/auth/authSelectors";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
@@ -48,6 +48,7 @@ export default function Home() {
  const theme = useSelector(selectTheme);
  const Username = useSelector(selectUsername);
  const dispatch = useDispatch<AppDispatch>();
+ const first_time = useRef(true)
  const bgClass = themeBg[theme]
  const [paginf, setPagInf] = useState<number>(0)
  const [pagsup, setPagSup] = useState<number>(itemsforpage)
@@ -69,10 +70,20 @@ if (filteredProducts) setTotalpaginas(Math.ceil(filteredProducts.length / itemsf
 },[filteredProducts])
 
 
+
 useEffect(() => {
-  if (Username) {
-    play_LazyGetProfile(); 
-  }
+
+    if(first_time) {
+      first_time.current=(false)
+    }
+
+    try {
+      
+      const result = play_LazyGetProfile().unwrap 
+
+    }catch(error_profile){ console.log(error_profile)}
+
+  
 }, [Username,play_LazyGetProfile]);
 
 
@@ -230,7 +241,7 @@ const handleClick = (i:number) => {
 }
 
 
-console.log(filteredProducts)
+
 return (
     <div className="flex flex-col items-center justify-center">
       

@@ -4,7 +4,7 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery, useUpdateProductMutation, useDeletePhotoMutation } from "../services/api/productsApi";
+import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery, useUpdateProductMutation, useDeletePhotoMutation, useUpdatePhotoMutation } from "../services/api/productsApi";
 import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter , useSearchParams } from "next/navigation";
 import Select from "react-select";
@@ -23,9 +23,7 @@ import { logout as logout_Auth} from "@/app/features/auth/authSlice";
 import ThumbImages from "@/app/components/thumbImage"
 import { MultiValue } from "react-select";
 import { GoStarFill } from "react-icons/go";
-import { UploadImagesBD  } from "@/app/services/api/queryTypes"
-import { resumePluginState } from "next/dist/build/build-context";
-import { join } from "path";
+
  
 
 
@@ -49,7 +47,7 @@ type OptionTypeG = {
   label: string;
 };
 
-type ImageStatus = 'NEW' | 'EXISTING' | 'DELETED' | 'TEMP';
+type ImageStatus = 'NEW' | 'EXISTING' | 'DELETED' | 'UPDATE';
 
 interface ImagewithPriority  {
   id: number | null;
@@ -68,13 +66,12 @@ export default function NewProduct() {
   const router = useRouter();
   const [seccion, setSeccion] = useState<OptionType | null>(null);
   const [categoria, setCategoria] = useState<OptionTypeG | null>(null);
-  const [talla, setTalla] = useState< OptionTypeG[] | null>([]);
+  const [talla, setTalla] = useState< OptionType[] | null>([]);
   const [foto, setFoto] = useState<string | null>(null);
   const [modal, setModal] = useState<boolean>(false);
   const [Uploading, setUploading] = useState<boolean>(false);
   const [tipo,setTipo] = useState<boolean>(false)
   const [actualizar,setActualizar] = useState<boolean>(false)
-  const [imagenUrl, setImagenUrl] = useState<string>("");
   const [addItem] = useAddItemMutation();
   const [UpdateProduct] = useUpdateProductMutation ();
   const [upLoadphoto] = useUpLoadphotoMutation();
@@ -88,10 +85,9 @@ export default function NewProduct() {
   const id_item =  searchParams.get("id");
   const dispatch = useDispatch<AppDispatch>();
   const [fotoscargadas, setFotosCargadas] = useState<boolean>(false)
-  const [fotoFile, setFotofile] = useState<File | null>(null)
-  const [ArrayFiles, setArrayFiles] = useState<File[]>([])
   const [ArrayImages, setArrayImages] = useState< ImagewithPriority[]>([])
   const [deletePhoto] = useDeletePhotoMutation();
+  const [updatePhoto] = useUpdatePhotoMutation();
   
   
   
@@ -106,7 +102,6 @@ useEffect(() => {
     setValue('titulo',item?.title)
     setValue('precio', item?.precio)
     setFoto(item?.product_images[0].imageurl)
-    setImagenUrl(item?.product_images[0].imageurl)
     setFotosCargadas(true)
 
     const ImagesUp = item.product_images.map ( i => {
@@ -117,8 +112,8 @@ useEffect(() => {
 
     setArrayImages(ImagesUp)
     
-    const tallasup = item?.Tallas.map(i => ( {value: i.name , label: i.name }) )
-    setTalla( tallasup)
+    const tallasup = item?.Tallas.map(i => ( {value: i.id , label: i.name }) )
+    setTalla( tallasup.sort ((a,b)=> a.value - b.value ) )
 
     setColor ({label: item?.color, value: COLOR_PALETTE.find((c)=> item?.color === c.label )?.label ?? item?.color})
     setActualizar(true)
@@ -153,15 +148,20 @@ useEffect(() => {
   }, [error, router]);
 
 
+
+  
+
+
+
   useEffect(() => {
 
     
     if(fotoscargadas) {      
       setFoto(ArrayImages[0].Url);
-      setFotofile(ArrayImages[0].filedata)
+
     }else{
       setFoto(null);
-      setFotofile(null)
+
     }
 
   }, [fotoscargadas, ArrayImages]);
@@ -199,7 +199,7 @@ useEffect(() => {
       }  )
 
 
-      setArrayFiles( prev => [...prev, ...arraytarget])
+
       setArrayImages  ( prev => [...prev, ...NewArrayImages])
       e.target.value = '';
 
@@ -258,10 +258,6 @@ useEffect(() => {
     const result = await upLoadphoto(FilesImagesArray).unwrap(); 
 
     
-
-    
-
-
       {/*  Creando nuevo producto en Backend   */ }
 
       await addItem({
@@ -278,18 +274,27 @@ useEffect(() => {
     }else{
 
     
-      const FilesImagesArray = ArrayImages.filter(f => f.status === 'NEW' ).map( i => { 
+    const FilesImagesArray = ArrayImages.filter(f => f.status === 'NEW' ).map( i => { 
           
             return { fileImagen: i.filedata, order: i.order}
-      })
+        })
 
      const result = await upLoadphoto(FilesImagesArray).unwrap(); 
+
+     
+     ArrayImages.filter(f => f.status === 'UPDATE' ).map( async i => { 
+          
+            console.log("UPDATE")
+            if( i.id && item?.id) {
+              await updatePhoto( {id: i.id , order: i.order , productId: item.id } )
+            }
+      })
 
     
      ArrayImages.filter( f => f.status === 'DELETED' ).map( async i => { 
         try {
           if(i.id) await deletePhoto({ name: i.Url.split("/").pop() , id:i.id}).unwrap();
-        } catch (err) {}
+        } catch (err) {console.log(err)}
     })
 
 
@@ -301,7 +306,7 @@ useEffect(() => {
         imagesUrl: result,
         seccionId: seccion.value,
         category: categoria.value,
-        talla: [],
+        talla: talla.map(t => t.value),
         precio: data.precio,
         color: color.label,
         userId: profile.userId
@@ -324,7 +329,7 @@ useEffect(() => {
       setTalla(null)
       setModal(true)
       setTipo(true)
-      setImagenUrl("")
+
       
      
     } catch  {
@@ -362,11 +367,15 @@ const handleChangeG = (selectedOption:  OptionTypeG | null, actionMeta: { name?:
 
 
 const handleChangeTallas = (
-  selectedOptions: MultiValue<OptionTypeG>
-) => {
-  setTalla([...selectedOptions]);
-};
+  selectedOptions: MultiValue<OptionType>
 
+) => {
+
+   const arrayTallasCopy = (selectedOptions as OptionType[]).sort((a, b) => a.value - b.value);
+
+  setTalla([...arrayTallasCopy]);
+
+};
 
 
 const getCategoryOptions = (seccionValue: number | undefined) => {
@@ -432,6 +441,7 @@ const filtrarArrayFile = (order_find :number | undefined, status: string) => {
     if(isMain) {
       const newArray2 = newArray.map ( i => {
         i.order = i.order-1
+        if(i.status==='EXISTING') i.status = 'UPDATE'
         return i
       })
       newArray2.sort((a, b) => a.order - b.order);
@@ -439,7 +449,10 @@ const filtrarArrayFile = (order_find :number | undefined, status: string) => {
     }else{
 
       const newArray2 = newArray.map ( i => {
-        if(i.order > order_erase) {i.order = i.order-1}
+        if(i.order > order_erase) {
+          i.order = i.order-1
+           if(i.status==='EXISTING') i.status = 'UPDATE'
+        }
         return i
       })
       newArray2.sort((a, b) => a.order - b.order);
@@ -462,11 +475,13 @@ const setMainItem = (indice:number) => {
     const newArraySafe = ArrayImages.map(item => {
 
         if (item.order === 0) {
-            return { ...item, order: indice }; 
+            const statusverificate = item.status==='EXISTING' ? 'UPDATE' : item.status
+            return { ...item, order: indice, status: statusverificate}; 
         }
 
         else if (item.order === indice) {
-            return { ...item, order: 0 }; // 
+            const statusverificate = item.status==='EXISTING' ? 'UPDATE' : item.status
+            return { ...item, order: 0,status: statusverificate }; // 
         }
         else {
             return item; 
@@ -485,11 +500,13 @@ const setMoveItem = (indice:number, away:string) => {
         const newArraySafe = ArrayImages.map(item => {
 
             if (item.order === indice-1) {
-                return { ...item, order: indice }; 
+                const statusverificate = item.status==='EXISTING' ? 'UPDATE' : item.status
+                return { ...item, order: indice, status: statusverificate  }; 
             }
 
             else if (item.order === indice) {
-                return { ...item, order: indice-1 }; // 
+                const statusverificate = item.status==='EXISTING' ? 'UPDATE' : item.status
+                return { ...item, order: indice-1 , status: statusverificate }; // 
             }
             else {
                 return item; 
@@ -504,11 +521,17 @@ const setMoveItem = (indice:number, away:string) => {
         const newArraySafe = ArrayImages.map(item => {
 
           if (item.order === indice ) {
-              if(indice+1 !== ArrayImages.length) {return { ...item, order: indice+1 }}else{return {...item}}; 
+              if(indice+1 !== ArrayImages.length) {
+                const statusverificate = item.status==='EXISTING' ? 'UPDATE' : item.status
+                return { ...item, order: indice+1, status: statusverificate }
+              }else{
+                return {...item}
+              }; 
           }
 
           else if (item.order === indice+1) {
-              return { ...item, order: indice }; // 
+              const statusverificate = item.status==='EXISTING' ? 'UPDATE' : item.status
+              return { ...item, order: indice, status: statusverificate }; // 
           }
           else {
               return item; 
@@ -528,10 +551,6 @@ const setMoveItem = (indice:number, away:string) => {
 
 
 
-
-  
-
-console.log(ArrayImages)
 
 
   return (
@@ -582,16 +601,21 @@ console.log(ArrayImages)
 
 
         {/*  Card Miniaturas Imagenes  */}
-            
+        
+      
+      
         { fotoscargadas && 
           <div className="w-[300px] h-[400px] my-2 py-2 flex flex-wrap items-center justify-around rounded-2xl bg-gray-300 ">
                 
              {
-                  ArrayImages.filter (f => f.status!=='DELETED').map ( (i,ind) =>  
 
-                
+                 
+                  ArrayImages.filter (f => f.status!=='DELETED')
+                  .sort((a, b) => a.order - b.order)
+                  .map ( (i) =>  
+
                   <ThumbImages 
-                    key={ind} 
+                    key={i.id} 
                     image={i.Url} 
                     index={i.order}  
                     deleteItem={ ()=>filtrarArrayFile(i.order, i.status) }

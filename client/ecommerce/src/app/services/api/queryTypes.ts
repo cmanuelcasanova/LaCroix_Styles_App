@@ -3,7 +3,7 @@ export interface qdata {
     title: string,
     seccionId: number,
     imagesUrl:DownloadImagesBD[],
-    talla:string[],
+    talla:number[],
     color: string,
     category: string,
     precio:number,
@@ -15,7 +15,7 @@ export interface qdataUpdate {
     title: string,
     seccionId: number
     imagesUrl:DownloadImagesBD[],
-    talla:string[]
+    talla:number[]
     color: string
     category: string
     precio:number
@@ -30,7 +30,7 @@ export interface product {
       id:number
       imageurl:string,
       order: number}[],
-    Tallas:{name:string}[]
+    Tallas:{name:string, id:number}[]
     precio:number
     category: string
     color: string

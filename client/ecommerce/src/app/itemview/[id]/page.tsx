@@ -48,6 +48,7 @@ export default function Item() {
   const [deletePhoto] = useDeletePhotoMutation();
   const [modal, setModal] = useState<boolean>(false);
   const [borrar, setBorrar] = useState<boolean>(false);
+  const [arrayTallas, setArrayTallas] = useState<{id: number,name:string}[]>([])
   const [addItemCarBD] = useCreateItemCarMutation();
   const user = useSelector(selectUsername);
   const [selectedTallas, setSelectedTallas] = useState<string[]>([]);
@@ -96,6 +97,13 @@ export default function Item() {
     }, [item]);
 
 
+     useEffect(() => {
+      if(item?.Tallas) {
+        const array = [...item?.Tallas]
+        array.sort((a,b)=> a.id - b.id  )
+        setArrayTallas(array)
+      }
+     },[item?.Tallas])
 
 
   const handleDelete = async () => {
@@ -193,9 +201,10 @@ export default function Item() {
         <h1 className="mr-auto mt-4 mb-2"> TALLA: </h1>
 
         <div className="flex flex-wrap gap-2 mr-auto">
-          {item.Tallas.map((element, index) => (
+          {         
+          arrayTallas.map((element) => (
             <div
-              key={index}
+              key={element.id}
               className={`flex flex-col items-center justify-center h-[40px] w-[40px] rounded-full mr-auto font-bold ${
                 selectedTallas.includes(element.name)
                   ? "bg-green-300 hover:bg-green-200  "

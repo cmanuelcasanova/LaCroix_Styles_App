@@ -94,3 +94,23 @@ export const homeslice = async (req, res) => {
 };
 
 
+
+
+
+export const update_image = async (req, res) => {
+
+
+  const { id , order, productId } = req.body
+ 
+  try{
+   
+
+    await db.product_images.update(  {order: order} ,{ where: { id: id , productId:productId }  } );
+
+    return res.status(200).json({ message: "Imagen Actualizada" });
+  } catch {
+    return res.status(401).json({ message: "Error al Actualizar Imagen" });
+  }
+
+};
+

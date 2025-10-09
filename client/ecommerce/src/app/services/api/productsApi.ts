@@ -46,7 +46,7 @@ export const productsApi = baseApi.injectEndpoints({
         }) ;  
         
         return {
-          url: "/auth/upload",
+          url: "/auth/upload_image",
           method: "POST",
           body: formData,
     
@@ -57,10 +57,23 @@ export const productsApi = baseApi.injectEndpoints({
 
     deletePhoto: builder.mutation<void, { name: string | undefined, id:number }>({
       query: ({ name , id}) => {
-        console.log(id)
         return {
-          url: `/auth/delete?filePath=${name}&id=${id}`,
+          url: `/auth/delete_image?filePath=${name}&id=${id}`,
           method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Product"],
+    }),
+
+    updatePhoto: builder.mutation<void, { id: number , order:number , productId: number }>({
+      query: ({ id , order, productId}) => {
+        return {
+          url: `/auth/update_image`,
+          method: "PUT",
+           body: { id: id,
+                   order: order,
+                   productId: productId
+             }
         };
       },
       invalidatesTags: ["Product"],
@@ -76,6 +89,7 @@ export const {
   useRemoveItemMutation,
   useDeletePhotoMutation,
   useUpLoadphotoMutation,
+  useUpdatePhotoMutation,
   useGetSeccionQuery,
   useGetItemQuery
   

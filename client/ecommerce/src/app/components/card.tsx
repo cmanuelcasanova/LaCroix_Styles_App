@@ -129,7 +129,7 @@ export default function Card({
           Precio: <span className="text-black">$ {precio}</span>{" "}
         </span>
         <span className="font-bold flex flex-wrap gap-2">
-          Talla: <span className="text-black flex flex-wrap gap-2"> { talla.map ((item , index) => <span key={index} className="bg-gray-300 rounded-full flex flex-wrap items-center justify-center h-[25px] w-[25px]"> {item.name} </span>) } </span>
+          Talla: <span className="text-black flex flex-wrap gap-[5px]"> { talla.map ((item , index) => <span key={index} className="bg-gray-300 rounded-full flex flex-wrap items-center justify-center h-[25px] w-[25px]"> {item.name} </span>) } </span>
         </span>
       </div>
 

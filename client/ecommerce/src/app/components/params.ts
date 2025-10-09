@@ -3,6 +3,10 @@ type OptionType = {
   label: string;
 };
 
+type OptionTypeT = {
+  value: number;
+  label: string;
+};
 
 export const COLOR_PALETTE: OptionType[] = [
   { label: "blanco", value: "#FFFFFF" },
@@ -33,23 +37,17 @@ export const COLOR_PALETTE: OptionType[] = [
 
 ];
 
-export const TALLAS: OptionType[] = [
-  { value: "XS", label: "XS" },
-  { value: "S", label: "S" },
-  { value: "M", label: "M" },
-  { value: "L", label: "L" },
-  { value: "XL", label: "XL" },
-  { value: "XXL", label: "XXL" },
-];
 
-export const CATEGORY: OptionType[] = [
-   { value: "U", label: "U" },
-  { value: "XS", label: "XS" },
-  { value: "S", label: "S" },
-  { value: "M", label: "M" },
-  { value: "L", label: "L" },
-  { value: "XL", label: "XL" },
-  { value: "XXL", label: "XXL" },
+export const TALLAS: OptionTypeT[] = [
+  { value: 1, label: "U" },
+  { value: 2, label: "XXS" },
+  { value: 3, label: "XS" },
+  { value: 4, label: "S" },
+  { value: 5, label: "M" },
+  { value: 6, label: "L" },
+  { value: 7, label: "XL" },
+  { value: 8, label: "XXL" },
+  { value: 9, label: "XXXL" },
 ];
 
 export const categoriesWomen: OptionType[] = [

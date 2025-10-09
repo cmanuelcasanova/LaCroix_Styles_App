@@ -1,5 +1,5 @@
 import { db } from "../models/index.js";
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
 
 
 export const createProduct = async (req, res) => {
@@ -9,11 +9,10 @@ export const createProduct = async (req, res) => {
     
     const { title, imagesUrl, talla, precio,userId, seccionId,color, category } = req.body;
     const product = await db.Product.create({ title, precio, userId, seccionId,color, category });
-    const tallas = await db.Talla.findAll({ where: {name: {[Op.in]: talla }  }});
     
-    const idsT = tallas.map(t => t.id);
-    for (const tallaId of idsT) {
-      await db.Product_Talla.create({ProductId: product.id, TallaId: tallaId });
+
+    for (const tallaarray of talla) {
+      await db.Product_Talla.create({ProductId: product.id, TallaId: tallaarray });
     }
 
   
@@ -44,7 +43,7 @@ export const getProduct = async (req, res) => {
 
    {
     model: db.Talla,
-    attributes: ['name'],
+    attributes: ['name','id'],
     through: { attributes: [] }  
   },
       
@@ -73,7 +72,7 @@ export const findProduct = async (req, res) => {
       include: [ 
         {
           model: db.Talla,
-          attributes: ['name'],
+          attributes: ['name','id'],
           through: { attributes: [] },
         },
 
@@ -107,9 +106,17 @@ export const UpdateProduct = async (req, res) => {
   try {
     
     const { title, imagesUrl, talla, precio,userId, seccionId,color, category, id } = req.body;
-    const product = await db.Product.update({ title, talla, precio, userId, seccionId,color, category }, {where: {id}});
+   
+    const product = await db.Product.update({ title, precio, userId, seccionId,color, category }, {where: {id}});
     
-      
+
+    for (const tallas of talla) {
+
+      await db.Product_Talla.findOrCreate({where: { ProductId: id, TallaId: tallas }});
+
+    }  
+
+
     for (const Imagen of imagesUrl) {
    
       await db.product_images.create({productId: id, imageurl: Imagen.url, order: Imagen.order   });
@@ -118,7 +125,7 @@ export const UpdateProduct = async (req, res) => {
     
     res.status(201).json(product);
   } catch (err) {
-    console.error("❌ Error al crear tarea:", err.message);
+    console.error("❌ Error al actualizar Producto:", err.message);
     res.status(500).json({ error: err.message });
   }
 };

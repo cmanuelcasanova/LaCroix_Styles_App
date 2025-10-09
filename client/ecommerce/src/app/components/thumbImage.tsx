@@ -52,7 +52,7 @@ export default function ThumbImages( {image, index, deleteItem, setMain, setLeft
         
         {status==='NEW' ? 
           <div className="flex flex-wrap justify-between items-center z-10 w-full">
-            < MdFiberNew size={30} className="text-[#ff95cb] bg-white rounded-2xl" /> <IoMdCloseCircle size={25} 
+            < MdFiberNew size={30} className="text-[#f77205] bg-white rounded-2xl" /> <IoMdCloseCircle size={25} 
           className="ml-auto text-[#ff95cb] z-10 bg-white rounded-full" 
           onClick={() => deleteItem()}
           />

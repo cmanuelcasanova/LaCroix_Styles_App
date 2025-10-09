@@ -1,5 +1,5 @@
 import express from 'express';
-import { uploadfiles, deleteImage, homeslice} from '../controllers/filesController.js';
+import { uploadfiles, deleteImage, homeslice, update_image} from '../controllers/filesController.js';
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import multer from 'multer';
 
@@ -9,7 +9,8 @@ const upload = multer();
 
 
 router.get("/auth/homeslice", homeslice);
-router.post("/auth/upload", authMiddleware , upload.any(), uploadfiles);
-router.delete("/auth/delete", deleteImage );
+router.post("/auth/upload_image", authMiddleware , upload.any(), uploadfiles);
+router.put("/auth/update_image", authMiddleware , update_image );
+router.delete("/auth/delete_image", authMiddleware ,  deleteImage );
 
 export default router;
