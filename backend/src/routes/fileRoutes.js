@@ -9,7 +9,7 @@ const upload = multer();
 
 
 router.get("/auth/homeslice", homeslice);
-router.post("/auth/upload_image", authMiddleware , upload.any(), uploadfiles);
+router.post("/auth/upload_image", upload.any(), uploadfiles);
 router.put("/auth/update_image", authMiddleware , update_image );
 router.delete("/auth/delete_image", authMiddleware ,  deleteImage );
 

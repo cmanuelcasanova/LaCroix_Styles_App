@@ -136,7 +136,7 @@ export default function Item() {
     });
 
     if (user) {
-      console.log(item);
+      
       selectedTallas.forEach((t) => {
         try {
           addItemCarBD({
@@ -187,6 +187,34 @@ export default function Item() {
           <h1 className="mr-auto"> {item.title} </h1>
           <h1 className="ml-auto"> {item.precio} $ </h1>
         </div>
+
+        {item.marca &&
+        
+              <div className=" flex flex-col items-center mt-4 justify-start  hover:bg-gray-400" >
+                           
+                            {item.icon &&
+                            <picture className="rounded-full">
+                             
+                              <source srcSet={item.icon} type="image/webp" />
+                              
+      
+                              <img 
+                                src={item.icon} 
+                                alt="ico_marca" 
+                                loading="lazy"
+                                width={150}
+                                height={150}
+                                className="rounded-full my-4"
+                              />
+                            </picture>
+                            }
+
+                            <span> {  item.marca.toUpperCase() } </span>
+                        
+                        </div>
+
+        
+        }
 
         <h1 className="mr-auto mt-4 mb-2"> COLOR: </h1>
 

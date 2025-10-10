@@ -28,7 +28,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
 
   const Filtros = useSelector(selectFilter);
 
-  console.log(HadFilters)
+
   useEffect( ( ) => {   
   if( SelectedFilters.preciomin !== 0 ) { setPmin( SelectedFilters.preciomin.toString())   }
   if( SelectedFilters.preciomax !== 1000 ) { setPmax( SelectedFilters.preciomax.toString())   }

@@ -2,14 +2,13 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { themeBgMap, themeBgMapHOpacity, themeText } from "@/app/themeStyles";
+import { themeText } from "@/app/themeStyles";
 import { CiMenuKebab } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { selectUsername } from  "@/app/features/auth/authSelectors"
 import { useRemoveItemMutation , useDeletePhotoMutation } from "@/app/services/api/productsApi";
 import  ConfirmationtModal  from "@/app/components/confirmation"
-import { MdOutlinePhotoCamera } from "react-icons/md";
 import Link from "next/link";
 
 
@@ -17,7 +16,6 @@ type CardProps = {
   id: number;
   title: string;
   imageUrl: string;
-  totalimages: number
   talla: {name:string}[];
   precio: number;
   onClick?: () => void;
@@ -29,12 +27,9 @@ export default function Card({
   precio,
   talla,
   id,
-  totalimages,
 }: CardProps) {
 
   const theme = useSelector(selectTheme);
-  const bgClass = themeBgMap[theme];
-  const bgClassHOpa = themeBgMapHOpacity[theme];
   const themeTextCard = themeText[theme];
   const [detail, setDetails] = useState<boolean>(false);
   const User = useSelector(selectUsername);
@@ -144,7 +139,7 @@ export default function Card({
         />
       </Link>
 
-      <div className="flex flex-wrap items-center justify-center ml-auto bg-[#ff8ec9] rounded-2xl px-2"><MdOutlinePhotoCamera size={20} /> ({totalimages}) </div>
+      
       
     </div>
   

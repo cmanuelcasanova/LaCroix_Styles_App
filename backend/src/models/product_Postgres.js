@@ -12,6 +12,15 @@ export const ProductModel = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+   marca: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    icon: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
     category: {
       type: DataTypes.STRING,
       allowNull: true,

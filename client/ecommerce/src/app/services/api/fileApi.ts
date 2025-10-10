@@ -1,5 +1,5 @@
 import { baseApi } from "./baseApi";
-import { ImagesBD } from './queryTypes';
+import { ImagesBD, BrandSearchResult} from './queryTypes';
 
 
 export const fileApi = baseApi.injectEndpoints({
@@ -9,12 +9,28 @@ export const fileApi = baseApi.injectEndpoints({
       providesTags: ["fileApi"],
     }),
 
+
+    getBrandInfo: builder.query<BrandSearchResult[], {query:string}>({
+      query: ({query}) => ({
+      url: `https://api.brandfetch.io/v2/search/${query}`,
+      credentials: 'omit',
+      method: 'GET',
+      headers: {
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_BRAND_FETCH_API_KEY}`,
+    },
+
+    }),
+}),
+
+
   }),
 });
 
 
 export const {
-useGetHomeImagesQuery
+useGetHomeImagesQuery,
+useLazyGetBrandInfoQuery,
+useGetBrandInfoQuery
 
 } = fileApi;
 

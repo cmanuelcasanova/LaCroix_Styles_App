@@ -60,8 +60,8 @@ export default function Home() {
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
  const { data: HomeImages } = useGetHomeImagesQuery();
  const [ images, setImages ] = useState<string[]>([])
- //const { data: profile, isLoading: Loading_Profile , isFetching:Fetching_Profile, error: error_profile } = useProfileQuery();
- const [play_LazyGetProfile, { data: profile,isLoading: Loading_Profile, isFetching:Fetching_Profile, error: error_profile }] = useLazyProfileQuery();
+ 
+ const [play_LazyGetProfile, { data: profile,isLoading: Loading_Profile, isFetching:Fetching_Profile}] = useLazyProfileQuery();
 
 useEffect (() => {
 
@@ -270,7 +270,7 @@ return (
             talla={product.Tallas}
             precio={Number(product.precio)}
             id={(product.id)}
-            totalimages={product.product_images.length}
+            
           />
         ))}
       </section>

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useAddItemMutation, useUpLoadphotoMutation , useGetSeccionQuery, useUpdateProductMutation, useDeletePhotoMutation, useUpdatePhotoMutation } from "../services/api/productsApi";
+import { useLazyGetBrandInfoQuery } from "@/app/services/api/fileApi"
 import { useProfileQuery } from "../services/api/usersApi";
 import { useRouter , useSearchParams } from "next/navigation";
 import Select from "react-select";
@@ -35,6 +36,7 @@ type FormData = {
   seccionId: string;
   talla: string;
   precio: number;
+  marcas: string
 };
 
 type OptionType = {
@@ -62,17 +64,16 @@ interface ImagewithPriority  {
 
 
 export default function NewProduct() {
-  const { register, handleSubmit, reset , setValue} = useForm<FormData>();
+  const { register, handleSubmit, reset , setValue, watch} = useForm<FormData>();
   const router = useRouter();
   const [seccion, setSeccion] = useState<OptionType | null>(null);
   const [categoria, setCategoria] = useState<OptionTypeG | null>(null);
   const [talla, setTalla] = useState< OptionType[] | null>([]);
   const [foto, setFoto] = useState<string | null>(null);
   const [modal, setModal] = useState<boolean>(false);
-  const [Uploading, setUploading] = useState<boolean>(false);
   const [tipo,setTipo] = useState<boolean>(false)
   const [actualizar,setActualizar] = useState<boolean>(false)
-  const [addItem] = useAddItemMutation();
+  const [addItem, { isLoading: loading_Create }] = useAddItemMutation();
   const [UpdateProduct] = useUpdateProductMutation ();
   const [upLoadphoto] = useUpLoadphotoMutation();
   const { data: profile, isLoading, error } = useProfileQuery();
@@ -82,19 +83,18 @@ export default function NewProduct() {
   const bgClass = themeBgMap[theme]
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
+  const [marca, setMarca]=useState<{name:string,icon:string | null}>();  
+  const [divMarcas, setDivMarcas] = useState<boolean>(false)
+  const [searchBrand, setSearchBrand] = useState<string>("")
   const id_item =  searchParams.get("id");
   const dispatch = useDispatch<AppDispatch>();
   const [fotoscargadas, setFotosCargadas] = useState<boolean>(false)
   const [ArrayImages, setArrayImages] = useState< ImagewithPriority[]>([])
   const [deletePhoto] = useDeletePhotoMutation();
   const [updatePhoto] = useUpdatePhotoMutation();
-  
-  
-  
-  
-
   const isEditMode = mode === "edit";
   const {data: item, isLoading: isLoadingProfile } = useGetItemQuery(id_item ? { id: id_item } : skipToken)
+  const [play_LazyGetBrand, { data: brand  }] = useLazyGetBrandInfoQuery();
     
 useEffect(() => { 
   if(isEditMode && item?.category && !isLoadingProfile) {
@@ -103,6 +103,15 @@ useEffect(() => {
     setValue('precio', item?.precio)
     setFoto(item?.product_images[0].imageurl)
     setFotosCargadas(true)
+
+                            
+    
+    if(item.marca){
+       setMarca( {name: item.marca , icon: item.icon})
+       setValue("marcas",item.marca)
+       setDivMarcas(false)
+
+    }
 
     const ImagesUp = item.product_images.map ( i => {
 
@@ -149,7 +158,29 @@ useEffect(() => {
 
 
 
+  const text = watch("marcas")
+  useEffect(() => {
+
+    setSearchBrand( text  )
+    
+    if(!marca){setDivMarcas(true)
+  }else{setDivMarcas(false)}
+
+    
+
+  },[text,marca])
+
   
+  useEffect(() => {
+
+    
+    try {
+      if(searchBrand) {const result = play_LazyGetBrand( { query: searchBrand}).unwrap }
+
+    }catch(error_brand){ console.log(error_brand)}
+
+
+  },[searchBrand, play_LazyGetBrand])
 
 
 
@@ -217,11 +248,12 @@ useEffect(() => {
   const onSubmit = handleSubmit(async (data) => {
     
     
-    setUploading(true)
+
     if (!seccion) {
       alert("Por favor selecciona una seccion");
       return;
     }
+
     if (!categoria) {
       alert("Por favor selecciona una categoria");
       return;
@@ -260,8 +292,9 @@ useEffect(() => {
     
       {/*  Creando nuevo producto en Backend   */ }
 
-      await addItem({
+      addItem({
         title: data.titulo,
+        marca: marca,
         imagesUrl: result,
         seccionId: seccion.value,
         category: categoria.value,
@@ -303,6 +336,7 @@ useEffect(() => {
      await UpdateProduct({
         id:item?.id,
         title: data.titulo,
+         marca: marca,
         imagesUrl: result,
         seccionId: seccion.value,
         category: categoria.value,
@@ -337,7 +371,7 @@ useEffect(() => {
       setTipo(false)
     }
 
-    setUploading(false)
+   
   });
 
 const options: OptionType[] = sec?.map(secc => ({
@@ -350,6 +384,9 @@ const options: OptionType[] = sec?.map(secc => ({
 const handleChange = (option: OptionType | null) => {
     setSeccion(option);
   };
+
+
+
 
 const handleChangeG = (selectedOption:  OptionTypeG | null, actionMeta: { name?: string }) => {
   switch (actionMeta.name) {
@@ -392,6 +429,9 @@ const getCategoryOptions = (seccionValue: number | undefined) => {
       return [];
   }
 };
+
+
+
 
 const filtrarArrayFile = (order_find :number | undefined, status: string) => {
 
@@ -553,14 +593,15 @@ const setMoveItem = (indice:number, away:string) => {
 
 
 
+
   return (
 
 
     <div className="flex flex-col items-center p-4 ">
 
       {modal && <AlertModal onClose={() => setModal(false)} tipo={tipo}  />}
-      {Uploading && <LoadingModal />}
-      <div className={`w-[700px] h-[1000px] flex flex-col overflow-auto items-center rounded-2xl mt-20  px-8 ${actualizar ? 'bg-green-200' : 'bg-white' }`}>
+      {loading_Create && <LoadingModal />}
+      <div  className={`w-[700px] h-[1000px] flex flex-col overflow-auto items-center rounded-2xl mt-20  px-8 ${actualizar ? 'bg-green-200' : 'bg-white' }`}>
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
 
         
@@ -652,6 +693,79 @@ const setMoveItem = (indice:number, away:string) => {
             />
           </label>
 
+           <label className="flex flex-col mb-4">
+            Marca
+            <input
+              className="h-10 bg-white border-[#202b38] border-1 rounded-md p-2
+                focus:outline-none focus:ring-2
+             focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
+                hover:border-[#677483] transition-colors duration-200"
+              type="text"
+              placeholder="ingresa Marca"
+              {...register("marcas")}
+            />
+       
+
+            {divMarcas && <div className="flex flex-col z-10">
+
+             { brand && 
+             
+             brand.map( element => {
+
+                return  <div
+                           
+                            key={element.brandId} 
+                            className=" overflow-auto w-[700px] h-14 px-2 flex flex-wrap items-center justify-start gap-2 hover:bg-gray-400" 
+                            onClick={()=>{
+                              
+                              setSearchBrand(element.name);
+                              setDivMarcas(false)
+                              setValue("marcas",element.name)
+                              setMarca( {name:element.name , icon: element.icon})
+                              
+                            
+                            }}
+                            >
+                           
+                            {element.icon &&
+                            <picture>
+                             
+                              <source srcSet={element.icon} type="image/webp" />
+                              
+      
+                              <img 
+                                src={element.icon} 
+                                alt="ico_marca" 
+                                loading="lazy"
+                                width={30}
+                                height={30}
+                              />
+                            </picture>
+                            }
+                            <span > {element.name} </span>  
+                        </div>
+                
+              })
+            
+            
+
+            }
+            
+
+
+
+            </div>
+}
+
+               </label>
+            
+
+
+
+
+
+
+
           <label className="" htmlFor="seccion">
             Seccion
           </label>
@@ -684,6 +798,7 @@ const setMoveItem = (indice:number, away:string) => {
             onChange={handleChangeG}
             options={ getCategoryOptions(seccion?.value)}
             placeholder="Selecciona una Categoria"
+            menuPortalTarget={document.body}
             required
             
           />
@@ -704,6 +819,7 @@ const setMoveItem = (indice:number, away:string) => {
             options={TALLAS}
             isMulti
             placeholder="Selecciona una Talla"
+            menuPortalTarget={document.body}
             required
             
           />
@@ -726,6 +842,7 @@ const setMoveItem = (indice:number, away:string) => {
             placeholder="Selecciona un Color"
             required
             components={{ Option: CustomOption }}
+            menuPortalTarget={document.body}
 
 
             

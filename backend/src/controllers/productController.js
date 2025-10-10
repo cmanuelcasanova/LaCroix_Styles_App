@@ -7,8 +7,8 @@ export const createProduct = async (req, res) => {
   
   try {
     
-    const { title, imagesUrl, talla, precio,userId, seccionId,color, category } = req.body;
-    const product = await db.Product.create({ title, precio, userId, seccionId,color, category });
+    const { title, imagesUrl, marca, talla, precio,userId, seccionId,color, category } = req.body;
+    const product = await db.Product.create({ title, precio, marca: marca?.name , icon: marca?.icon, userId, seccionId,color, category });
     
 
     for (const tallaarray of talla) {
@@ -103,11 +103,13 @@ export const deleteProduct = async (req, res) => {
 };
 
 export const UpdateProduct = async (req, res) => {
+
+
   try {
     
-    const { title, imagesUrl, talla, precio,userId, seccionId,color, category, id } = req.body;
+    const { title, imagesUrl, marca , talla, precio,userId, seccionId,color, category, id } = req.body;
    
-    const product = await db.Product.update({ title, precio, userId, seccionId,color, category }, {where: {id}});
+    const product = await db.Product.update({ title, precio, userId, marca: marca?.name, icon: marca?.icon, seccionId,color, category }, {where: {id}});
     
 
     for (const tallas of talla) {
