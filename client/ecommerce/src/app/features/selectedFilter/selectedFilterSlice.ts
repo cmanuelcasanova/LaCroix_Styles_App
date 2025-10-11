@@ -8,7 +8,8 @@ const initialState: FilterState = {
   talla: [],
   preciomin: 0,
   preciomax: 1000,
-  search: ""
+  search: "",
+  orderPrice: 0,
 };
 
 
@@ -36,14 +37,24 @@ export const SeletedFilterSlice = createSlice({
       
     },
 
-    clearSelectFilters: (state, action: PayloadAction< void >) => {
+    setOrderPrice: (state, action: PayloadAction< { valor: number }>) => {
+      const { valor } = action.payload
+      
+      state.orderPrice=valor
+     
+    },
+
+
+    clearSelectFilters: (state) => {
       
       state.category = [];
       state.talla = [];
       state.color = [];
       state.preciomin = 0;
       state.preciomax = 1000;
-      state.search=""
+      state.search="";
+      state.orderPrice = 0;
+
 
     },
 
@@ -51,6 +62,6 @@ export const SeletedFilterSlice = createSlice({
   },
 });
 
-export const { addSelectFilters , deleteSelectFilters , clearSelectFilters } =
+export const { addSelectFilters , deleteSelectFilters , clearSelectFilters, setOrderPrice} =
   SeletedFilterSlice.actions;
 export default SeletedFilterSlice.reducer;

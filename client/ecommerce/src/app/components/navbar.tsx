@@ -206,7 +206,7 @@ useEffect(() => {
               <div className="flex flex-wrap items-center justify-between m-4 border-b-2 pb-2 mb-10">
 
               
-              <h1 className="text-2xl"> Filter  </h1>
+              <h1 className="text-2xl"> Filtros de Prodcutos  </h1>
               < IoMdCloseCircleOutline size={30}  onClick={() => setMenuFiltros(!menuFiltros)}/> 
 
                 

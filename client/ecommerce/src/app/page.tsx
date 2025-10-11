@@ -190,12 +190,13 @@ useEffect( ( ) => {
   return matchCategory && matchColor && matchTalla && matchpreciomin && matchpreciomax && matchSearch;
 });
 
-
+if(UserFilters.orderPrice===1) filteredItemsbyFilters?.sort((a,b) => a.precio - b.precio )
+if(UserFilters.orderPrice===2) filteredItemsbyFilters?.sort((a,b) => b.precio - a.precio )
 
 setFilteredProducts(filteredItemsbyFilters)
 
 
-},[ allProducts , UserFilters.category ,UserFilters.talla , UserFilters.color, UserFilters.preciomin , UserFilters.preciomax ,UserFilters.search  ])
+},[ allProducts , UserFilters.category ,UserFilters.talla , UserFilters.orderPrice, UserFilters.color, UserFilters.preciomin , UserFilters.preciomax ,UserFilters.search  ])
   
 
 useEffect( ( ) => {  
@@ -210,6 +211,13 @@ useEffect(()=> {
   setPagSup (  (itemsforpage*(currentPage+1))  )
 
 },[currentPage])
+
+
+
+useEffect(()=> {
+
+setCurrentPage(0)
+  },[UserFilters.orderPrice])
 
 
 if (isLoading || isFetching ) return <LoadingModal />;
