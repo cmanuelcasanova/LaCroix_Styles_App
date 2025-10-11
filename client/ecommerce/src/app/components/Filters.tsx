@@ -8,6 +8,7 @@ import { selectedFiltersG , selectHasFilters } from "@/app/features/selectedFilt
 import { useDispatch } from "react-redux";
 import Select from "react-select"
 
+
 type MoldeProps = {
 
 onClose: () => void;
@@ -72,13 +73,13 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
 
       <div className="flex flex-wrap justify-between mb-4 border-b-2 pb-2 mx-4">
         
-        <div className="flex flex-warp gap-2 items-center justify-between mb-8">
+        <div className="flex flex-warp gap-2 items-center justify-between mb-8 w-full text-l">
         <label>
             Ordenar precios:
 
                </label>
         <Select options={options}
-          className="text-black mr-auto w-[170px]"
+          className="text-black ml-auto w-[200px]"
           placeholder="Ordenar por:"
           styles={{
                 control: (baseStyles, state) => ({

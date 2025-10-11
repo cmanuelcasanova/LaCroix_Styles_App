@@ -199,14 +199,14 @@ useEffect(() => {
           {/* Menú móvil en bloque */}
           {menuFiltros && (
             <div
-              className={`fixed top-0 right-0 h-full w-full sm:w-80 bg-${bgClass} px-4 py-3 overflow-scroll shadow-lg z-40 transform transition-transform duration-300 ease-in-out 
+              className={`fixed top-0 right-0 h-full w-full sm:w-100 bg-${bgClass} px-4 py-3 overflow-scroll shadow-lg z-40 transform transition-transform duration-300 ease-in-out 
       
 `}
             >
-              <div className="flex flex-wrap items-center justify-between m-4 border-b-2 pb-2 mb-10">
+              <div className="flex flex-wrap items-center justify-between m-4 w-full pr-4 border-b-2 pb-2 mb-10">
 
-              
-              <h1 className="text-2xl"> Filtros de Prodcutos  </h1>
+              {<TbAdjustmentsHorizontal className="mr-2"size={30} />}
+              <h1 className="text-2xl mr-auto">   Filtros de busqueda  </h1>
               < IoMdCloseCircleOutline size={30}  onClick={() => setMenuFiltros(!menuFiltros)}/> 
 
                 
