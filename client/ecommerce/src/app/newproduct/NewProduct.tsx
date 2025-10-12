@@ -83,7 +83,7 @@ export default function NewProduct() {
   const bgClass = themeBgMap[theme]
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
-  const [marca, setMarca]=useState<{name:string,icon:string | null}>();  
+  const [marca, setMarca]=useState<{name:string,domain:string | null}>();  
   const [divMarcas, setDivMarcas] = useState<boolean>(false)
   const [searchBrand, setSearchBrand] = useState<string>("")
   const id_item =  searchParams.get("id");
@@ -107,7 +107,7 @@ useEffect(() => {
                             
     
     if(item.marca){
-       setMarca( {name: item.marca , icon: item.icon})
+       setMarca( {name: item.marca , domain: item.domain})
        setValue("marcas",item.marca)
        setDivMarcas(false)
 
@@ -721,7 +721,7 @@ const setMoveItem = (indice:number, away:string) => {
                               setSearchBrand(element.name);
                               setDivMarcas(false)
                               setValue("marcas",element.name)
-                              setMarca( {name:element.name , icon: element.icon})
+                              setMarca( {name:element.name , domain: element.domain})
                               
                             
                             }}

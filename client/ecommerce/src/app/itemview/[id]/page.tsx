@@ -54,8 +54,7 @@ export default function Item() {
   const [selectedTallas, setSelectedTallas] = useState<string[]>([]);
   const [ImagenesArray, setImagenesArray] = useState<imagenes[]>([]);
 
-
-
+ 
 
   const {
     data: item,
@@ -63,6 +62,11 @@ export default function Item() {
     error,
     isFetching,
   } = useGetItemQuery(id_item ? { id: id_item } : skipToken);
+
+   const UrlLogo = `https://cdn.brandfetch.io/${item?.domain}?c=${process.env.NEXT_PUBLIC_BRAND_FETCH_CLIENT_ID}`
+ 
+   
+
 
   useEffect(() => {
     try {
@@ -192,14 +196,14 @@ export default function Item() {
         
               <div className=" flex flex-col items-center mt-4 justify-start  hover:bg-gray-400" >
                            
-                            {item.icon &&
+                            {item.domain &&
                             <picture className="rounded-full">
                              
-                              <source srcSet={item.icon} type="image/webp" />
+                              <source srcSet={UrlLogo} type="image/webp" />
                               
       
                               <img 
-                                src={item.icon} 
+                                src={UrlLogo} 
                                 alt="ico_marca" 
                                 loading="lazy"
                                 width={150}

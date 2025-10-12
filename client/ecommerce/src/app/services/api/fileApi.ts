@@ -19,6 +19,7 @@ export const fileApi = baseApi.injectEndpoints({
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_BRAND_FETCH_API_KEY}`,
     },
 
+    
     }),
 }),
 

@@ -1,7 +1,7 @@
 
 export interface qdata {
     title: string,
-    marca: {name:string,icon:string | null} | undefined;
+    marca: {name:string,domain:string | null} | undefined;
     seccionId: number,
     imagesUrl:DownloadImagesBD[],
     talla:number[],
@@ -15,7 +15,7 @@ export interface qdataUpdate {
     id: number | undefined,
     title: string,
     seccionId: number
-    marca: {name:string,icon:string | null} | undefined;
+    marca: {name:string,domain:string | null} | undefined;
     imagesUrl:DownloadImagesBD[],
     talla:number[]
     color: string
@@ -29,7 +29,7 @@ export interface product {
     title: string,
     seccionId: number
     marca:string | null
-    icon:string | null
+    domain:string | null
     product_images:{
       id:number
       imageurl:string,

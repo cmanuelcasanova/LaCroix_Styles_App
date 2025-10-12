@@ -16,7 +16,7 @@ export const ProductModel = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    icon: {
+   domain: {
       type: DataTypes.STRING,
       allowNull: true,
     },

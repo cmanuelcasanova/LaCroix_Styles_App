@@ -93,7 +93,7 @@ export default function ImageSlider ( { imageUrls }:ListaStringsProps ) {
 
 
   return (      
-    <div className="h-[300px] sm:h-[800px] w-screen mb-16 sm:mb-0 shadow-black">
+    <div className="h-[300px] sm:h-[800px] w-screen mb-16 sm:mb-4 shadow-black">
       <ImageGallery items={ ArrayImgRIG } autoPlay={true} slideInterval={6000} showFullscreenButton={false} />
     </div>
   )
