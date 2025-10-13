@@ -106,7 +106,8 @@ export const logout = async (req, res) => {
     res.clearCookie("token", {
       httpOnly: true,
       secure: true,
-      sameSite: "strict",
+      sameSite: "None",
+      path: "/"
     });
     res.status(200).json({ message: "Sesión cerrada" });
   } catch (error) {
