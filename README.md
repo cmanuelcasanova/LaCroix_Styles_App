@@ -41,6 +41,8 @@ Aplicación web para crear, visualizar y administrar productos, incluyendo imág
 - Subida de imágenes optimizada con CDN (ImagenKit)
 - Estado global con RTK + persistencia de carrito en PostgreSQL
 
+![Home](./client/ecommerce/public/Home.JPG)
+
 
 🧭 Arquitectura visual
 Arquitectura del ecommerce
