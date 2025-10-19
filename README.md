@@ -69,4 +69,4 @@ Este diagrama muestra el flujo completo entre frontend, backend, base de datos y
 - 🧠 homeslice (vista personalizada o destacada)
 
 
-![Modelo relacional](./client/ecommerce/public/Diagramavisual_Supabase.png)
+![Modelo relacional](./client/ecommerce/public/supabase-schema-zvokpvogprdzfonqatkq.svg)
