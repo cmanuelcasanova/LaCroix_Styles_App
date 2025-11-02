@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import LoadingModal from "../../components/Loadingpage";
 import { useParams } from "next/navigation";
 import { skipToken } from "@reduxjs/toolkit/query";
@@ -183,9 +184,9 @@ export default function Item() {
       )}
       <div className="bg-white flex flex-col items-center shadow-2xl mt-20 rounded-2xl p-4 mb-6 mx-4 w-dwv">
         
-       
+          <div>
           <ImageGallery items={ ImagenesArray }  additionalClass="custom-gallery-ItemView"/>
-       
+       </div>
 
         <div className="flex flex-wrap justify-around items-center gap-4 mt-6 text-2xl font-extrabold w-full">
           <h1 className="mr-auto"> {item.title} </h1>

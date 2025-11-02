@@ -161,9 +161,14 @@ useEffect(() => {
   const text = watch("marcas")
   useEffect(() => {
 
+
+
     setSearchBrand( text  )
     
-    if(!marca){setDivMarcas(true)
+
+    
+
+    if(!marca || marca.name !==text ){setDivMarcas(true)
   }else{setDivMarcas(false)}
 
     

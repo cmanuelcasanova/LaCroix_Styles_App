@@ -3,11 +3,14 @@ import { Caritem } from "../components/caritem";
 import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useSelector } from "react-redux";
 import { TbShoppingCartOff } from "react-icons/tb";
+import { TbArrowBackUp } from "react-icons/tb";
+import { useRouter } from "next/navigation";
 
 export default function Shopping() {
 
   
   const itemsC = useSelector(selectItemsc);
+   const router = useRouter();
   
 
 const calculartotal = ():number => {return itemsC.reduce((totale, item) => totale + (item.precio*item.cant),0 )}
@@ -47,6 +50,16 @@ return (
         <h1 className="text-2xl font-bold ">Total: {calculartotal()} $ </h1>
         </div>
       </div>
+
+            <button
+              className="bg-white p-2 px-20 mt-4 rounded-2xl flex flex-wrap items-center gap-2 hover:bg-gray-200 active:scale-95 transition-transform duration-150 ease-in-out"
+              onClick={() => router.push("/")}
+            >
+              {" "}
+              <>
+                <TbArrowBackUp /> Volver{" "}
+              </>
+            </button>
     </div>
   );
 }
