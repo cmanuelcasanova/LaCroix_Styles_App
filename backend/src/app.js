@@ -14,6 +14,29 @@ const app = express();
 dotenv.config({ quiet: true }); 
 
 
+const allowedOrigins = [
+  'https://miapp.vercel.app',
+  /^https:\/\/.*\.vercel\.app$/ // permite previews
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (
+      allowedOrigins.some((o) =>
+        typeof o === 'string' ? o === origin : o.test(origin)
+      )
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS bloqueado'));
+    }
+  },
+  credentials: true
+}));
+
+
+
+
 app.use(cors({
  origin: process.env.FRONTEND_URL,   
   credentials: true                
