@@ -35,12 +35,12 @@ app.use(cors({
 }));
 
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 
 
-app.use(cors({
- origin: process.env.FRONTEND_URL,   
-  credentials: true                
-}));
 
 app.get('/', (req, res) => {
   res.send('Backend activo  🚀');
