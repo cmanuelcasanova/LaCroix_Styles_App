@@ -172,7 +172,7 @@ useEffect(() => {
               
               <button 
               className="bg-[#fe9ccf] w-8 h-8 flex flex-col justify-center items-center rounded-r-sm"
-              onClick={()=> {dispatch(addSelectFilters({search: textsearch})  ); setViewSearch(false)}}
+              onClick={()=> {dispatch(addSelectFilters({search: textsearch})  ); setViewSearch(false) ; router.push("/");}}
               >  <FaSearch size={15} /> 
               </button>
 

@@ -29,12 +29,8 @@ body {
 }
 
 .image-gallery-slide .image-gallery-image {
-    /* 🎯 Prioridad alta para anular estilos internos */
     width: 100% !important; 
     height: 100% !important;
-    
-    /* 🎯 Crucial: Esto asegura que la imagen llene el espacio de alto y ancho definido,
-       recortando partes si el aspecto ratio no coincide. */
     object-fit: cover !important; 
 }
 
@@ -50,14 +46,54 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+   overflow: visible !important;
+  touch-action: auto !important;
+  pointer-events: auto !important;
+
 
 }
 
-.image-gallery-image .custom-gallery-ItemVie {
-  max-height: 100%;
+.image-gallery-image .custom-gallery-ItemView {
+  width: auto !important;
+  height: auto !important;
   max-width: 100%;
-  object-fit: contain; /* o cover si quieres recorte */
+  max-height: 100%;
+  object-fit: contain !important;
+
 }
 
+
+.carousel .thumbs-wrapper {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  width: 90%;
+  max-width: 250px; /* ✅ Limita el ancho del área de thumbnails */
+  margin: 0 auto;    /* ✅ Centra el contenedor */
+}
+
+.carousel .thumbs {
+  display: inline-flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+
+.carousel .slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto; /* ✅ permite que el contenido crezca */
+  touch-action: auto; /* ✅ permite pinch-to-zoom */
+  pointer-events: auto;
+  overflow: visible;
+}
+
+
+.carousel .slide img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
 

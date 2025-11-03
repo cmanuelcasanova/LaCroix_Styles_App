@@ -19,6 +19,9 @@ import { addItem } from "@/app/features/Car/CarSlice";
 import { selectRole } from "@/app/features/auth/authSelectors";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css"
+import { CgCloseO } from "react-icons/cg";
+
+
 import {
   useRemoveItemMutation,
   useDeletePhotoMutation,
@@ -54,6 +57,11 @@ export default function Item() {
   const user = useSelector(selectUsername);
   const [selectedTallas, setSelectedTallas] = useState<string[]>([]);
   const [ImagenesArray, setImagenesArray] = useState<imagenes[]>([]);
+  const [fullscreenIndex, setFullscreenIndex] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+
+  
 
  
 
@@ -184,9 +192,56 @@ export default function Item() {
       )}
       <div className="bg-white flex flex-col items-center shadow-2xl mt-20 rounded-2xl p-4 mb-6 mx-4 w-dwv">
         
-          <div>
-          <ImageGallery items={ ImagenesArray }  additionalClass="custom-gallery-ItemView"/>
-       </div>
+
+
+
+          
+          <ImageGallery 
+            items={ ImagenesArray } 
+            onClick={()=>setFullscreenIndex(true)}
+            onSlide={(index) => setCurrentIndex(index)} 
+            showFullscreenButton={false}
+            showPlayButton={false}
+            additionalClass="custom-gallery-ItemView"/>
+          
+
+
+
+          {fullscreenIndex && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50"
+
+            >
+            <CgCloseO size={40} onClick={ () => setFullscreenIndex(false)} className="text-[#ff8ec9] ml-auto mr-2 mb-2"/>
+
+                   <Image
+                      src={ImagenesArray[currentIndex].original}
+                      alt={`Fullscreen ${fullscreenIndex}`}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{
+                        width: 'auto',
+                        height: 'auto',
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        touchAction: 'auto',
+                      }}
+                      unoptimized 
+                      priority
+                    />
+            </div>
+
+
+          )}
+
+
+
+  
+
+
+
+
 
         <div className="flex flex-wrap justify-around items-center gap-4 mt-6 text-2xl font-extrabold w-full">
           <h1 className="mr-auto"> {item.title} </h1>
@@ -300,6 +355,8 @@ export default function Item() {
           <TbArrowBackUp /> Volver{" "}
         </>
       </button>
+
+
     </div>
   );
 }

@@ -14,33 +14,10 @@ const app = express();
 dotenv.config({ quiet: true }); 
 
 
-const allowedOrigins = [
-  'https://miapp.vercel.app',
-  /^https:\/\/.*\.vercel\.app$/ // permite previews
-];
-
 app.use(cors({
-  origin: (origin, callback) => {
-    if (
-      allowedOrigins.some((o) =>
-        typeof o === 'string' ? o === origin : o.test(origin)
-      )
-    ) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS bloqueado'));
-    }
-  },
-  credentials: true
+ origin: process.env.FRONTEND_URL,   
+  credentials: true                
 }));
-
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', 'true');
-  next();
-});
-
-
 
 app.get('/', (req, res) => {
   res.send('Backend activo  🚀');
