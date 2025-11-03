@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://lacroix-styles-app.onrender.com/api/:path*",
+      },
+    ];
+  },
+
 
 };
 
