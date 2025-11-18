@@ -24,6 +24,7 @@ import { logout as logout_Auth} from "@/app/features/auth/authSlice";
 import ThumbImages from "@/app/components/thumbImage"
 import { MultiValue } from "react-select";
 import { GoStarFill } from "react-icons/go";
+import ImageDefault from "../../../public/default-Image.png";
 
  
 
@@ -101,7 +102,7 @@ useEffect(() => {
     
     setValue('titulo',item?.title)
     setValue('precio', item?.precio)
-    setFoto(item?.product_images[0].imageurl)
+    setFoto(item?.product_images[0] ? item?.product_images[0].imageurl : "https://ik.imagekit.io/wakm0y68u/LaCroix/default-Image.png")
     setFotosCargadas(true)
 
                             
@@ -193,7 +194,7 @@ useEffect(() => {
 
     
     if(fotoscargadas) {      
-      setFoto(ArrayImages[0].Url);
+      setFoto(ArrayImages[0] ? ArrayImages[0].Url : "https://ik.imagekit.io/wakm0y68u/LaCroix/default-Image.png");
 
     }else{
       setFoto(null);

@@ -106,18 +106,22 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
         {category && (
           <div className="flex flex-col justify-start w-full mb-4">
             {Filtros.category.map((product) => (
+              
+              <label  key={product.name} htmlFor={product.name}>
               <div
-                key={product.name}
+               
                 className="flex flex-wrap justify-between items-center p-2 pl-2 border-b-[1px] border-gray-400"
               >
                 {product.name } ({product.cant})
-                <input 
+                <input
+                    id={product.name} 
                     name={product.name} 
                     type="checkbox" 
                     className="h-4 w-4"
                     checked={ SelectedFilters.category.includes ( product.name )  } 
                     onChange={e => dispatch( e.target.checked ? addSelectFilters({category: product.name}) :  deleteSelectFilters ({name: "category", value: product.name}) , onClose() )  } />
               </div>
+              </label>
             ))}
           </div>
         )}
