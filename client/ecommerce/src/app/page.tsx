@@ -24,6 +24,8 @@ import { PiEmptyBold } from "react-icons/pi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { addSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
 import { useGetHomeImagesQuery } from "@/app/services/api/fileApi"
+import { BiArrowToLeft } from "react-icons/bi";
+import { BiArrowToRight } from "react-icons/bi";
 
 
 
@@ -292,10 +294,14 @@ return (
 
 
       <div className="flex flex-wrap gap-2 mt-10 text-gray-500">
-        <button className="bg-white p-2 rounded-2xl shadow mr-4 hover:cursor-pointer" disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
-        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < currentPage+1 || index+1 - 2 > currentPage+1) && `hidden`} p-2 rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
-        {totalpaginas> 5 && <button className={`text-black bg-white p-2 rounded-2xl shadow  `}> ... </button> } 
-        <button className="bg-white p-2 rounded-2xl shadow ml-4 hover:cursor-pointer" disabled={currentPage+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
+        {currentPage+1 > 1 && <button className={`text-black/70 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> setCurrentPage(0)}> <BiArrowToLeft /> </button> } 
+        <button className="bg-white/60  px-[4px] rounded-2xl shadow mr-4 hover:cursor-pointer" disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
+       
+        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < currentPage+1 || index+1 - 2 > currentPage+1) && `hidden`} p-[6px] rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
+       
+        {(totalpaginas> 5 && currentPage +1 < totalpaginas) && <button className={`text-black `}> ... </button> } 
+        <button className="bg-white/60  px-[4px] rounded-2xl shadow ml-4 hover:cursor-pointer" disabled={currentPage+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
+         {currentPage +1 < totalpaginas  && <button className={`text-black/60 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> setCurrentPage(totalpaginas-1)}> <BiArrowToRight /> </button> } 
       </div>
 
     </div>
