@@ -251,6 +251,7 @@ const handleClick = (i:number) => {
 
 
 
+
 return (
     <div className="flex flex-col items-center justify-center">
       
@@ -275,7 +276,7 @@ return (
           <Card
             key={product.id}
             title={product.title}
-            imageUrl={ product.product_images[0].imageurl}
+            imageUrl={ product.product_images[0] ? product.product_images[0].imageurl : "https://ik.imagekit.io/wakm0y68u/LaCroix/default-Image.png"}
             talla={product.Tallas}
             precio={Number(product.precio)}
             id={(product.id)}

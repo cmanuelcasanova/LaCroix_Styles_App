@@ -134,7 +134,7 @@ export default function Card({
       <Link href={`/itemview/${id}`} className="mb-2 overflow-hidden ">
         <Image
           className="rounded object-cover"
-          src={imageUrl ? imageUrl : ImageDefault}
+          src={imageUrl}
           alt="Image"
           width={400}
           height={700}

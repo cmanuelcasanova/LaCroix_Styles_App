@@ -1,0 +1,23 @@
+{
+  "name": "LaCroix Styles App",
+  "short_name": "LaCroix",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "../../public/Logo_LAcroix Styles_192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../../public/public/Logo_LAcroix Styles_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "../../public/Logo_LAcroix Styles_192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
