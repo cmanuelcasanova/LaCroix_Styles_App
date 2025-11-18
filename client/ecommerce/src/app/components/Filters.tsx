@@ -119,7 +119,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
                     type="checkbox" 
                     className="h-4 w-4"
                     checked={ SelectedFilters.category.includes ( product.name )  } 
-                    onChange={e => dispatch( e.target.checked ? addSelectFilters({category: product.name}) :  deleteSelectFilters ({name: "category", value: product.name}) , onClose() )  } />
+                    onChange={e => {dispatch( e.target.checked ? addSelectFilters({category: product.name}) :  deleteSelectFilters ({name: "category", value: product.name}) , onClose() );  window.scrollTo(0, 0) }} />
               </div>
               </label>
             ))}

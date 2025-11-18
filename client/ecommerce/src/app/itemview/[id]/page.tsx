@@ -305,6 +305,9 @@ export default function Item() {
           ))}
         </div>
 
+        <h1 className="mr-auto mt-4 mb-2"> CATEGORIA: {  item.category } </h1>
+
+         
         <h1 className="mr-auto mt-4 mb-2"> DETALLES: </h1>
 
         <textarea

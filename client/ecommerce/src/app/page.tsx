@@ -293,7 +293,8 @@ return (
 
       <div className="flex flex-wrap gap-2 mt-10 text-gray-500">
         <button className="bg-white p-2 rounded-2xl shadow mr-4 hover:cursor-pointer" disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
-        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } p-2 rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
+        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < currentPage+1 || index+1 - 2 > currentPage+1) && `hidden`} p-2 rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
+        {totalpaginas> 5 && <button className={`text-black bg-white p-2 rounded-2xl shadow  `}> ... </button> } 
         <button className="bg-white p-2 rounded-2xl shadow ml-4 hover:cursor-pointer" disabled={currentPage+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
       </div>
 

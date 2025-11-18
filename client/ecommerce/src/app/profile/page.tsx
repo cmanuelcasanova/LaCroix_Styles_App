@@ -4,6 +4,7 @@
 import { useRouter } from "next/navigation";
 import { useProfileQuery } from "@/app/services/api/usersApi";
 import LoadingModal from "@/app/components/Loadingpage";
+import { TbArrowBackUp } from "react-icons/tb";
 
 
 
@@ -30,6 +31,19 @@ export default function ProfilePage() {
          <p><strong>Última modificación:</strong> <span className="text-black">{profile?.updatedAt}</span></p>
    
       </div>
+
+
+<button
+        className="bg-white p-2 px-20 mt-4 rounded-2xl flex flex-wrap items-center gap-2 hover:bg-gray-200 active:scale-95 transition-transform duration-150 ease-in-out"
+        onClick={() => router.push("/")}
+      >
+        {" "}
+        <>
+          <TbArrowBackUp /> Volver{" "}
+        </>
+      </button>
+
+
     </div>
   );
 }
