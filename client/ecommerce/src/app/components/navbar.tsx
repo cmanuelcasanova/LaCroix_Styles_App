@@ -188,7 +188,7 @@ useEffect(() => {
 
           <button
             className={`text-white ml-4 shadows-black ${HadFilters ? "bg-white/50 rounded-full p-[7px]" : "" }  `}
-            onClick={() => setMenuFiltros(!menuFiltros)}
+            onClick={() => {setMenuFiltros(!menuFiltros); setMenuOpen(false);}}
           >
             <TbAdjustmentsHorizontal size={25} />
           </button>
@@ -351,7 +351,7 @@ useEffect(() => {
 
       <button
         className="md:hidden text-white"
-        onClick={() => setMenuOpen(!menuOpen)}
+        onClick={() => {setMenuOpen(!menuOpen);setMenuFiltros(false)}}
       >
         {menuOpen ? (
           <IoIosCloseCircleOutline size={30} />

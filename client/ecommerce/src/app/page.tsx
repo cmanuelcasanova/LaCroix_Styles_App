@@ -230,7 +230,7 @@ if (error) return <ErrorConection />;
 const handleft = () => {
  
   if( currentPage > 0 ) setCurrentPage( prev => prev - 1 )
-
+     window.scrollTo(0, 0)
 }
 
 const handright = () => {
@@ -238,12 +238,13 @@ const handright = () => {
   console.log("boton +")
 
   if( currentPage +1 < totalpaginas ) setCurrentPage( prev => prev +1) 
-  
+   window.scrollTo(0, 0)
 }
 
 const handleClick = (i:number) => {
 
   setCurrentPage(i)
+  window.scrollTo(0, 0)
 
 
 }
@@ -290,9 +291,9 @@ return (
 
 
       <div className="flex flex-wrap gap-2 mt-10 text-gray-500">
-        <button className="bg-white p-2 rounded-2xl shadow mr-4" disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
-        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } p-2 rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
-        <button className="bg-white p-2 rounded-2xl shadow ml-4" disabled={currentPage+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
+        <button className="bg-white p-2 rounded-2xl shadow mr-4 hover:cursor-pointer" disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
+        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } p-2 rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
+        <button className="bg-white p-2 rounded-2xl shadow ml-4 hover:cursor-pointer" disabled={currentPage+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
       </div>
 
     </div>

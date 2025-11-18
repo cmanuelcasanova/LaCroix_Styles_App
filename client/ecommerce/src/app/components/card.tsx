@@ -9,6 +9,9 @@ import { selectTheme } from "@/app/features/theme/themeSelector";
 import { selectUsername } from  "@/app/features/auth/authSelectors"
 import { useRemoveItemMutation , useDeletePhotoMutation } from "@/app/services/api/productsApi";
 import  ConfirmationtModal  from "@/app/components/confirmation"
+import ImageDefault from "../../../public/default-Image.png";
+
+
 import Link from "next/link";
 
 
@@ -131,7 +134,7 @@ export default function Card({
       <Link href={`/itemview/${id}`} className="mb-2 overflow-hidden ">
         <Image
           className="rounded object-cover"
-          src={imageUrl}
+          src={imageUrl ? imageUrl : ImageDefault}
           alt="Image"
           width={400}
           height={700}

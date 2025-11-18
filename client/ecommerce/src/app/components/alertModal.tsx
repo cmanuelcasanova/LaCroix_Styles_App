@@ -22,7 +22,7 @@ export default function AlertModal( { onClose , tipo }: MoldeProps) {
 const router = useRouter();
 
   return (
-    <div className="fixed inset-0 z-10 bg-black/40 blackdrop-blur-sm flex flex-col justify-center items-center w-dvw sm:w-full h-full sm:h-full">
+    <div className="fixed inset-0 z-1000 bg-black/40 blackdrop-blur-sm flex flex-col justify-center items-center w-dvw sm:w-full h-full sm:h-full">
          <div className="bg-white p-5 rounded-2xl shadow-lg flex flex-col justify-center items-center gap-2 w-[300px] h-[400px]">
           
           { tipo ?  <FaCheckCircle size={56} className="mx-auto text-green-400"/> : <MdDangerous size={56} className="mx-auto text-red-600"/> }
