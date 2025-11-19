@@ -11,6 +11,7 @@ import { useRouter , useSearchParams } from "next/navigation";
 import Select from "react-select";
 import { COLOR_PALETTE , TALLAS , categoriesWomen , categoriesMen , categoriesKids } from "../components/params"
 import LoadingModal from "../components/Loadingpage";
+import CargandoModal from "../components/modalCargando";
 import AlertModal from "../components/alertModal";
 import { themeBgMap } from "@/app/themeStyles"
 import { useSelector } from "react-redux";
@@ -24,7 +25,8 @@ import { logout as logout_Auth} from "@/app/features/auth/authSlice";
 import ThumbImages from "@/app/components/thumbImage"
 import { MultiValue } from "react-select";
 import { GoStarFill } from "react-icons/go";
-import ImageDefault from "../../../public/default-Image.png";
+import { FaCheckCircle } from "react-icons/fa";
+
 
  
 
@@ -72,6 +74,7 @@ export default function NewProduct() {
   const [talla, setTalla] = useState< OptionType[] | null>([]);
   const [foto, setFoto] = useState<string | null>(null);
   const [modal, setModal] = useState<boolean>(false);
+  const [modalCargando, setModalCargando] = useState<boolean>(false);
   const [tipo,setTipo] = useState<boolean>(false)
   const [actualizar,setActualizar] = useState<boolean>(false)
   const [addItem, { isLoading: loading_Create }] = useAddItemMutation();
@@ -255,6 +258,9 @@ useEffect(() => {
     
     
 
+     
+
+    
     if (!seccion) {
       alert("Por favor selecciona una seccion");
       return;
@@ -262,6 +268,11 @@ useEffect(() => {
 
     if (!categoria) {
       alert("Por favor selecciona una categoria");
+      return;
+    }
+
+     if (!text) {
+      alert("Por favor selecciona una marca");
       return;
     }
 
@@ -280,6 +291,7 @@ useEffect(() => {
       return;
     }
 
+     setModalCargando(true); 
 
     try {
       if (!actualizar) {
@@ -300,7 +312,7 @@ useEffect(() => {
 
       addItem({
         title: data.titulo,
-        marca: marca,
+        marca: marca===undefined ? {name: text, domain: null} : marca ,
         imagesUrl: result,
         seccionId: seccion.value,
         category: categoria.value,
@@ -369,6 +381,7 @@ useEffect(() => {
       setTalla(null)
       setModal(true)
       setTipo(true)
+       setModalCargando(false); 
 
       
      
@@ -606,7 +619,7 @@ const setMoveItem = (indice:number, away:string) => {
     <div className="flex flex-col items-center p-4 ">
 
       {modal && <AlertModal onClose={() => setModal(false)} tipo={tipo}  />}
-      {loading_Create && <LoadingModal />}
+      { modalCargando && <CargandoModal />}
       <div  className={`w-[700px] h-[1000px] flex flex-col overflow-auto items-center rounded-2xl mt-20  px-8 ${actualizar ? 'bg-green-200' : 'bg-white' }`}>
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
 
@@ -883,6 +896,8 @@ const setMoveItem = (indice:number, away:string) => {
          
           </div>
         </form>
+
+       
 
         <button
               onClick={() => {
