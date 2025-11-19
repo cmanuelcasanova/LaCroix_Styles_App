@@ -1,7 +1,7 @@
 export enum Themetype {
     WOMAN= "WOMAN" ,
     MEN = "MEN" ,
-    BOY = "BOY",
+    KID = "KID",
     ALL = "ALL"
 }
 
