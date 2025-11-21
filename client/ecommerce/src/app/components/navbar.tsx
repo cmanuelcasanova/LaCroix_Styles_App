@@ -26,7 +26,7 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import { selectHasFilters } from "@/app/features/selectedFilter/selectedFilterSelector"
 import FilterBar from "./Filters";
-import { addSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
+import { addSelectFilters, clearSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
 import { IoMdCloseCircle } from "react-icons/io";
 import { selectedFiltersG } from "@/app/features/selectedFilter/selectedFilterSelector"
 
@@ -63,7 +63,7 @@ export default function Navbar() {
       case Themetype.MEN:
         document.body.classList.add("bg-men");
         break;
-      case Themetype.BOY:
+      case Themetype.KIDS:
         document.body.classList.add("bg-boy");
         break;
       case Themetype.ALL:
@@ -114,6 +114,7 @@ useEffect(() => {
           onClick={() => {
             router.push("/");
             dispatch(setTheme(Themetype.WOMAN));
+            dispatch( clearSelectFilters());
           }}
         >
           WOMAN
@@ -124,6 +125,7 @@ useEffect(() => {
           onClick={() => {
             router.push("/");
             dispatch(setTheme(Themetype.MEN));
+            dispatch( clearSelectFilters());
           }}
         >
           MEN
@@ -133,10 +135,11 @@ useEffect(() => {
           className=" hover:underline"
           onClick={() => {
             router.push("/");
-            dispatch(setTheme(Themetype.BOY));
+            dispatch(setTheme(Themetype.KIDS));
+            dispatch( clearSelectFilters());
           }}
         >
-          KID
+          KIDS
         </button>
 
         <button
@@ -144,6 +147,7 @@ useEffect(() => {
           onClick={() => {
             router.push("/");
             dispatch(setTheme(Themetype.ALL));
+            dispatch( clearSelectFilters());
           }}
         >
           ALL
@@ -372,6 +376,7 @@ useEffect(() => {
                 setMenuOpen(false);
                 router.push("/");
                 dispatch(setTheme(Themetype.WOMAN));
+                dispatch( clearSelectFilters()); 
               }}
             >
               WOMAN
@@ -383,6 +388,7 @@ useEffect(() => {
                 setMenuOpen(false);
                 router.push("/");
                 dispatch(setTheme(Themetype.MEN));
+                dispatch( clearSelectFilters());
               }}
             >
               MEN
@@ -393,10 +399,11 @@ useEffect(() => {
               onClick={() => {
                 setMenuOpen(false);
                 router.push("/");
-                dispatch(setTheme(Themetype.BOY));
+                dispatch(setTheme(Themetype.KIDS));
+                dispatch( clearSelectFilters());
               }}
             >
-              KID
+              KIDS
             </button>
 
             <button
@@ -405,6 +412,7 @@ useEffect(() => {
                 setMenuOpen(false);
                 router.push("/");
                 dispatch(setTheme(Themetype.ALL));
+                dispatch( clearSelectFilters());
               }}
             >
               ALL

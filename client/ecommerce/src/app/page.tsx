@@ -297,11 +297,11 @@ return (
         {currentPage+1 > 1 && <button className={`text-black/70 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> setCurrentPage(0)}> <BiArrowToLeft /> </button> } 
         <button className="bg-white/60  px-[4px] rounded-2xl shadow mr-4 hover:cursor-pointer" disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
        
-        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < currentPage+1 || index+1 - 2 > currentPage+1) && `hidden`} p-[6px] rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
+        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < currentPage+1 || index+1 - 2 > currentPage+1) && `hidden`} p-[6px] rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)}; 
        
-        {(totalpaginas> 5 && currentPage +1 < totalpaginas) && <button className={`text-black `}> ... </button> } 
+        {(totalpaginas> 3 && currentPage +1 < totalpaginas) && <button className={`text-black `}> ... </button> } 
         <button className="bg-white/60  px-[4px] rounded-2xl shadow ml-4 hover:cursor-pointer" disabled={currentPage+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
-         {currentPage +1 < totalpaginas  && <button className={`text-black/60 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> setCurrentPage(totalpaginas-1)}> <BiArrowToRight /> </button> } 
+         {currentPage +1 < totalpaginas  && <button className={`text-black/60 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> setCurrentPage(totalpaginas-1)}> <BiArrowToRight /> </button> } ;
       </div>
 
     </div>
