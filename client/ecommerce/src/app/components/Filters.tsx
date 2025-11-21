@@ -57,6 +57,11 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
 
   }
 
+    useEffect( ( ) => {   
+  if (SelectedFilters.category.length > 0)  setCategory(true)
+  if (SelectedFilters.color.length > 0)  setColor(true)
+  if (SelectedFilters.talla.length > 0)  setTalla(true)
+  },[SelectedFilters])
 
 
   return (
@@ -139,19 +144,23 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
         {color && (
           <div className="flex flex-col justify-start w-full mb-4 mt-4">
             {Filtros.color.map((product) => (
-              <div
-                key={product.name}
+              <label  key={product.name} htmlFor={product.name}>
+             <div
+                
                 className="flex flex-wrap justify-between items-center p-2 pl-2 border-b-[1px] border-gray-400"
               >
                 
                 {product.name} ({product.cant})
                 <input 
+                 id={product.name} 
                 name={product.name}
                 type="checkbox" 
                 className="h-4 w-4" 
                 checked={ SelectedFilters.color.includes ( product.name)  } 
                 onChange={e => dispatch( e.target.checked ? addSelectFilters({color: product.name}) :  deleteSelectFilters ({name: "color", value: product.name})  ,onClose() )}/>
               </div>
+
+              </label>
             ))}
           </div>
         )}
@@ -168,12 +177,14 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
         {talla && (
           <div className="flex flex-col justify-start w-full mb-4 mt-4">
             {Filtros.talla.map((product) => (
+              <label  key={product.name} htmlFor={product.name}>
               <div
-                key={product.name}
+                
                 className="flex flex-wrap justify-between items-center p-2 pl-2 border-b-[1px] border-gray-400"
               >
                 {product.name} ({product.cant})
                 <input 
+                 id={product.name} 
                 name={product.name} 
                 type="checkbox" 
                 className="h-4 w-4" 
@@ -181,6 +192,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
                 onChange={e => dispatch( e.target.checked ? addSelectFilters({talla: product.name }) :  deleteSelectFilters ({name: "talla", value: product.name}) , onClose()  )}
                  />
               </div>
+              </label>
             ))}
           </div>
         )}
