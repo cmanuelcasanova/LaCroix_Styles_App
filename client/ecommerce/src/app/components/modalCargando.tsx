@@ -1,3 +1,4 @@
+"use client";
 import { themeFill } from "@/app/themeStyles";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { useSelector } from "react-redux";
