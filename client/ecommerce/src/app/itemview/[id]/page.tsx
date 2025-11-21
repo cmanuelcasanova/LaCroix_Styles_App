@@ -180,7 +180,7 @@ export default function Item() {
 
 
   return (
-    <div className={`flex flex-col items-center justify-center `}>
+    <div className={`flex flex-col items-center justify-center  `}>
       <Toaster />
       {modal && (
         <ConfirmationtModal
@@ -190,7 +190,7 @@ export default function Item() {
           }}
         />
       )}
-      <div className="bg-white flex flex-col items-center shadow-2xl mt-20 rounded-2xl p-4 mb-6 mx-4 w-dwv">
+      <div className="bg-white flex flex-col items-center shadow-2xl mt-30 rounded-2xl p-4 mb-6 mx-4 w-dwv">
         
 
 
@@ -250,7 +250,7 @@ export default function Item() {
 
         {item.marca &&
         
-              <div className=" flex flex-col items-center mt-4 justify-start  hover:bg-gray-400" >
+              <div className=" flex flex-col items-center mt-8 justify-start  hover:bg-gray-400" >
                            
                             {item.domain &&
                             <picture className="rounded-full">
@@ -305,7 +305,7 @@ export default function Item() {
           ))}
         </div>
 
-        <h1 className="mr-auto mt-4 mb-2"> CATEGORIA: {  item.category } </h1>
+        <h1 className="mr-auto mt-8 mb-2"> CATEGORIA: {  item.category } </h1>
 
          
         <h1 className="mr-auto mt-4 mb-2"> DETALLES: </h1>

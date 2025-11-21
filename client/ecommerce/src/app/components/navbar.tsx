@@ -364,14 +364,25 @@ useEffect(() => {
         )}
       </button>
 
-      {/* Menú móvil en bloque */}
-      {menuOpen && (
-        <div
-          className={`absolute inset-x-0 top-full bg-${bgClass} px-4 py-3 rounded shadow text-gray-800 md:hidden z-40`}
+       <div
+          className={`absolute inset-x-0 top-full ${bgClassOpa} px-4 rounded text-white md:hidden `}
         >
-          <div className="flex flex-wrap items-center justify-between gap-4 my-4 ">
+          <div className="flex flex-wrap items-center justify-between gap-4 my-[5px] ">
+
             <button
-              className=" hover:underline bg-white p-2 rounded-2xl"
+              className=" hover:underline rounded-2xl"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/");
+                dispatch(setTheme(Themetype.ALL));
+                dispatch( clearSelectFilters());
+              }}
+            >
+              ALL
+            </button>
+
+             <button
+              className=" hover:underline rounded-2xl"
               onClick={() => {
                 setMenuOpen(false);
                 router.push("/");
@@ -383,7 +394,7 @@ useEffect(() => {
             </button>
 
             <button
-              className=" hover:underline bg-white p-2 rounded-2xl"
+              className=" hover:underline  rounded-2xl"
               onClick={() => {
                 setMenuOpen(false);
                 router.push("/");
@@ -395,7 +406,7 @@ useEffect(() => {
             </button>
 
             <button
-              className=" hover:underline bg-white p-2 rounded-2xl"
+              className=" hover:underline  rounded-2xl"
               onClick={() => {
                 setMenuOpen(false);
                 router.push("/");
@@ -406,18 +417,19 @@ useEffect(() => {
               KIDS
             </button>
 
-            <button
-              className=" hover:underline bg-white p-2 rounded-2xl"
-              onClick={() => {
-                setMenuOpen(false);
-                router.push("/");
-                dispatch(setTheme(Themetype.ALL));
-                dispatch( clearSelectFilters());
-              }}
-            >
-              ALL
-            </button>
+      
+
+
           </div>
+      
+      </div>
+
+      {/* Menú móvil en bloque */}
+      {menuOpen && (
+        <div
+          className={`absolute inset-x-0 top-full bg-${bgClass} px-4 py-3 rounded shadow text-gray-800 md:hidden z-40`}
+        >
+  
 
 
           {UserRole==="ADMIN"  && <Link
