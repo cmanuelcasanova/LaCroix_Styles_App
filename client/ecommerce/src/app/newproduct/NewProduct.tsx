@@ -271,11 +271,6 @@ useEffect(() => {
       return;
     }
 
-     if (!text) {
-      alert("Por favor selecciona una marca");
-      return;
-    }
-
    if (!talla) {
       alert("Por favor selecciona una talla");
       return;
@@ -388,6 +383,7 @@ useEffect(() => {
     } catch  {
       setModal(true)
       setTipo(false)
+       setModalCargando(false); 
     }
 
    

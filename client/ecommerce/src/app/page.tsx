@@ -287,15 +287,14 @@ return (
         ))}
       </section>
       : <div className="flex flex-col items-center justify-center my-8"> 
-          <PiEmptyBold size={70} className="text-gray-600"/>
-          <h1> No hay resultados</h1>
+         
         </div>
         }
 
 
       <div className="flex flex-wrap gap-2 mt-10 text-gray-500">
-        {currentPage+1 > 1 && <button className={`text-black/70 bg-white/60 px-[4px] rounded-2xl shadow ${currentPage+1 ===1 && `hidden` } `} onClick={()=> setCurrentPage(0)}> <BiArrowToLeft /> </button> } 
-        <button className="bg-white/60  px-[4px] rounded-2xl shadow mr-4 hover:cursor-pointer" disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
+        {currentPage+1 > 1 && <button className={`text-black/70 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> setCurrentPage(0)}> <BiArrowToLeft /> </button> } 
+        <button className={`bg-white/60  px-[4px] rounded-2xl shadow mr-4 hover:cursor-pointer ${currentPage+1 ===1 && `hidden` }  ` } disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
        
         {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < currentPage+1 || index+1 - 2 > currentPage+1) && `hidden`} p-[6px] rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
        
