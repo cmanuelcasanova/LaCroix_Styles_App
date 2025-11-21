@@ -1,4 +1,12 @@
+import { themeFill } from "@/app/themeStyles";
+import { selectTheme } from "@/app/features/theme/themeSelector";
+import { useSelector } from "react-redux";
+
 export default function CargandoModal() {
+
+  const theme = useSelector(selectTheme);
+  const ColorThemeFill = themeFill[theme];
+
   return (
     <div className="fixed inset-0 z-1000 bg-black/40 blackdrop-blur-sm w-dvw h-full sm:w-full flex flex-col items-center justify-center">
       <div
@@ -7,7 +15,7 @@ export default function CargandoModal() {
       >
         <svg
           aria-hidden="true"
-          className="w-15 h-15 text-gray-200 animate-spin dark:text-gray-600 fill-[#ff288e]"
+          className={`w-15 h-15 text-gray-200 animate-spin dark:text-gray-600 ${ColorThemeFill}`}
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

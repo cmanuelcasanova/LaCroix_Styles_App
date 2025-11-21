@@ -42,6 +42,11 @@ export const themeBgMapHOpacity: Record<string, string> = {
 
 
 
-
+export const themeFill: Record<string, string> = {
+  ALL: "fill-[#ff8ec9]",
+  WOMAN: "fill-[#c37ff0]",
+  MEN: "fill-[#4e8bc0]",
+  KIDS: "fill-[#fe871e]",
+};
 
 
