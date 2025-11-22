@@ -26,6 +26,7 @@ import { addSelectFilters } from "@/app/features/selectedFilter/selectedFilterSl
 import { useGetHomeImagesQuery } from "@/app/services/api/fileApi"
 import { BiArrowToLeft } from "react-icons/bi";
 import { BiArrowToRight } from "react-icons/bi";
+import { selectHasFilters } from "@/app/features/selectedFilter/selectedFilterSelector"
 
 
 
@@ -62,6 +63,7 @@ export default function Home() {
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
  const { data: HomeImages } = useGetHomeImagesQuery();
  const [ images, setImages ] = useState<string[]>([])
+ const HadFilters = useSelector( selectHasFilters )  ;
  
  const [play_LazyGetProfile, { data: profile,isLoading: Loading_Profile, isFetching:Fetching_Profile}] = useLazyProfileQuery();
 
@@ -70,6 +72,13 @@ useEffect (() => {
 if (filteredProducts) setTotalpaginas(Math.ceil(filteredProducts.length / itemsforpage))
 
 },[filteredProducts])
+
+
+useEffect(() => {
+
+  if (HadFilters) setCurrentPage(0)
+
+  },[HadFilters])
 
 
 

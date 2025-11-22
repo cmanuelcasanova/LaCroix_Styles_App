@@ -73,7 +73,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
       
       className= "p-2 mb-4 ml-auto bg-white text-black rounded"
       
-      onClick={() => {dispatch( clearSelectFilters(), setPmin(""), setPmax("")); onClose()} }
+      onClick={() => {dispatch( clearSelectFilters(), setPmin(""), setPmax("")); onClose();   window.scrollTo(0, 0)} }
       > Limpiar Filtros  
       
       
