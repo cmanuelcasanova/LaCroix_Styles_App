@@ -76,9 +76,9 @@ if (filteredProducts) setTotalpaginas(Math.ceil(filteredProducts.length / itemsf
 
 useEffect(() => {
 
-  if (HadFilters) setCurrentPage(0)
+  setCurrentPage(0)
 
-  },[HadFilters])
+  },[HadFilters,theme])
 
 
 
