@@ -121,7 +121,7 @@ export default function Card({
         </div>
       )}
 
-      <h1 className="text-2xl font-extrabold mb-4"> {title} </h1>
+      <h1 className="text-2xl font-extrabold mb-4 text-center"> {title} </h1>
       <div className={`${themeTextCard} mb-10 flex flex-wrap gap-6`}>
         <span className="font-bold">
           Precio: <span className="text-black">$ {precio}</span>{" "}

@@ -29,6 +29,7 @@ import FilterBar from "./Filters";
 import { addSelectFilters, clearSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
 import { IoMdCloseCircle } from "react-icons/io";
 import { selectedFiltersG } from "@/app/features/selectedFilter/selectedFilterSelector"
+import { RiStarFill } from "react-icons/ri";
 
 
 
@@ -190,12 +191,17 @@ useEffect(() => {
 
           {/* Filtros Icono Barras  */}
 
+              <div>
           <button
-            className={`text-white ml-4 shadows-black ${HadFilters ? "bg-white/50 rounded-full p-[7px]" : "" }  `}
+            className={`text-white ml-4 mt-[3px] relative shadows-black `}
             onClick={() => {setMenuFiltros(!menuFiltros); setMenuOpen(false);}}
           >
-            <TbAdjustmentsHorizontal size={25} />
+            <TbAdjustmentsHorizontal size={35} />
+
+            {HadFilters && <RiStarFill className="text-red-600 absolute top-0 right-0"/>}
           </button>
+         
+          </div>
 
 
 
@@ -365,9 +371,9 @@ useEffect(() => {
       </button>
 
        <div
-          className={`absolute inset-x-0 top-full ${bgClassOpa} px-4 rounded text-white md:hidden `}
+          className={`absolute inset-x-0 top-full ${bgClassOpa} px-4 rounded text-white text-l md:hidden `}
         >
-          <div className="flex flex-wrap items-center justify-between gap-4 my-[5px] ">
+          <div className="flex flex-wrap items-center justify-between gap-4 my-[6px] ">
 
             <button
               className=" hover:underline rounded-2xl"

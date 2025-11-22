@@ -23,7 +23,7 @@ type optionsType = {
 
 
 export default function FilterBar( { onClose }: MoldeProps  ) {
-  const [category, setCategory] = useState<boolean>(false);
+  const [category, setCategory] = useState<boolean>(true);
   const [color, setColor] = useState<boolean>(false);
   const [talla, setTalla] = useState<boolean>(false);
   const [precio, setPrecio] = useState<boolean>(false);
@@ -67,13 +67,17 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
   return (
     <div> 
 
-      {HadFilters && <button 
+      {HadFilters && 
+      
+      <div className="w-full flex flex-wrap justify-end items-center px-4">  <button 
+      
       className= "p-2 mb-4 ml-auto bg-white text-black rounded"
+      
       onClick={() => {dispatch( clearSelectFilters(), setPmin(""), setPmax("")); onClose()} }
       > Limpiar Filtros  
       
       
-      </button> }
+      </button> </div>}
 
 
       <div className="flex flex-wrap justify-between mb-4 border-b-2 pb-2 mx-4">
@@ -109,7 +113,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
      
 
         {category && (
-          <div className="flex flex-col justify-start w-full mb-4">
+          <div className="flex flex-col justify-start w-full mb-4 text-xl" >
             {Filtros.category.map((product) => (
               
               <label  key={product.name} htmlFor={product.name}>
@@ -142,7 +146,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
         </div>
 
         {color && (
-          <div className="flex flex-col justify-start w-full mb-4 mt-4">
+          <div className="flex flex-col justify-start w-full mb-4 mt-4 text-xl">
             {Filtros.color.map((product) => (
               <label  key={product.name} htmlFor={product.name}>
              <div
@@ -175,7 +179,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
         </div>
 
         {talla && (
-          <div className="flex flex-col justify-start w-full mb-4 mt-4">
+          <div className="flex flex-col justify-start w-full mb-4 mt-4 text-xl">
             {Filtros.talla.map((product) => (
               <label  key={product.name} htmlFor={product.name}>
               <div
