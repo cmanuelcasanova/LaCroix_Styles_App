@@ -130,6 +130,7 @@ export const categoriesKids: OptionType[] = [
   { label: 'Pantalones', value: 'Pantalones_ninos' },
   { label: 'Jeans', value: 'Jeans_ninos' },
   { label: 'Shorts', value: 'Shorts_ninos' },
+  { label: 'Monos', value: 'Monos_ninos' },
   { label: 'Chaquetas', value: 'Chaquetas_ninos' },
   { label: 'Sueter', value: 'Sueter_ninos' },
   { label: 'Abrigos', value: 'Abrigos_ninos' },
