@@ -4,7 +4,7 @@
   "start_url": "/",
   "icons": [
     {
-      "src": "../../public/Logo_LAcroix Styles_192x192.png",
+      "src": "../../public/Logo_LAcroix Styles_192_Android.png",
       "sizes": "192x192",
       "type": "image/png"
     },
@@ -14,10 +14,16 @@
       "type": "image/png"
     },
     {
-      "src": "../../public/Logo_LAcroix Styles_192x192.png",
+      "src": "../../public/Logo_LAcroix Styles_192_Android.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+
+
+  "background_color": "#FFFFFF", 
+  "display": "standalone"
+
+  
 }

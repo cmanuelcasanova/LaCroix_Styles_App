@@ -349,7 +349,7 @@ useEffect(() => {
      await UpdateProduct({
         id:item?.id,
         title: data.titulo,
-         marca: marca,
+        marca:  marca===undefined ? {name: text, domain: null} : marca ,
         imagesUrl: result,
         seccionId: seccion.value,
         category: categoria.value,

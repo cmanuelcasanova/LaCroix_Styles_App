@@ -270,7 +270,7 @@ useEffect(() => {
             className="flex items-center gap-2 ml-4 sm:ml-0 hover:underline"
           >
             <FaUserCircle size={25} />
-            {Username}
+            
           </Link>)}
           {UserRole==="ADMIN"  && (<>
           <Link

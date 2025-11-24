@@ -7,6 +7,7 @@ import { addSelectFilters , deleteSelectFilters , clearSelectFilters , setOrderP
 import { selectedFiltersG , selectHasFilters } from "@/app/features/selectedFilter/selectedFilterSelector"
 import { useDispatch } from "react-redux";
 import Select from "react-select"
+import { useRouter } from "next/navigation";
 
 
 type MoldeProps = {
@@ -34,6 +35,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
   const [pmin,setPmin] = useState<string>("")
   const [pmax,setPmax] = useState<string>("")
   const Filtros = useSelector(selectFilter);
+  const router = useRouter();
 
 
 
@@ -73,7 +75,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
       
       className= "p-2 mb-4 ml-auto bg-white text-black rounded"
       
-      onClick={() => {dispatch( clearSelectFilters(), setPmin(""), setPmax("")); onClose();   window.scrollTo(0, 0)} }
+      onClick={() => {dispatch( clearSelectFilters(), setPmin(""), setPmax("")); onClose();   window.scrollTo(0, 0); router.push("/")} }
       > Limpiar Filtros  
       
       
@@ -128,7 +130,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
                     type="checkbox" 
                     className="h-4 w-4"
                     checked={ SelectedFilters.category.includes ( product.name )  } 
-                    onChange={e => {dispatch( e.target.checked ? addSelectFilters({category: product.name}) :  deleteSelectFilters ({name: "category", value: product.name}) , onClose() );  window.scrollTo(0, 0) }} />
+                    onChange={e => {dispatch( e.target.checked ? addSelectFilters({category: product.name}) :  deleteSelectFilters ({name: "category", value: product.name}) , onClose() );  window.scrollTo(0, 0); router.push("/") }} />
               </div>
               </label>
             ))}
@@ -161,7 +163,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
                 type="checkbox" 
                 className="h-4 w-4" 
                 checked={ SelectedFilters.color.includes ( product.name)  } 
-                onChange={e => dispatch( e.target.checked ? addSelectFilters({color: product.name}) :  deleteSelectFilters ({name: "color", value: product.name})  ,onClose() )}/>
+                onChange={e => {dispatch( e.target.checked ? addSelectFilters({color: product.name}) :  deleteSelectFilters ({name: "color", value: product.name})  ,onClose());window.scrollTo(0, 0); router.push("/")}   }/>
               </div>
 
               </label>
@@ -193,7 +195,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
                 type="checkbox" 
                 className="h-4 w-4" 
                 checked={ SelectedFilters.talla.includes ( product.name )  } 
-                onChange={e => dispatch( e.target.checked ? addSelectFilters({talla: product.name }) :  deleteSelectFilters ({name: "talla", value: product.name}) , onClose()  )}
+                onChange={e => {dispatch( e.target.checked ? addSelectFilters({talla: product.name }) :  deleteSelectFilters ({name: "talla", value: product.name}) , onClose()  );window.scrollTo(0, 0); router.push("/")}}
                  />
               </div>
               </label>

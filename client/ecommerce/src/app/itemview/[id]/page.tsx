@@ -269,7 +269,7 @@ export default function Item() {
                             </picture>
                             }
 
-                            <span> {  item.marca.toUpperCase() } </span>
+                            <span> ®️ {  item.marca.toUpperCase() } </span>
                         
                         </div>
 

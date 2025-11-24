@@ -37,6 +37,7 @@ export const COLOR_PALETTE: OptionType[] = [
   { label: "Animal Print", value: "linear-gradient(45deg, #ad804d 50%, #000 50%)"},
   { label: "rayas", value: "repeating-linear-gradient(90deg, #000 0px, #000 4px, #fff 4px, #fff 8px)"},
   { label: "cuadros", value: "repeating-conic-gradient(#000 0% 25%, #fff 0% 50%) 0 0 / 8px 8px"},
+  { label: "Militar", value: "repeating-conic-gradient(#37473B 0% 25%, #8B4513 0% 50%, #B09C7A 0% 75%, #000 0% 100%) 0 0 / 12px 12px"},
   { label: "mixto", value: "linear-gradient(45deg, #000 50%, #fff 50%)"}
 
 ];

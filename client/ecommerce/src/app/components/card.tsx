@@ -19,6 +19,7 @@ type CardProps = {
   id: number;
   title: string;
   imageUrl: string;
+  marca: string | null;
   talla: {name:string}[];
   precio: number;
   onClick?: () => void;
@@ -29,6 +30,7 @@ export default function Card({
   imageUrl,
   precio,
   talla,
+  marca,
   id,
 }: CardProps) {
 
@@ -122,7 +124,7 @@ export default function Card({
       )}
 
       <h1 className="text-2xl font-extrabold mb-4 text-center"> {title} </h1>
-      <div className={`${themeTextCard} mb-10 flex flex-wrap gap-6`}>
+      <div className={`${themeTextCard} mb-2 flex flex-wrap gap-6`}>
         <span className="font-bold">
           Precio: <span className="text-black">$ {precio}</span>{" "}
         </span>
@@ -130,6 +132,16 @@ export default function Card({
           Talla: <span className="text-black flex flex-wrap gap-[5px]"> { talla.map ((item , index) => <span key={index} className="bg-gray-300 rounded-full flex flex-wrap items-center justify-center h-[25px] w-[25px]"> {item.name} </span>) } </span>
         </span>
       </div>
+
+     
+
+        {marca && 
+         <div className="w-full flex flex-wrap items-center justify-center mb-2">
+             <span>®️​ {marca}</span>
+         </div>
+        }
+
+     
 
       <Link href={`/itemview/${id}`} className="mb-2 overflow-hidden ">
         <Image
