@@ -7,6 +7,7 @@ import LoadingModal from "./components/Loadingpage";
 import { useSelector } from "react-redux";
 import { selectTheme } from "@/app/features/theme/themeSelector";
 import { selectedFiltersG } from "@/app/features/selectedFilter/selectedFilterSelector"
+import { currentPageS } from "@/app/features/CurrentPage/CurrentPageSelector"
 import { addFilters } from "@/app/features/filter/FilterSlice" 
 import { setItems } from "@/app/features/items/itemsSlice" 
 import { useDispatch } from "react-redux";
@@ -21,6 +22,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { themeBg } from "@/app/themeStyles"
 import { PiEmptyBold } from "react-icons/pi";
+import { Next_Page , Prev_Page , Reset_Page, Set_Page} from "@/app/features/CurrentPage/CurrentPageSlice"
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { addSelectFilters } from "@/app/features/selectedFilter/selectedFilterSlice" 
 import { useGetHomeImagesQuery } from "@/app/services/api/fileApi"
@@ -50,12 +52,12 @@ export default function Home() {
  const itemsforpage = 9
  const theme = useSelector(selectTheme);
  const Username = useSelector(selectUsername);
+ const CurrentPageSlice = useSelector(currentPageS);
  const dispatch = useDispatch<AppDispatch>();
  const first_time = useRef(true)
  const bgClass = themeBg[theme]
  const [paginf, setPagInf] = useState<number>(0)
  const [pagsup, setPagSup] = useState<number>(itemsforpage)
- const [currentPage, setCurrentPage] = useState<number>(0)
  const [totalpaginas, setTotalpaginas] = useState<number>(0)
  const UserFilters = useSelector(selectedFiltersG);
  const [allProducts, setAllProducts] = useState<product[] | undefined>([]);
@@ -63,8 +65,7 @@ export default function Home() {
  const { data: Productos, isLoading, error,isFetching } = useGetItemsQuery();
  const { data: HomeImages } = useGetHomeImagesQuery();
  const [ images, setImages ] = useState<string[]>([])
- const HadFilters = useSelector( selectHasFilters )  ;
- 
+ const HadFilters = useSelector( selectHasFilters )  ; 
  const [play_LazyGetProfile, { data: profile,isLoading: Loading_Profile, isFetching:Fetching_Profile}] = useLazyProfileQuery();
 
 useEffect (() => {
@@ -76,9 +77,9 @@ if (filteredProducts) setTotalpaginas(Math.ceil(filteredProducts.length / itemsf
 
 useEffect(() => {
 
-  setCurrentPage(0)
+  dispatch(Reset_Page())
 
-  },[HadFilters,theme])
+  },[HadFilters,theme,dispatch])
 
 
 
@@ -218,17 +219,25 @@ useEffect( ( ) => {
 
 useEffect(()=> {
 
-  setPagInf (  (itemsforpage*currentPage)  )
-  setPagSup (  (itemsforpage*(currentPage+1))  )
+  setPagInf (  (itemsforpage*CurrentPageSlice)  )
+  setPagSup (  (itemsforpage*(CurrentPageSlice+1))  )
 
-},[currentPage])
+},[CurrentPageSlice])
+
+
+
 
 
 
 useEffect(()=> {
 
-setCurrentPage(0)
-  },[UserFilters.orderPrice])
+  dispatch(Reset_Page())
+
+  },[UserFilters.orderPrice,dispatch])
+
+
+
+
 
 
 if (isLoading || isFetching ) return <LoadingModal />;
@@ -240,25 +249,26 @@ if (error) return <ErrorConection />;
 
 const handleft = () => {
  
-  if( currentPage > 0 ) setCurrentPage( prev => prev - 1 )
+  if( CurrentPageSlice > 0 ) dispatch(Prev_Page())
      window.scrollTo(0, 0)
 }
 
 const handright = () => {
 
-  console.log("boton +")
 
-  if( currentPage +1 < totalpaginas ) setCurrentPage( prev => prev +1) 
+  if( CurrentPageSlice +1 < totalpaginas ) dispatch(Next_Page())
    window.scrollTo(0, 0)
 }
 
 const handleClick = (i:number) => {
 
-  setCurrentPage(i)
+  dispatch(Set_Page(i))
   window.scrollTo(0, 0)
 
 
 }
+
+
 
 
 return (
@@ -301,16 +311,18 @@ return (
 
 
       <div className="flex flex-wrap gap-2 mt-10 text-gray-500">
-        {currentPage+1 > 2 && <button className={`text-black/70 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> setCurrentPage(0)}> <BiArrowToLeft /> </button> } 
-        <button className={`bg-white/60  px-[4px] rounded-2xl shadow mr-4 hover:cursor-pointer ${currentPage+1 ===1 && `hidden` }  ` } disabled={currentPage===0}  onClick={handleft}> <IoIosArrowBack /> </button>
+        {CurrentPageSlice+1 > 2 && <button className={`text-black/70 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> dispatch(Reset_Page())}> <BiArrowToLeft /> </button> } 
+        <button className={`bg-white/60  px-[4px] rounded-2xl shadow mr-4 hover:cursor-pointer ${CurrentPageSlice+1 ===1 && `hidden` }  ` } disabled={CurrentPageSlice===0}  onClick={handleft}> <IoIosArrowBack /> </button>
        
-        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === currentPage+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < currentPage+1 || index+1 - 2 > currentPage+1) && `hidden`} p-[6px] rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
+        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === CurrentPageSlice+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < CurrentPageSlice+1 || index+1 - 2 > CurrentPageSlice+1) && `hidden`} p-[6px] rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
        
-        {(totalpaginas> 3 && currentPage +1 < totalpaginas) && <button className={`text-black `}> ... </button> } 
-        <button className={`bg-white/60  px-[4px] rounded-2xl shadow ml-4 hover:cursor-pointer ${currentPage+1 ===totalpaginas && `hidden` } `} disabled={currentPage+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
-         {currentPage +1 < totalpaginas -1  && <button className={`text-black/60 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> setCurrentPage(totalpaginas-1)}> <BiArrowToRight /> </button> } 
+        {(totalpaginas> 3 && CurrentPageSlice +1 < totalpaginas) && <button className={`text-black `}> ... </button> } 
+        <button className={`bg-white/60  px-[4px] rounded-2xl shadow ml-4 hover:cursor-pointer ${CurrentPageSlice+1 ===totalpaginas && `hidden` } `} disabled={CurrentPageSlice+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
+         {CurrentPageSlice +1 < totalpaginas -1  && <button className={`text-black/60 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> dispatch(Set_Page(totalpaginas-1))}> <BiArrowToRight /> </button> } 
       </div>
 
+
+       
     </div>
   );
 }

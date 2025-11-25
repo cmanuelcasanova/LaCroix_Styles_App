@@ -137,7 +137,7 @@ export default function Card({
 
         {marca && 
          <div className="w-full flex flex-wrap items-center justify-center mb-2">
-             <span>®️​ {marca}</span>
+             <span>{marca} ®️​</span>
          </div>
         }
 

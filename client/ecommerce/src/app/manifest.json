@@ -19,11 +19,7 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ],
-
-
-  "background_color": "#FFFFFF", 
-  "display": "standalone"
+  ]
 
   
 }

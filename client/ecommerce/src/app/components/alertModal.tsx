@@ -36,7 +36,7 @@ const router = useRouter();
             
             <button
               className= {`btn btn-light w-full rounded p-2 mt-4 ${tipo ? "bg-green-400" : "bg-red-600"}`}
-              onClick={()=> {onClose(); router.push("/") }}
+              onClick={()=> onClose()}
             >
               Aceptar
             </button>

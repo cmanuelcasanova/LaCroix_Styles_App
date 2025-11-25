@@ -55,6 +55,7 @@ export const SeletedFilterSlice = createSlice({
       state.search="";
       state.orderPrice = 0;
 
+     
 
     },
 

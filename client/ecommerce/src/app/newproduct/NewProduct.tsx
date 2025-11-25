@@ -360,7 +360,7 @@ useEffect(() => {
       }).unwrap();
 
 
-
+     
 
 
     }
@@ -376,7 +376,9 @@ useEffect(() => {
       setTalla(null)
       setModal(true)
       setTipo(true)
-       setModalCargando(false); 
+      setModalCargando(false);
+      
+    
 
       
      
@@ -614,7 +616,7 @@ const setMoveItem = (indice:number, away:string) => {
 
     <div className="flex flex-col items-center p-4 ">
 
-      {modal && <AlertModal onClose={() => setModal(false)} tipo={tipo}  />}
+      {modal && <AlertModal onClose={() => {setModal(false); if(actualizar && item?.id){ router.push(`/itemview/${item.id}`) }else {router.push("/") }}} tipo={tipo}  />}
       { modalCargando && <CargandoModal />}
       <div  className={`w-[700px] h-[1000px] flex flex-col overflow-auto items-center rounded-2xl mt-20  px-8 ${actualizar ? 'bg-green-200' : 'bg-white' }`}>
         <h1 className="text-2xl font-bold my-10">Agregar</h1>
