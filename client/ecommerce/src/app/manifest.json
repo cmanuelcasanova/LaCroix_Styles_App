@@ -2,6 +2,8 @@
   "name": "LaCroix Styles App",
   "short_name": "LaCroix Styles",
   "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
   "icons": [
     {
       "src": "../../public/Logo_Lacroix_Styles_192x192_Android.png",
