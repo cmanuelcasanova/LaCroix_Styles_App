@@ -3,20 +3,20 @@
   "short_name": "LaCroix Styles",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#FFFFFF",
   "icons": [
     {
-      "src": "../../public/Logo_Lacroix_Styles_192x192_Android.png",
+      "src": "/Logo_Lacroix_Styles_192x192_Android.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "../../public/Logo_Lacroix_Styles_512x512.png",
+      "src": "/Logo_Lacroix_Styles_512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "../../public/Logo_Lacroix_Styles_192x192_Android.png",
+      "src": "/Logo_Lacroix_Styles_192x192_Android.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
