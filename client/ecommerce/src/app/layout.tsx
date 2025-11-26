@@ -31,9 +31,9 @@ export const metadata: Metadata = {
       { url: "/favicon.png", sizes: "32x32" }, 
     ],
     
-    shortcut: "/Logo_LAcroix Styles_192_Android.png", 
+    shortcut: "/Logo_Lacroix_Styles_192x192_Android.png", 
    
-    apple: "/Logo_LAcroix Styles_192x192.png",
+    apple: "/Logo_Lacroix_Styles_192x192_Iphone.png",
   },
   
   manifest: "/manifest.json",
