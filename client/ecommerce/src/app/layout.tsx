@@ -33,7 +33,11 @@ export const metadata: Metadata = {
     
     shortcut: "/Logo_Lacroix_Styles_192x192_Android.png", 
    
-    apple: "/Logo_Lacroix_Styles_192x192_Iphone.png",
+     apple: [
+    { url: "/Logo_Lacroix_Styles_192x192_Iphone.png", sizes: "192x192" },
+    { url: "/Logo_Lacroix_Styles_512x512.png", sizes: "512x512" },
+  ],
+
   },
   
   manifest: "/manifest.json",
@@ -56,6 +60,27 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ReduxProvider>
+
+      <head>
+        {/* Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+
+        {/* Android */}
+        <meta name="mobile-web-app-capable" content="yes" />
+
+        {/* iOS */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="LaCroix Styles" />
+
+        {/* Iconos */}
+        <link rel="apple-touch-icon" href="/Logo_Lacroix_Styles_192x192_Iphone.png" />
+        <link rel="icon" sizes="192x192" href="/Logo_Lacroix_Styles_192x192_Android.png" />
+      </head>
+
+
+
+
       <body
         className={`${RobotoFont.className} min-h-screen overflow-x-hidden antialiased bg-gradient-to-b from-[#ff8ec9]  via-white via-70% to-[#fed3e7]`}
       >

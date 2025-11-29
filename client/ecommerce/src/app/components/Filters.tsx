@@ -6,6 +6,7 @@ import { selectItems } from "@/app/features/items/itemsSelectors"
 import { addSelectFilters , deleteSelectFilters , clearSelectFilters , setOrderPrice } from "@/app/features/selectedFilter/selectedFilterSlice" 
 import { selectedFiltersG , selectHasFilters } from "@/app/features/selectedFilter/selectedFilterSelector"
 import { useDispatch } from "react-redux";
+import { Reset_Page } from "@/app/features/CurrentPage/CurrentPageSlice"
 import Select from "react-select"
 import { useRouter } from "next/navigation";
 
@@ -53,7 +54,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
   
   const handerOrder = (seleted: optionsType | null) => {
 
-    if(seleted) dispatch( setOrderPrice ( {valor: seleted?.value} ))
+    if(seleted) {dispatch( setOrderPrice ( {valor: seleted?.value} ));dispatch( Reset_Page())}
     onClose()
    
 
@@ -75,7 +76,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
       
       className= "p-2 mb-4 ml-auto bg-white text-black rounded"
       
-      onClick={() => {dispatch( clearSelectFilters(), setPmin(""), setPmax("")); onClose();   window.scrollTo(0, 0); router.push("/")} }
+      onClick={() => {dispatch( clearSelectFilters(), setPmin(""), setPmax("")); onClose();   window.scrollTo(0, 0); router.push("/"); dispatch( Reset_Page())} }
       > Limpiar Filtros  
       
       
@@ -130,7 +131,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
                     type="checkbox" 
                     className="h-4 w-4"
                     checked={ SelectedFilters.category.includes ( product.name )  } 
-                    onChange={e => {dispatch( e.target.checked ? addSelectFilters({category: product.name}) :  deleteSelectFilters ({name: "category", value: product.name}) , onClose() );  window.scrollTo(0, 0); router.push("/") }} />
+                    onChange={e => {dispatch( e.target.checked ? addSelectFilters({category: product.name}) :  deleteSelectFilters ({name: "category", value: product.name}) , onClose() );  window.scrollTo(0, 0);dispatch( Reset_Page()); router.push("/") }} />
               </div>
               </label>
             ))}
@@ -163,7 +164,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
                 type="checkbox" 
                 className="h-4 w-4" 
                 checked={ SelectedFilters.color.includes ( product.name)  } 
-                onChange={e => {dispatch( e.target.checked ? addSelectFilters({color: product.name}) :  deleteSelectFilters ({name: "color", value: product.name})  ,onClose());window.scrollTo(0, 0); router.push("/")}   }/>
+                onChange={e => {dispatch( e.target.checked ? addSelectFilters({color: product.name}) :  deleteSelectFilters ({name: "color", value: product.name})  ,onClose());window.scrollTo(0, 0); dispatch( Reset_Page()); router.push("/")}   }/>
               </div>
 
               </label>
@@ -195,7 +196,7 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
                 type="checkbox" 
                 className="h-4 w-4" 
                 checked={ SelectedFilters.talla.includes ( product.name )  } 
-                onChange={e => {dispatch( e.target.checked ? addSelectFilters({talla: product.name }) :  deleteSelectFilters ({name: "talla", value: product.name}) , onClose()  );window.scrollTo(0, 0); router.push("/")}}
+                onChange={e => {dispatch( e.target.checked ? addSelectFilters({talla: product.name }) :  deleteSelectFilters ({name: "talla", value: product.name}) , onClose()  );window.scrollTo(0, 0); dispatch( Reset_Page()); router.push("/")}}
                  />
               </div>
               </label>
@@ -219,12 +220,12 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
            
                 <div className="flex flex-wrap gap-2"><span>Min: </span>
                   <input type="text" value={pmin} onChange={e => setPmin(e.target.value)}  className="border-2 w-[60px] text-center"/>
-                  <button onClick={ ()=> dispatch(addSelectFilters({preciomin: Number(pmin)})) }> ✔️​</button>
+                  <button onClick={ ()=> {dispatch(addSelectFilters({preciomin: Number(pmin)})); window.scrollTo(0, 0); dispatch( Reset_Page()); router.push("/") }}> ✔️​</button>
                 </div>
 
                 <div className="flex flex-wrap gap-2"><span>Max: </span>
                   <input type="text" value={pmax} onChange={e => setPmax(e.target.value)} className="border-2 w-[60px] text-center"/>
-                  <button onClick={ ()=> dispatch(addSelectFilters({preciomax: Number(pmax)})) }> ✔️​</button>
+                  <button onClick={ ()=> {dispatch(addSelectFilters({preciomax: Number(pmax)})); window.scrollTo(0, 0); dispatch( Reset_Page()); router.push("/") }}> ✔️​</button>
                 </div>
             
           

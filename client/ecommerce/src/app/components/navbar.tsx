@@ -30,6 +30,7 @@ import { addSelectFilters, clearSelectFilters } from "@/app/features/selectedFil
 import { IoMdCloseCircle } from "react-icons/io";
 import { selectedFiltersG } from "@/app/features/selectedFilter/selectedFilterSelector"
 import { RiStarFill } from "react-icons/ri";
+import { Reset_Page } from "@/app/features/CurrentPage/CurrentPageSlice"
 
 
 
@@ -116,6 +117,7 @@ useEffect(() => {
             router.push("/");
             dispatch(setTheme(Themetype.WOMAN));
             dispatch( clearSelectFilters());
+            dispatch( Reset_Page() );
           }}
         >
           WOMAN
@@ -127,6 +129,7 @@ useEffect(() => {
             router.push("/");
             dispatch(setTheme(Themetype.MEN));
             dispatch( clearSelectFilters());
+            dispatch( Reset_Page() );
           }}
         >
           MEN
@@ -138,6 +141,7 @@ useEffect(() => {
             router.push("/");
             dispatch(setTheme(Themetype.KIDS));
             dispatch( clearSelectFilters());
+            dispatch( Reset_Page() );
           }}
         >
           KIDS
@@ -149,6 +153,7 @@ useEffect(() => {
             router.push("/");
             dispatch(setTheme(Themetype.ALL));
             dispatch( clearSelectFilters());
+            dispatch( Reset_Page() );
           }}
         >
           ALL
@@ -382,6 +387,7 @@ useEffect(() => {
                 router.push("/");
                 dispatch(setTheme(Themetype.ALL));
                 dispatch( clearSelectFilters());
+                dispatch( Reset_Page() );
               }}
             >
               ALL
@@ -394,6 +400,7 @@ useEffect(() => {
                 router.push("/");
                 dispatch(setTheme(Themetype.WOMAN));
                 dispatch( clearSelectFilters()); 
+                dispatch( Reset_Page() );
               }}
             >
               WOMAN
@@ -406,6 +413,7 @@ useEffect(() => {
                 router.push("/");
                 dispatch(setTheme(Themetype.MEN));
                 dispatch( clearSelectFilters());
+                dispatch( Reset_Page() );
               }}
             >
               MEN
@@ -418,6 +426,7 @@ useEffect(() => {
                 router.push("/");
                 dispatch(setTheme(Themetype.KIDS));
                 dispatch( clearSelectFilters());
+                dispatch( Reset_Page() );
               }}
             >
               KIDS

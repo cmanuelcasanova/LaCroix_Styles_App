@@ -68,6 +68,8 @@ export default function Home() {
  const HadFilters = useSelector( selectHasFilters )  ; 
  const [play_LazyGetProfile, { data: profile,isLoading: Loading_Profile, isFetching:Fetching_Profile}] = useLazyProfileQuery();
 
+
+
 useEffect (() => {
 
 if (filteredProducts) setTotalpaginas(Math.ceil(filteredProducts.length / itemsforpage))
@@ -75,11 +77,6 @@ if (filteredProducts) setTotalpaginas(Math.ceil(filteredProducts.length / itemsf
 },[filteredProducts])
 
 
-useEffect(() => {
-
-  dispatch(Reset_Page())
-
-  },[HadFilters,theme,dispatch])
 
 
 
@@ -224,16 +221,6 @@ useEffect(()=> {
 
 },[CurrentPageSlice])
 
-
-
-
-
-
-useEffect(()=> {
-
-  dispatch(Reset_Page())
-
-  },[UserFilters.orderPrice,dispatch])
 
 
 
