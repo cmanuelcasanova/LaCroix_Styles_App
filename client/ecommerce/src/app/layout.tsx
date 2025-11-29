@@ -31,7 +31,7 @@ export const metadata: Metadata = {
       { url: "/favicon.png", sizes: "32x32" }, 
     ],
     
-    shortcut: "/Logo_Lacroix_Styles_192x192_Android.png", 
+    shortcut: "/Logo_Lacroix_Styles_192x192_Android_V2.png", 
    
      apple: [
     { url: "/Logo_Lacroix_Styles_192x192_Iphone.png", sizes: "192x192" },

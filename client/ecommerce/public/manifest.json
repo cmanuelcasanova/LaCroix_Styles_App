@@ -6,7 +6,7 @@
   "background_color": "#FFFFFF",
   "icons": [
     {
-      "src": "/Logo_Lacroix_Styles_192x192_Android.png",
+      "src": "/Logo_Lacroix_Styles_192x192_Android_V2.png",
       "sizes": "192x192",
       "type": "image/png"
     },
@@ -16,7 +16,7 @@
       "type": "image/png"
     },
     {
-      "src": "/Logo_Lacroix_Styles_192x192_Android.png",
+      "src": "/Logo_Lacroix_Styles_192x192_Android_V2.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
