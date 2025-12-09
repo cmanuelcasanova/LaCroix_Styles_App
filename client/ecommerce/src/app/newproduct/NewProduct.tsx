@@ -873,7 +873,8 @@ const setMoveItem = (indice:number, away:string) => {
                 focus:outline-none focus:ring-2
              focus:ring-[#15508b] focus:shadow-[0_0_0_4px_#4a76e9]
                 hover:border-[#677483] transition-colors duration-200"
-              type="text"
+              type="number"
+              pattern="[0-9]*" 
               placeholder="input Precio"
               required
               {...register("precio")}

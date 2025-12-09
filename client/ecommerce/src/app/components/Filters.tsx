@@ -235,7 +235,8 @@ export default function FilterBar( { onClose }: MoldeProps  ) {
 
 
 
-      <div className="bg-white text-black rounded p-4 flex flex-col items-center justify-center mt-20">   
+      <div className="bg-white text-black rounded p-4 flex flex-col items-center justify-center mt-20"
+      onClick={() => onClose()}>   
         
         Total:  {totalProductos} 
         

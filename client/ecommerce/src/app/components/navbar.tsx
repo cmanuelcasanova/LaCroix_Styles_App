@@ -112,7 +112,7 @@ useEffect(() => {
 
       <div className="sm:flex flex-wrap justify-between hidden items-center w-[250px] ">
         <button
-          className=" hover:underline"
+          className={` hover:underline rounded-2xl ${theme==='WOMAN' && `underline font-extrabold`}   `}
           onClick={() => {
             router.push("/");
             dispatch(setTheme(Themetype.WOMAN));
@@ -124,7 +124,7 @@ useEffect(() => {
         </button>
 
         <button
-          className=" hover:underline"
+           className={` hover:underline rounded-2xl ${theme==='MEN' && `underline font-extrabold`}   `}
           onClick={() => {
             router.push("/");
             dispatch(setTheme(Themetype.MEN));
@@ -136,7 +136,7 @@ useEffect(() => {
         </button>
 
         <button
-          className=" hover:underline"
+           className={` hover:underline rounded-2xl ${theme==='KIDS' && `underline font-extrabold`}   `}
           onClick={() => {
             router.push("/");
             dispatch(setTheme(Themetype.KIDS));
@@ -148,7 +148,7 @@ useEffect(() => {
         </button>
 
         <button
-          className=" hover:underline"
+           className={` hover:underline rounded-2xl ${theme==='ALL' && `underline font-extrabold`}   `}
           onClick={() => {
             router.push("/");
             dispatch(setTheme(Themetype.ALL));
@@ -381,7 +381,7 @@ useEffect(() => {
           <div className="flex flex-wrap items-center justify-between gap-4 my-[6px] ">
 
             <button
-              className=" hover:underline rounded-2xl"
+              className={` hover:underline rounded-2xl ${theme==='ALL' && `underline font-extrabold`}   `}
               onClick={() => {
                 setMenuOpen(false);
                 router.push("/");
@@ -394,7 +394,7 @@ useEffect(() => {
             </button>
 
              <button
-              className=" hover:underline rounded-2xl"
+             className={` hover:underline rounded-2xl ${theme==='WOMAN' && `underline font-extrabold`}   `}
               onClick={() => {
                 setMenuOpen(false);
                 router.push("/");
@@ -407,7 +407,7 @@ useEffect(() => {
             </button>
 
             <button
-              className=" hover:underline  rounded-2xl"
+              className={` hover:underline rounded-2xl ${theme==='MEN' && `underline font-extrabold`}   `}
               onClick={() => {
                 setMenuOpen(false);
                 router.push("/");
@@ -420,7 +420,7 @@ useEffect(() => {
             </button>
 
             <button
-              className=" hover:underline  rounded-2xl"
+              className={` hover:underline rounded-2xl ${theme==='KIDS' && `underline font-extrabold`}   `}
               onClick={() => {
                 setMenuOpen(false);
                 router.push("/");

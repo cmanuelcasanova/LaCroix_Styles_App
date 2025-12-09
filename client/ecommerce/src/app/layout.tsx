@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 
   },
   
-  manifest: "/manifest.json",
+  manifest: "/manifest.json?v=3",
 
   appleWebApp: {
     

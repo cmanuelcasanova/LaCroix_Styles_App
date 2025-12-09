@@ -68,19 +68,20 @@ export const Caritem = ({
        <Link href={`/itemview/${idProduct}`} className="">
         <Image
           src={imgurlmin}
-          height={100}
-          width={100}
+          height={80}
+          width={80}
           alt="Logo"
           className="object-contain rounded-l-2xl p-2"
         />
       </Link>
 
-      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:w-[400px] items-start ml-2 py-6 justify-start sm:gap-4 sm:pr-6">
-        <div className="sm:mr-auto mr-10">
+      <div className="flex flex-col w-[200px] sm:flex-row sm:flex-wrap sm:w-[400px] items-start ml-2 py-2 justify-start sm:gap-4 sm:pr-6">
+        <div className="sm:mr-auto mr-4">
         <h1>
         
-          Title: <span className="font-bold">{title}</span>{" "}
+          Title: 
         </h1>
+        <span className="font-bold">{title}</span>{" "}
         <h1>
         
           Talla: <span className="font-bold">{talla}</span>{" "}

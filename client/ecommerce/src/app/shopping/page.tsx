@@ -17,7 +17,7 @@ const calculartotal = ():number => {return itemsC.reduce((totale, item) => total
  
 
 return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mt-6">
       <div className="w-dvw sm:w-[700px] h-[800px] flex flex-col items-center rounded-2xl mt-20 bg-gray-300 px-8">
         <h1 className="text-2xl font-bold my-10">Shopping Cart</h1>
 
