@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Themetype , ThemeState } from "../theme/themeTypes";
 
 const initialState: ThemeState = {
-  theme: Themetype.ALL
+  theme: Themetype.WOMAN
 };
 
 
