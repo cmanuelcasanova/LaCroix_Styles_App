@@ -5,6 +5,7 @@ import Navbar from "./components/navbar";
 import Footer from "./components/footer"
 import { ReduxProvider } from "./ReduxProvider";
 import { Roboto } from 'next/font/google';
+import ColorBarAndroid from "./components/ColorBarAndroid";
 
 const RobotoFont = Roboto({
   subsets: ['latin'],
@@ -64,9 +65,10 @@ export default function RootLayout({
       <head>
         {/* Manifest */}
         <link rel="manifest" href="/manifest.json" />
-
+        
         {/* Android */}
         <meta name="mobile-web-app-capable" content="yes" />
+        <ColorBarAndroid />
 
         {/* iOS */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -82,7 +84,7 @@ export default function RootLayout({
 
 
       <body
-        className={`${RobotoFont.className} min-h-screen overflow-x-hidden antialiased bg-gradient-to-b from-[#ff8ec9]  via-white via-70% to-[#fed3e7]`}
+        className={`${RobotoFont.className} min-h-screen overflow-x-hidden antialiased bg-linear-to-b from-[#ff8ec9]  via-white via-70% to-[#fed3e7]`}
       >
         
           <Navbar />

@@ -1,3 +1,10 @@
+export const themeColor: Record<string, string> = {
+  ALL: "#ff8ec9",
+  WOMAN: "#c37ff0",
+  MEN: "#4e8bc0",
+  KIDS: "#fe871e",
+};
+
 export const themeBgMap: Record<string, string> = {
   ALL: "[#ff8ec9]",
   WOMAN: "[#c37ff0]",

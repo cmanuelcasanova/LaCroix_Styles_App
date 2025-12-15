@@ -4,6 +4,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFFFFF",
+  "theme_color":"#ff8ec9",
   "icons": [
     {
       "src": "/Logo_Lacroix_Styles_192x192_Android_V2.png",
