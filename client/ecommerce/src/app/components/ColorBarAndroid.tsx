@@ -12,7 +12,7 @@ export default function ColorBarAndroid() {
 
 
 
-        <meta name="theme_color" content={ColorCurrent} key="theme_color" />
+        <meta name="theme-color" content={ColorCurrent} key="theme_color" />
 
 
 
