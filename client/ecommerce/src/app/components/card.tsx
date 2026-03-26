@@ -74,7 +74,7 @@ export default function Card({
   return (
 
 
-    <div className="bg-white relative flex flex-col items-center shadow-2xl rounded-2xl p-4 mb-6 mx-4 w-[300px] h-[450px] ">
+    <div className="bg-white relative flex flex-col items-center shadow-2xl rounded-2xl p-4 mb-6 w-dwv sm:w-80 h-114 ">
       
       {modal && <ConfirmationtModal onClose={() => setModal(false)} confirm={() => {setBorrar(true)}} />}
       

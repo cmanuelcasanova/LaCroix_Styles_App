@@ -41,15 +41,8 @@ export const metadata: Metadata = {
 
   },
   
-  manifest: "/manifest.json?v=3",
-
-  appleWebApp: {
-    
-    capable: true, 
-    title: 'LaCroix Styles',
-    statusBarStyle: 'black-translucent',
-  }
-  
+  manifest: "/manifest.json",
+ 
   
 };
 

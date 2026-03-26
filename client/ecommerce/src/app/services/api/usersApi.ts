@@ -10,6 +10,7 @@ export const usersApi = baseApi.injectEndpoints({
         method: "POST",
         body: credentials,
       }),
+      
     }),
     logout: builder.mutation<AuthResponse, void>({
       query: (credentials) => ({

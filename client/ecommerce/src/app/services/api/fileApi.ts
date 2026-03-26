@@ -5,8 +5,24 @@ import { ImagesBD, BrandSearchResult} from './queryTypes';
 export const fileApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getHomeImages: builder.query<ImagesBD[],void>({
-      query: () => `/auth/homeslice`,
-      providesTags: ["fileApi"],
+      
+      
+      query: () => ({
+        url: `${process.env.NEXT_PUBLIC_SUPABASE_PATH}/rest/v1/homeslice?select=* }` ,
+        method: "GET",
+        credentials: "omit",
+        headers: {
+          apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }),
+      
+      
+      
+      
+      
+      providesTags: ["HomeSlice"],
     }),
 
 
@@ -21,6 +37,7 @@ export const fileApi = baseApi.injectEndpoints({
 
     
     }),
+     providesTags: ["BrandInfo"],
 }),
 
 

@@ -264,7 +264,7 @@ return (
 
       <ImageSlider imageUrls={images}/> 
 
-      <h1 className="font-bold text-3xl mt-10 mb-16 "> Shopping with US </h1>
+      <h1 className="font-bold text-3xl my-8"> Shopping with US </h1>
 
      
       { UserFilters.search &&
@@ -275,7 +275,7 @@ return (
       }
 
       {filteredProducts && filteredProducts?.length > 0 ? 
-      <section className="flex flex-wrap items-center sm:justify-start w-[350px] sm:w-[1000px]">
+      <section className="flex flex-wrap items-center sm:justify-between w-88 sm:w-250">
         { filteredProducts  ?.slice(paginf,pagsup).map((product) => (
           
 

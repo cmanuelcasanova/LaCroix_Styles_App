@@ -7,7 +7,7 @@ export const baseApi = createApi({
     baseUrl: '/api',
     credentials: 'include', 
   }),
-  tagTypes: ['Product', 'User','Shopping', 'fileApi'],
+  tagTypes: ['Product', 'User','Shopping', 'HomeSlice','BrandInfo', 'Seccion'],
   endpoints: () => ({}),
   //keepUnusedDataFor: process.env.NODE_ENV === 'development' ? 0 : 60,
 
