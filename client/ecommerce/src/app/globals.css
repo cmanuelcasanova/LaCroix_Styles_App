@@ -8,17 +8,17 @@ body {
 }
 
 .bg-woman {
-  @apply bg-linear-to-b from-[#c37ff0] via-white via-70% to-[#ffa1df];
+  @apply bg-[#c37ff0] ;
 }
 
 .bg-men {
-  @apply bg-linear-to-b from-[#4e8bc0] via-white via-70% to-[#e1edf9];
+  @apply bg-[#4e8bc0];
 }
 .bg-boy {
-  @apply bg-linear-to-b from-[#fe871e] via-white via-70% to-[#679f16];
+  @apply bg-[#fe871e] ;
 }
 .bg-all {
-  @apply bg-linear-to-b from-[#ff8ec9] via-white via-70% to-[#fed3e7];
+  @apply bg-[#ff8ec9] ;
 }
 
 
@@ -30,7 +30,12 @@ body {
   
 }
 
+/*
 
+bg-[#ff8ec9] bg-[#c37ff0] bg-[#4e8bc0] bg-[#fe871e]
+ This is a multi-line comment.
+ It explains a complex style or section.
+*/
 
 
 

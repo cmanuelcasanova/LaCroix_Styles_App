@@ -56,7 +56,7 @@ export default function Navbar() {
 
 
   useEffect(() => {
-    document.body.classList.remove("bg-woman", "bg-men", "bg-boy", "bg-all");
+    document.body.classList.remove("bg-[#ff8ec9]","bg-[#c37ff0]","bg-[#4e8bc0]","bg-[#fe871e]","bg-woman", "bg-men", "bg-boy", "bg-all");
 
     switch (theme) {
       case Themetype.WOMAN:
