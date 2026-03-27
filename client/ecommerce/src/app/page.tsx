@@ -20,7 +20,7 @@ import { useLazyProfileQuery } from "@/app/services/api/usersApi";
 import { selectUsername } from "@/app/features/auth/authSelectors";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
-import { themeBg } from "@/app/themeStyles"
+import { themeBg,themeBgGradient } from "@/app/themeStyles"
 import { PiEmptyBold } from "react-icons/pi";
 import { Next_Page , Prev_Page , Reset_Page, Set_Page} from "@/app/features/CurrentPage/CurrentPageSlice"
 import { IoIosCloseCircleOutline } from "react-icons/io";
@@ -29,6 +29,8 @@ import { useGetHomeImagesQuery } from "@/app/services/api/fileApi"
 import { BiArrowToLeft } from "react-icons/bi";
 import { BiArrowToRight } from "react-icons/bi";
 import { selectHasFilters } from "@/app/features/selectedFilter/selectedFilterSelector"
+import Footer from "./components/footer";
+
 
 
 
@@ -56,6 +58,7 @@ export default function Home() {
  const dispatch = useDispatch<AppDispatch>();
  const first_time = useRef(true)
  const bgClass = themeBg[theme]
+ const bgClassGradient = themeBgGradient [theme]
  const [paginf, setPagInf] = useState<number>(0)
  const [pagsup, setPagSup] = useState<number>(itemsforpage)
  const [totalpaginas, setTotalpaginas] = useState<number>(0)
@@ -259,7 +262,7 @@ const handleClick = (i:number) => {
 
 
 return (
-    <div className="flex flex-col items-center justify-center">
+    <div className={`flex flex-col items-center justify-center ${bgClassGradient} `} >
       
 
       <ImageSlider imageUrls={images}/> 
@@ -298,18 +301,20 @@ return (
 
 
       <div className="flex flex-wrap gap-2 mt-10 text-gray-500">
-        {CurrentPageSlice+1 > 2 && <button className={`text-black/70 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> dispatch(Reset_Page())}> <BiArrowToLeft /> </button> } 
-        <button className={`bg-white/60  px-[4px] rounded-2xl shadow mr-4 hover:cursor-pointer ${CurrentPageSlice+1 ===1 && `hidden` }  ` } disabled={CurrentPageSlice===0}  onClick={handleft}> <IoIosArrowBack /> </button>
+        {CurrentPageSlice+1 > 2 && <button className={`text-black/70 bg-white/60 px-1 rounded-2xl shadow  `} onClick={()=> dispatch(Reset_Page())}> <BiArrowToLeft /> </button> } 
+        <button className={`bg-white/60  px-1 rounded-2xl shadow mr-4 hover:cursor-pointer ${CurrentPageSlice+1 ===1 && `hidden` }  ` } disabled={CurrentPageSlice===0}  onClick={handleft}> <IoIosArrowBack /> </button>
        
-        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === CurrentPageSlice+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < CurrentPageSlice+1 || index+1 - 2 > CurrentPageSlice+1) && `hidden`} p-[6px] rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
+        {Array.from({ length: totalpaginas }, (_, index) => <button key={index} className={`hover:cursor-pointer ${ index+1 === CurrentPageSlice+1 ? `${bgClass} underline text-black` : "bg-white" } ${(index+1 + 2 < CurrentPageSlice+1 || index+1 - 2 > CurrentPageSlice+1) && `hidden`} p-1.5 rounded-2xl shadow  `} onClick={()=> handleClick(index)}> {index + 1} </button>)} 
        
         {(totalpaginas> 3 && CurrentPageSlice +1 < totalpaginas) && <button className={`text-black `}> ... </button> } 
-        <button className={`bg-white/60  px-[4px] rounded-2xl shadow ml-4 hover:cursor-pointer ${CurrentPageSlice+1 ===totalpaginas && `hidden` } `} disabled={CurrentPageSlice+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
-         {CurrentPageSlice +1 < totalpaginas -1  && <button className={`text-black/60 bg-white/60 px-[4px] rounded-2xl shadow  `} onClick={()=> dispatch(Set_Page(totalpaginas-1))}> <BiArrowToRight /> </button> } 
+        <button className={`bg-white/60  px-1 rounded-2xl shadow ml-4 hover:cursor-pointer ${CurrentPageSlice+1 ===totalpaginas && `hidden` } `} disabled={CurrentPageSlice+1===totalpaginas} onClick={handright}> <IoIosArrowForward /> </button>
+         {CurrentPageSlice +1 < totalpaginas -1  && <button className={`text-black/60 bg-white/60 px-1 rounded-2xl shadow  `} onClick={()=> dispatch(Set_Page(totalpaginas-1))}> <BiArrowToRight /> </button> } 
       </div>
 
 
        
+        <Footer />
+
     </div>
   );
 }

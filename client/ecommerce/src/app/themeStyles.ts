@@ -19,6 +19,14 @@ export const themeBg: Record<string, string> = {
   KIDS: "bg-[#fe871e]",
 };
 
+export const themeBgGradient: Record<string, string> = {
+  ALL: "bg-linear-to-b from-[#ff8ec9] via-white via-70% to-[#fed3e7]",
+  WOMAN: "bg-linear-to-b from-[#c37ff0] via-white via-70% to-[#ffa1df]",
+  MEN: "bg-linear-to-b from-[#4e8bc0] via-white via-70% to-[#e1edf9]",
+  KIDS: "bg-linear-to-b from-[#fe871e] via-white via-70% to-[#679f16]",
+};
+
+
 export const themeBgOpa: Record<string, string> = {
   ALL: "bg-[#ff8ec9]/30",
   WOMAN: "bg-[#c37ff0]/30",
