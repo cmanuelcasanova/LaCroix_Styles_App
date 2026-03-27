@@ -77,7 +77,7 @@ export default function RootLayout({
 
 
       <body
-        className={`${RobotoFont.className} min-h-screen overflow-x-hidden antialiased bg-linear-to-b from-[#ff8ec9]  via-white via-70% to-[#fed3e7]`}
+        className={`${RobotoFont.className} min-h-screen overflow-x-hidden antialiased bg-[#ff8ec9]`}
       >
         
           <Navbar />
