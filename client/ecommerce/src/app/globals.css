@@ -30,13 +30,15 @@ body {
   
 }
 
-/*
 
-bg-[#ff8ec9] bg-[#c37ff0] bg-[#4e8bc0] bg-[#fe871e]
- This is a multi-line comment.
- It explains a complex style or section.
-*/
+#nprogress .bar {
+  display: none !important;
+}
 
+
+#nprogress .peg {
+  box-shadow: none !important;
+}
 
 
 .image-gallery-slide .image-gallery-image {
