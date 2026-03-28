@@ -63,19 +63,19 @@ export const Caritem = ({
   };
 
   return (
-    <div className="flex flex-wrap justify-center items-center rounded-2xl bg-white w-dvw h-[120px] sm:w-full mb-4">
+    <div className="flex flex-wrap justify-around items-center rounded-2xl bg-white w-full h-[120px] sm:w-full mb-4">
       
-       <Link href={`/itemview/${idProduct}`} className="">
+       <Link href={`/itemview/${idProduct}`} className=" w-[20%]">
         <Image
           src={imgurlmin}
           height={80}
           width={80}
           alt="Logo"
-          className="object-contain rounded-l-2xl p-2"
+          className="object-contain rounded-2xl"
         />
       </Link>
 
-      <div className="flex flex-col w-[200px] sm:flex-row sm:flex-wrap sm:w-[400px] items-start ml-2 py-2 justify-start sm:gap-4 sm:pr-6">
+      <div className="flex flex-col w-[50%] sm:flex-row sm:flex-wrap sm:w-[400px] items-start ml-2 py-2 justify-start sm:gap-4 sm:pr-6">
         <div className="sm:mr-auto mr-4">
         <h1>
         
@@ -95,12 +95,12 @@ export const Caritem = ({
         <button onClick={addm}>
           <IoMdAddCircle size={25} />
         </button>
-        <button onClick={remove} className="ml-6">
+        <button onClick={remove} className="mx-auto">
           <FaRegTrashCan size={25} />
         </button>
       </div>
 </div>
-      <div className="flex flex-col items-center justify-center ">
+      <div className="flex flex-col items-center justify-center w-[20%] ">
         <h1 className="px-2">Precio: </h1>
         <h1 className="font-bold text-2xl px-2">{precio * cant} $</h1>
       </div>

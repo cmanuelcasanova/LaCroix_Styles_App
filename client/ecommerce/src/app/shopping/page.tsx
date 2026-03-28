@@ -18,7 +18,7 @@ const calculartotal = ():number => {return itemsC.reduce((totale, item) => total
 
 return (
     <div className="flex flex-col items-center mt-6">
-      <div className="w-dvw sm:w-[700px] h-[800px] flex flex-col items-center rounded-2xl mt-20 bg-gray-300 px-8">
+      <div className="w-[95%] sm:w-[700px] h-[800px] flex flex-col items-center rounded-2xl mt-20 bg-gray-300 px-2">
         <h1 className="text-2xl font-bold my-10">Shopping Cart</h1>
 
         {itemsC.length ===0 && <TbShoppingCartOff size={80}/>}
@@ -52,7 +52,7 @@ return (
       </div>
 
             <button
-              className="bg-white p-2 px-20 mt-4 rounded-2xl flex flex-wrap items-center gap-2 hover:bg-gray-200 active:scale-95 transition-transform duration-150 ease-in-out"
+              className="bg-white p-2 px-20 mt-4 mb-8 rounded-2xl flex flex-wrap items-center gap-2 hover:bg-gray-200 active:scale-95 transition-transform duration-150 ease-in-out"
               onClick={() => router.push("/")}
             >
               {" "}

@@ -103,7 +103,7 @@ useEffect(() => {
     >
       <Link
         href={"/"}
-        onClick={() => setMenuOpen(false)}
+        onClick={() => {setMenuOpen(false),window.scrollTo(0, 0)} }
         className="active:scale-95 transition-transform duration-150 ease-in-out"
       >
         <Image src={Logo} height={40} alt="Logo" priority />

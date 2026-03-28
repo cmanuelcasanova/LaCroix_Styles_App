@@ -905,7 +905,7 @@ const setMoveItem = (indice:number, away:string) => {
                 }else{router.push("/")}
               
               }}
-              className={`bg-gray-300 text-black w-[180px] rounded-md mb-4 p-2 h-15 mx-auto font-semibold active:scale-95
+              className={`bg-gray-300 text-black w-[180px] rounded-md mb-8 p-2 h-15 mx-auto font-semibold active:scale-95
                  transition-colors duration-300 ease-in-out hover:bg-[#677483] cursor-pointer`}
             >
                Cancelar 
