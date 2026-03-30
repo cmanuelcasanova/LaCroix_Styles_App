@@ -13,6 +13,7 @@ import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useSelector } from "react-redux";
 import { useCreateItemCarMutation } from "@/app/services/api/ShoppingApi"
 import { useState } from "react";
+import { truncate } from "node:fs/promises";
 
 
 
@@ -24,6 +25,7 @@ type FormData = {
 export default function Login() {
   const { register, handleSubmit } = useForm<FormData>();
   const dispatch = useDispatch<AppDispatch>();
+  const [loading, setLoading] = useState<boolean>(false)
   const [play_LazyGetItemsCar, { data: itemsCarBD }] = useLazyGetAllItemsCarQuery();
   const router = useRouter();
   const [Login] = useLoginMutation();
@@ -33,6 +35,8 @@ export default function Login() {
   const [mergeDB,setMergeDB] = useState<boolean>(false);
 
   const onSubmit = handleSubmit(async (data) => {
+    
+    setLoading(true)
     try {
       const response = await Login(data).unwrap();
    
@@ -111,6 +115,7 @@ export default function Login() {
 
     }
 
+     setLoading(false)
    
 
 
@@ -158,7 +163,7 @@ export default function Login() {
             <div className="flex flex-col w-full content-center justify-center items-center rounded-md h-[70px] mt-10 ">
               <button
                 type="submit"
-                className=" w-[120px] bg-[#ff288b] my-4 mx-auto h-full rounded-md text-black font-semibold active:scale-95
+                className=" w-30 bg-[#ff288b] my-4 mx-auto h-full rounded-md text-black font-semibold active:scale-95
              transition-colors duration-300 ease-in-out hover:bg-[#fad6e0] "
               >
                 Login
@@ -168,7 +173,7 @@ export default function Login() {
             <label className="mt-20 ">
               <h1 className="mt-20 flex flex-warp gap-2 text-sm ">
                 Dont have an account?{" "}
-                <Link href="/signup">
+                <Link href="/registro">
                   {" "}
                   <h1 className="font-extrabold text-[#ff288b]">Sign Up</h1>
                 </Link>{" "}

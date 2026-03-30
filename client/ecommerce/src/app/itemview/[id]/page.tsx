@@ -59,6 +59,7 @@ export default function Item() {
   const [ImagenesArray, setImagenesArray] = useState<imagenes[]>([]);
   const [fullscreenIndex, setFullscreenIndex] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loadImage, setLoadImage] = useState<boolean>(false)
 
 
   
@@ -95,6 +96,7 @@ export default function Item() {
     useEffect(() => {
   
       if(item) {
+          window.scrollTo(0, 0)
           const  images = item.product_images.map ( i => {
 
 
@@ -123,8 +125,8 @@ export default function Item() {
     setModal(true);
   };
 
-  if (isLoading || isFetching) return <LoadingModal />;
-  if (error || !item) return <p>Artículo no encontrado</p>;
+ 
+  if (error || !item) return ;
 
   const handleAdd = () => {
     if (selectedTallas.length == 0) {
@@ -176,6 +178,8 @@ export default function Item() {
     }
   };
 
+  
+
 
 
 
@@ -190,6 +194,11 @@ export default function Item() {
           }}
         />
       )}
+
+
+      { isLoading || isFetching || !loadImage && <LoadingModal /> }
+
+
       <div className="bg-white flex flex-col items-center shadow-2xl mt-30 rounded-2xl p-4 mb-6 mx-4 w-dwv">
         
 
@@ -202,7 +211,9 @@ export default function Item() {
             onSlide={(index) => setCurrentIndex(index)} 
             showFullscreenButton={false}
             showPlayButton={false}
-            additionalClass="custom-gallery-ItemView"/>
+            additionalClass= "custom-gallery-ItemView"
+            onImageLoad={()=>setLoadImage(true)}
+            />
           
 
 
@@ -279,7 +290,7 @@ export default function Item() {
         <h1 className="mr-auto mt-4 mb-2"> COLOR: </h1>
 
         <div
-          className="h-[30px] w-[30px] border-black border-2 mr-auto"
+          className="h-7.5 w-7.5 border-black border-2 mr-auto"
           style={{
             background: COLOR_PALETTE.find((c) => item.color === c.label)
               ?.value,
@@ -293,7 +304,7 @@ export default function Item() {
           arrayTallas.map((element) => (
             <div
               key={element.id}
-              className={`flex flex-col items-center justify-center h-[40px] w-[40px] rounded-full mr-auto font-bold ${
+              className={`flex flex-col items-center justify-center h-10 w-10 rounded-full mr-auto font-bold ${
                 selectedTallas.includes(element.name)
                   ? "bg-green-300 hover:bg-green-200  "
                   : "bg-gray-300 hover:bg-gray-200"
