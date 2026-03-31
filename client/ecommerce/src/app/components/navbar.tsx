@@ -118,6 +118,7 @@ useEffect(() => {
             dispatch(setTheme(Themetype.WOMAN));
             dispatch( clearSelectFilters());
             dispatch( Reset_Page() );
+            window.scrollTo(0,0)
           }}
         >
           WOMAN
@@ -130,6 +131,7 @@ useEffect(() => {
             dispatch(setTheme(Themetype.MEN));
             dispatch( clearSelectFilters());
             dispatch( Reset_Page() );
+            window.scrollTo(0,0)
           }}
         >
           MEN
@@ -142,6 +144,7 @@ useEffect(() => {
             dispatch(setTheme(Themetype.KIDS));
             dispatch( clearSelectFilters());
             dispatch( Reset_Page() );
+            window.scrollTo(0,0)
           }}
         >
           KIDS
@@ -154,6 +157,7 @@ useEffect(() => {
             dispatch(setTheme(Themetype.ALL));
             dispatch( clearSelectFilters());
             dispatch( Reset_Page() );
+            window.scrollTo(0,0)
           }}
         >
           ALL
@@ -388,6 +392,7 @@ useEffect(() => {
                 dispatch(setTheme(Themetype.ALL));
                 dispatch( clearSelectFilters());
                 dispatch( Reset_Page() );
+                window.scrollTo(0,0)
               }}
             >
               ALL
@@ -401,6 +406,7 @@ useEffect(() => {
                 dispatch(setTheme(Themetype.WOMAN));
                 dispatch( clearSelectFilters()); 
                 dispatch( Reset_Page() );
+                window.scrollTo(0,0)
               }}
             >
               WOMAN
@@ -414,6 +420,7 @@ useEffect(() => {
                 dispatch(setTheme(Themetype.MEN));
                 dispatch( clearSelectFilters());
                 dispatch( Reset_Page() );
+                window.scrollTo(0,0)
               }}
             >
               MEN
@@ -427,6 +434,7 @@ useEffect(() => {
                 dispatch(setTheme(Themetype.KIDS));
                 dispatch( clearSelectFilters());
                 dispatch( Reset_Page() );
+                window.scrollTo(0,0)
               }}
             >
               KIDS

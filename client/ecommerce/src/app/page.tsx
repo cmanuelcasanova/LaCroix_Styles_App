@@ -144,6 +144,7 @@ useEffect( ()=> {
 
     filteredProducts?.forEach((item) =>{
 
+      if(UserFilters.category.length===0) {
       const cat = filterget.categoria.find( i => i.name === item.category)
       
       if (cat) {
@@ -151,7 +152,9 @@ useEffect( ()=> {
       }else {
         filterget.categoria.push({name: item.category, cant:1})
       }
+    }
 
+     if(UserFilters.color.length===0) {
       const col = filterget.color.find( i => i.name === item.color)
       
       if (col) {
@@ -159,7 +162,10 @@ useEffect( ()=> {
       }else {
         filterget.color.push({name: item.color, cant:1})
       }
+    }
 
+
+     if(UserFilters.talla.length===0) {
       item.Tallas.forEach( t =>   {
         
         const tal = filterget.talla.find( i => i.name === t.name)
@@ -171,13 +177,15 @@ useEffect( ()=> {
         }
 
       }  )
+    }
 
 
+    
 
 
 
     })
-    dispatch(addFilters( {category: filterget.categoria , color: filterget.color, talla: filterget.talla   }  ))
+    dispatch(addFilters( { category: filterget.categoria  , color: filterget.color, talla: filterget.talla   }  ))
     
 
 
