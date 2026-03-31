@@ -211,7 +211,7 @@ export default function Item() {
             onSlide={(index) => setCurrentIndex(index)} 
             showFullscreenButton={false}
             showPlayButton={false}
-            additionalClass= "custom-gallery-ItemView"
+            additionalClass= "custom-gallery-ItemView "
             onImageLoad={()=>setLoadImage(true)}
             />
           

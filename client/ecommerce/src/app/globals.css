@@ -28,6 +28,7 @@ body {
 .image-gallery-slides {
     height: 100%;
     border-radius: 0;
+    touch-action: auto !important;
   
 }
 
@@ -63,7 +64,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-   overflow: visible !important;
+  overflow: visible !important;
   touch-action: auto !important;
   pointer-events: auto !important;
  
@@ -78,6 +79,7 @@ body {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain !important;
+  
   
 
 }
