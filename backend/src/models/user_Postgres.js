@@ -23,6 +23,14 @@ export const UserModel = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    resetPasswordToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    },
+    resetPasswordExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    },
   });
 
   

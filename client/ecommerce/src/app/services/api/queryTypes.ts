@@ -64,6 +64,18 @@ export interface RegisterData {
   password: string;
 }
 
+export interface RecoveryData {
+
+  email: string;
+ 
+}
+
+export interface RecoveryDataNew {
+
+  password_new: string;
+  token:string | null;
+}
+
 export interface SecData {
   id: number;
   name: string;

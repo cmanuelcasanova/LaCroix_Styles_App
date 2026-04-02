@@ -1,6 +1,8 @@
 import { db } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import { Resend } from 'resend';
+import crypto from 'crypto';
 
 
 export const createUser = async (req, res) => {
@@ -116,4 +118,112 @@ export const logout = async (req, res) => {
 };
 
 
+export const recoverypass = async (req, res) => {
 
+  try {
+
+    const { email } = req.body;
+
+
+
+      const user = await db.User.findOne({
+      where: { email: email },
+      attributes: { exclude: ["password"] },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    const token = crypto.randomBytes(30).toString('hex');
+
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = new Date(Date.now() + 3600000);
+    await user.save();
+
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const url_recovery = process.env.RESEND_URL_FRONT+"?token="+token;
+
+
+    await resend.emails.send({
+    from: 'LaCroix Styles <onboarding@resend.dev>', 
+    to: email,
+    subject: 'Recuperación de Contraseña',
+    html: `
+      <h1>Has solicitado restablecer tu contraseña</h1>
+      <p>Haz clic en el siguiente enlace para continuar:</p>
+      <a href="${url_recovery}">${url_recovery}</a>
+     
+    `,
+  });
+   
+    
+   
+    res.status(200).json({ message: "Correo de recuperacion enviado" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al recuperar", error });
+  }
+};
+
+
+
+export const updateuser = async (req, res) => {
+
+  try {
+
+    const { password_new, token } = req.body
+
+      
+
+    const user = await db.User.findOne({
+      where: { 
+          resetPasswordToken: token,
+       },
+      attributes: { exclude: ["password"] },
+    });
+
+    
+    
+    if (!user) {
+      return res.status(400).json({ msg: "El token es inválido" });
+    }
+
+    const ahora = new Date();
+    const fechaExpiracion = new Date(user.resetPasswordExpires);
+
+   
+    if (ahora > fechaExpiracion) {
+      return res.status(400).json({ msg: "El enlace ha expirado. Solicita uno nuevo." });
+    }
+
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password_new, saltRounds);
+    user.password = hashedPassword;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
+    await resend.emails.send({
+    from: 'Seguridad LaCroix Styles <onboarding@resend.dev>',
+    to: user.email,
+    subject: 'Tu contraseña ha sido actualizada',
+    html: `
+      <h1>Hola, ${user.username}</h1>
+      <p>Te informamos que la contraseña de tu cuenta ha sido cambiada exitosamente.</p>
+      <p>Si **no has sido tú**, por favor contacta con nuestro equipo de soporte de inmediato.</p>
+      <hr />
+      <p>Este es un mensaje automático, no es necesario responder.</p>
+    `,
+});
+
+   
+
+    res.status(200).json({ message: "Password Actualizado" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al recuperar", error });
+  }
+};

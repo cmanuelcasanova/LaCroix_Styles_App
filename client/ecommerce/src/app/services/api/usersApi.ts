@@ -1,5 +1,5 @@
 import { baseApi } from "./baseApi";
-import { AuthResponse, LoginData, RegisterData } from './queryTypes';
+import { AuthResponse, LoginData, RegisterData, RecoveryData, RecoveryDataNew } from './queryTypes';
 
 
 export const usersApi = baseApi.injectEndpoints({
@@ -26,16 +26,28 @@ export const usersApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    
+    recoverypass: builder.mutation<AuthResponse, RecoveryData >({
+      query: ( data) => ({
+        url: "/auth/recoverypass",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    recoverypass_new: builder.mutation<AuthResponse, RecoveryDataNew >({
+      query: ( data) => ({
+        url: "/auth/updateuser",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
     profile: builder.query<AuthResponse, void>({
       query: () => '/auth/profile',
         providesTags: ['User'],
        
     }),
-
-
-
-
-
 
   }),
 });
@@ -46,7 +58,9 @@ export const {
   useRegistroMutation,
   useProfileQuery,
   useLazyProfileQuery,
-  useLogoutMutation
+  useLogoutMutation,
+  useRecoverypassMutation,
+  useRecoverypass_newMutation
 } = usersApi;
 
 /*

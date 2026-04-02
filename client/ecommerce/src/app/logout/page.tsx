@@ -20,7 +20,7 @@ export default function Logout() {
       try {
         
         await logout().unwrap(); 
-        dispatch(  logout_Auth()) ;
+        dispatch(logout_Auth()) ;
         localStorage.removeItem('token');
         sessionStorage.removeItem('token');
         dispatch(baseApi.util.resetApiState());

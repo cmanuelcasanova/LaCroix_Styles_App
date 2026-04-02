@@ -13,7 +13,9 @@ import { selectItemsc } from "@/app/features/Car/CarSelector";
 import { useSelector } from "react-redux";
 import { useCreateItemCarMutation } from "@/app/services/api/ShoppingApi"
 import { useState } from "react";
-import { truncate } from "node:fs/promises";
+import LoadingModal from "@/app/components/Loadingpage"
+import toast, { Toaster } from "react-hot-toast";
+
 
 
 
@@ -55,7 +57,8 @@ export default function Login() {
       router.push("/");
     } catch (error) {
       console.error("Error en el Login:", error);
-      alert("Error al Loguearse, Reintente");
+      toast("Error en el Login, reintente ");
+        setLoading(false)
     }
   });
 
@@ -115,16 +118,25 @@ export default function Login() {
 
     }
 
-     setLoading(false)
+    
    
 
 
   }, [itemsCarBD, dispatch,itemsCarrito,addItemBD, mergeRTK, mergeDB ]);
 
 
+
+  if (loading) return <LoadingModal/>  
+
   return (
     <div className="flex justify-center items-center min-h-screen mx-4 mt-10 ">
-      <div className="h-140 w-100 border bg-white border-[#202b38] p-2 rounded-3xl hover:border-[#677483] transition-colors duration-800">
+    
+      <Toaster />
+      <div className="h-130 w-100 border bg-white border-[#202b38] p-2 rounded-3xl hover:border-[#677483] transition-colors duration-800">
+        
+          
+     
+        
         <h1 className="  text-4xl pl-4 mt-12">Sing in</h1>
 
         <div className="text-[#8092a1] flex flex-col p-4 pt-10">
@@ -135,7 +147,7 @@ export default function Login() {
             <label className="flex flex-col mb-4">
               Email
               <input
-                className=" h-10  border-[#202b38] border-1 rounded-md p-2
+                className=" h-10  border-[#202b38] border rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#ff288b] focus:shadow-[0_0_0_4px_#ffd5e1]
                 hover:border-[#677483] transition-colors duration-200"
@@ -149,7 +161,7 @@ export default function Login() {
             <label className="flex flex-col mb-4">
               Password
               <input
-                className="h-10 border-[#202b38] border-1 rounded-md p-2
+                className="h-10 border-[#202b38] border rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#ff288b] focus:shadow-[0_0_0_4px_#ffd5e1]
                 hover:border-[#677483] transition-colors duration-200"
@@ -170,8 +182,8 @@ export default function Login() {
               </button>
             </div>
 
-            <label className="mt-20 ">
-              <h1 className="mt-20 flex flex-warp gap-2 text-sm ">
+            <label className="mt-10 ">
+              <h1 className="flex flex-warp gap-2 text-sm ">
                 Dont have an account?{" "}
                 <Link href="/registro">
                   {" "}
@@ -179,6 +191,17 @@ export default function Login() {
                 </Link>{" "}
               </h1>
             </label>
+
+             <label className="mt-2 ">
+              <h1 className="flex flex-warp gap-2 text-sm ">
+                Olvidaste tu Clave?{" "}
+                <Link href="/forgetpassword">
+                  {" "}
+                  <h1 className="font-extrabold text-[#ff288b]">click aqui</h1>
+                </Link>{" "}
+              </h1>
+            </label>
+
           </form>
         </div>
       </div>
