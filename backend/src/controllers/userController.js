@@ -2,7 +2,7 @@ import { db } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 import { Resend } from 'resend';
-import crypto from 'crypto';
+import crypto, { verify } from 'crypto';
 
 
 export const createUser = async (req, res) => {
@@ -17,12 +17,41 @@ export const createUser = async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    const token = crypto.randomBytes(30).toString('hex');
+
     const user = await db.User.create({
       username,
       email,
       password: hashedPassword,
-      role: "USER"
+      role: "USER",
+      resetPasswordToken:null,
+      resetPasswordExpires:null,
+      isVerified:false,
+      verificationToken:token
+
     });
+
+
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const url_recovery = process.env.RESEND_URL_FRONT_CONFIRM+"?token="+token;
+
+
+    await resend.emails.send({
+    from: 'LaCroix Styles <onboarding@resend.dev>', 
+    to: email,
+    subject: 'Confirmacion de Email',
+    html: `<p>Bienvenido a LaCroix Styles! Haz clic aquí para activar tu cuenta: </p>
+    <a href="${url_recovery}">Verificar Email</a>
+ 
+     
+    `,})
+
+
+
+
+
+
     res.status(201).json({ userid: user.id, username: user.username });
   } catch (error) {
     res.status(500).json({ message: "Error al registrar usuario", error });
@@ -92,11 +121,12 @@ export const getprofile = async (req, res) => {
       userId: user.id,
       email: user.email,
       role: user.role,
+      isVerified: user.isVerified,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });
   } catch (error) {
-    console.error("Error en getProfile:", error);
+    
     res.status(500).json({ message: "Error al obtener perfil" });
   }
 };
@@ -227,3 +257,59 @@ export const updateuser = async (req, res) => {
     res.status(500).json({ message: "Error al recuperar", error });
   }
 };
+
+
+export const verifyEmail = async (req, res) => {
+
+  
+
+  try {
+
+    const { token } = req.body
+
+      if (!token) {
+      return res.status(400).json({ msg: "No hay Token valido" });
+    }
+
+       const user = await db.User.findOne({
+      where: { 
+          verificationToken: token,
+       },
+      attributes: { exclude: ["password"] },
+    });
+
+    
+    
+    if (!user) {
+      return res.status(400).json({ msg: "El token es inválido" });
+    }
+
+
+    user.isVerified=true;
+    user.verificationToken=null;
+    await user.save();
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
+    await resend.emails.send({
+    from: 'LaCroix Styles <onboarding@resend.dev>',
+    to: user.email,
+    subject: 'Tu email ha sido verificado',
+    html: `
+      <h1>Hola, ${user.username}</h1>
+      <p>Te informamos que cuenta de correo ha sido verificada exitosamente.</p>
+      <p>Si **no has sido tú**, por favor contacta con nuestro equipo de soporte de inmediato.</p>
+      <hr />
+      <p>Este es un mensaje automático, no es necesario responder.</p>
+    `,
+
+});
+
+
+     res.status(200).json({ message: "Cuenta Verificada" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al Verificar", error });
+  }
+
+}
+      

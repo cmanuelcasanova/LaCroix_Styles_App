@@ -1,7 +1,7 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes } from "sequelize";
 
 export const UserModel = (sequelize) => {
-  const User = sequelize.define('User', {
+  const User = sequelize.define("User", {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -24,19 +24,26 @@ export const UserModel = (sequelize) => {
       allowNull: false,
     },
     resetPasswordToken: {
-    type: DataTypes.STRING,
-    allowNull: true,
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     resetPasswordExpires: {
-    type: DataTypes.DATE,
-    allowNull: true,
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    verificationToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   });
 
-  
   User.associate = (models) => {
-    User.hasMany(models.Product, { foreignKey: 'userId' });
-    User.hasMany(models.Shopping, { foreignKey: 'userId' });
+    User.hasMany(models.Product, { foreignKey: "userId" });
+    User.hasMany(models.Shopping, { foreignKey: "userId" });
   };
 
   return User;
