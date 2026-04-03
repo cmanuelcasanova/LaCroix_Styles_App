@@ -49,6 +49,7 @@ export interface AuthResponse {
   user: string;
   role: string;
   email: string;
+  isVerified: boolean;
   createdAt: string
   updatedAt: string
 }

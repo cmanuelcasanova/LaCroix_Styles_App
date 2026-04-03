@@ -1,12 +1,16 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm  } from "react-hook-form";
 import { useRegistroMutation } from "@/app/services/api/usersApi";
 import { useRouter } from "next/navigation";
+import { useState } from "react"
+import LoadingModal from "@/app/components/Loadingpage"
+import toast, { Toaster } from "react-hot-toast";
 
 type FormData = {
   email: string;
   password: string;
+  confirm: string;
   username: string;
   agreeTerms: boolean;
 };
@@ -15,8 +19,18 @@ export default function Signup() {
   const { register, handleSubmit } = useForm<FormData>();
   const [registro] = useRegistroMutation();
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false)
+
 
   const onSubmit = handleSubmit(async (data) => {
+    setLoading(true)
+
+    if (data.password !==data.confirm) {
+      toast("El Password con coincide, reintente ");
+      setLoading(false)
+      return
+    }
+
     try {
       
       await registro(data).unwrap();
@@ -24,25 +38,29 @@ export default function Signup() {
     } catch (error) {
       console.error("Error en el registro:", error);
       alert("Error al registrar")
-    }
+    } finally {setLoading(false)}
+    
   });
+
+  if(loading) return <LoadingModal/>
 
   return (
     <div className="flex justify-center items-center min-h-screen mx-4 mt-10">
+       <Toaster />
       <div className="h-140 w-100 border bg-white rounded-3xl border-[#202b38] p-2  hover:border-[#677483] transition-colors duration-800">
-        <h1 className="  text-4xl pl-4 mt-12">Sing up</h1>
+        <h1 className="  text-4xl pl-4 mt-6">Sing up</h1>
 
         <div className="text-black  flex flex-col p-4 pt-10">
           <form onSubmit={onSubmit} className="w-full">
             <label className="flex flex-col mb-4">
               Username
               <input
-                className=" h-10  border-[#202b38] border-1 rounded-md p-2
+                className=" h-10  border-[#202b38] border rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#fd298b] focus:shadow-[0_0_0_4px_#fe9ace]
                 hover:border-[#677483] transition-colors duration-200"
                 type="text"
-                placeholder="input Email"
+               
                 required
                 {...register("username")}
               />
@@ -51,12 +69,12 @@ export default function Signup() {
             <label className="flex flex-col  mb-4">
               Email
               <input
-                className="h-10  border-[#202b38] border-1 rounded-md p-2
+                className="h-10  border-[#202b38] border rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#fd298b] focus:shadow-[0_0_0_4px_#fe9ace]
                 hover:border-[#677483] transition-colors duration-200"
                 type="text"
-                placeholder="input Email"
+                
                 required
                 {...register("email")}
               />
@@ -65,14 +83,28 @@ export default function Signup() {
             <label className="flex flex-col mb-4">
               Password
               <input
-                className=" h-10  border-[#202b38] border-1 rounded-md p-2
+                className=" h-10  border-[#202b38] border rounded-md p-2
                 focus:outline-none focus:ring-2
              focus:ring-[#fd298b] focus:shadow-[0_0_0_4px_#fe9ace]
                 hover:border-[#677483] transition-colors duration-200"
                 type="password"
-                placeholder="Input Password"
+                
                 required
                 {...register("password")}
+              />
+            </label>
+
+             <label className="flex flex-col mb-4">
+              Confirmar Password
+              <input
+                className=" h-10  border-[#202b38] border rounded-md p-2
+                focus:outline-none focus:ring-2
+             focus:ring-[#fd298b] focus:shadow-[0_0_0_4px_#fe9ace]
+                hover:border-[#677483] transition-colors duration-200"
+                type="password"
+                
+                required
+                {...register("confirm")}
               />
             </label>
 
@@ -102,10 +134,10 @@ export default function Signup() {
               <span className="">I agree Terms & conditions</span>
             </label>
 
-            <div className="flex justify-center mt-10">
+            <div className="flex justify-center mt-4">
               <button
                 type="submit"
-                className="bg-[#fd298b] w-[120px] rounded-md mt-4 h-10 mx-auto text-black font-semibold active:scale-95
+                className="bg-[#fd298b] w-30 rounded-md mt-4 h-10 mx-auto text-black font-semibold active:scale-95
                  transition-colors duration-300 ease-in-out hover:bg-[#677483] cursor-pointer"
               >
                 Register

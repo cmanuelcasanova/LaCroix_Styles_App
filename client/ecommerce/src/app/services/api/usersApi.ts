@@ -43,6 +43,14 @@ export const usersApi = baseApi.injectEndpoints({
       }),
     }),
 
+    verifyEmail: builder.mutation<void, {token:string} >({
+      query: ( {token}) => ({
+        url: "/auth/verifyEmail",
+        method: "POST",
+        body: {token},
+      }),
+    }),
+
     profile: builder.query<AuthResponse, void>({
       query: () => '/auth/profile',
         providesTags: ['User'],
@@ -60,7 +68,8 @@ export const {
   useLazyProfileQuery,
   useLogoutMutation,
   useRecoverypassMutation,
-  useRecoverypass_newMutation
+  useRecoverypass_newMutation,
+  useVerifyEmailMutation
 } = usersApi;
 
 /*

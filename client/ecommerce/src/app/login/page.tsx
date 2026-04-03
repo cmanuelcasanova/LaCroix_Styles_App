@@ -15,6 +15,7 @@ import { useCreateItemCarMutation } from "@/app/services/api/ShoppingApi"
 import { useState } from "react";
 import LoadingModal from "@/app/components/Loadingpage"
 import toast, { Toaster } from "react-hot-toast";
+import { FaRegEye } from "react-icons/fa";
 
 
 
@@ -35,6 +36,7 @@ export default function Login() {
   const [addItemBD] = useCreateItemCarMutation ();
   const [mergeRTK,setMergeRTK] = useState<boolean>(false);
   const [mergeDB,setMergeDB] = useState<boolean>(false);
+  const [ viewpassword , setViewPAssword  ] = useState<boolean>(false)
 
   const onSubmit = handleSubmit(async (data) => {
     
@@ -160,19 +162,20 @@ export default function Login() {
 
             <label className="flex flex-col mb-4">
               Password
+              <div className="flex flex-wrap items-center justify-between h-10 border-[#202b38] border rounded-md p-2
+                ">
               <input
-                className="h-10 border-[#202b38] border rounded-md p-2
-                focus:outline-none focus:ring-2
-             focus:ring-[#ff288b] focus:shadow-[0_0_0_4px_#ffd5e1]
-                hover:border-[#677483] transition-colors duration-200"
-                type="password"
+                className="w-[90%] border-white focus:outline-none focus:ring-0 focus:border-transparent"
+                type={ viewpassword ? "text" : "password"  }
                 placeholder="Input Password"
                 required
                 {...register("password")}
               />
+              <FaRegEye size={20} onClick={()=>{setViewPAssword(!viewpassword)}}/>
+              </div>
             </label>
 
-            <div className="flex flex-col w-full content-center justify-center items-center rounded-md h-[70px] mt-10 ">
+            <div className="flex flex-col w-full content-center justify-center items-center rounded-md h-17.5 mt-10 ">
               <button
                 type="submit"
                 className=" w-30 bg-[#ff288b] my-4 mx-auto h-full rounded-md text-black font-semibold active:scale-95

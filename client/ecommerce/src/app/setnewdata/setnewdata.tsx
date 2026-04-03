@@ -51,11 +51,12 @@ export default function SetNewPass() {
 
 
    if(!token) {router.push("/login")}
+   if (loading) return <LoadingModal/>  
 
   return (
     <div className="flex justify-center items-center min-h-screen mx-4 mt-4 sm:mt-10 ">
     
-      {loading && <LoadingModal/>}  
+     
       <Toaster />
       <div className="h-100 w-100 border bg-white border-[#202b38] p-2 rounded-3xl hover:border-[#677483] transition-colors duration-800">
         
