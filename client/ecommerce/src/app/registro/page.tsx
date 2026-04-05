@@ -34,6 +34,7 @@ export default function Signup() {
     try {
       
       await registro(data).unwrap();
+      toast("Registro Exitoso ✔️​");
       router.push("/login");
     } catch (error) {
       console.error("Error en el registro:", error);
@@ -48,12 +49,12 @@ export default function Signup() {
     <div className="flex justify-center items-center min-h-screen mx-4 mt-10">
        <Toaster />
       <div className="h-140 w-100 border bg-white rounded-3xl border-[#202b38] p-2  hover:border-[#677483] transition-colors duration-800">
-        <h1 className="  text-4xl pl-4 mt-6">Sing up</h1>
+        <h1 className="  text-4xl pl-4 mt-6">Registro</h1>
 
         <div className="text-black  flex flex-col p-4 pt-10">
           <form onSubmit={onSubmit} className="w-full">
             <label className="flex flex-col mb-4">
-              Username
+              Nombre de usuario
               <input
                 className=" h-10  border-[#202b38] border rounded-md p-2
                 focus:outline-none focus:ring-2
@@ -131,7 +132,7 @@ export default function Signup() {
                   </svg>
                 </span>
               </div>
-              <span className="">I agree Terms & conditions</span>
+              <span className="">Aceptar terminos y condiciones</span>
             </label>
 
             <div className="flex justify-center mt-4">
@@ -140,7 +141,7 @@ export default function Signup() {
                 className="bg-[#fd298b] w-30 rounded-md mt-4 h-10 mx-auto text-black font-semibold active:scale-95
                  transition-colors duration-300 ease-in-out hover:bg-[#677483] cursor-pointer"
               >
-                Register
+                Registrar
               </button>
             </div>
           </form>

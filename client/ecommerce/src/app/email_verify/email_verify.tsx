@@ -7,12 +7,14 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
+import { useProfileQuery } from "../services/api/usersApi";
 
 export default function Email_Verify() {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const [verifyEmail] = useVerifyEmailMutation();
   const [isVerified, setIsVerified] = useState<boolean>(false);
+  const { data: profile, isLoading, error , refetch } = useProfileQuery();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -21,6 +23,8 @@ export default function Email_Verify() {
       if (token) {
         try {
           const response = await verifyEmail({ token: token }).unwrap();
+          toast("Correo verificado con Exito ✔️​");
+          refetch()
           setIsVerified(true);
           
         } catch {

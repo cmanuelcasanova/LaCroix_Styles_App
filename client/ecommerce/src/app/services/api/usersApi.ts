@@ -49,6 +49,15 @@ export const usersApi = baseApi.injectEndpoints({
         method: "POST",
         body: {token},
       }),
+      invalidatesTags: ["User"],
+    }),
+
+    resend_email: builder.mutation<void, {email:string} >({
+      query: ( {email}) => ({
+        url: "/auth/resend_email",
+        method: "POST",
+        body: {email},
+      }),
     }),
 
     profile: builder.query<AuthResponse, void>({
@@ -69,7 +78,8 @@ export const {
   useLogoutMutation,
   useRecoverypassMutation,
   useRecoverypass_newMutation,
-  useVerifyEmailMutation
+  useVerifyEmailMutation,
+  useResend_emailMutation
 } = usersApi;
 
 /*

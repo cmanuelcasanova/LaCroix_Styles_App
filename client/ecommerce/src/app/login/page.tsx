@@ -55,13 +55,17 @@ export default function Login() {
 
       if(response.username) {await play_LazyGetItemsCar();}
 
-
+      toast("Bienvenido" + response.username )
       router.push("/");
     } catch (error) {
-      console.error("Error en el Login:", error);
-      toast("Error en el Login, reintente ");
-        setLoading(false)
-    }
+
+    
+      const serverError = error as { data: { message: string } };
+      toast("⚠️​" + serverError.data.message)
+      setLoading(false)
+
+
+  }
   });
 
   useEffect(() => {
@@ -187,10 +191,10 @@ export default function Login() {
 
             <label className="mt-10 ">
               <h1 className="flex flex-warp gap-2 text-sm ">
-                Dont have an account?{" "}
+                No tienes cuenta?{" "}
                 <Link href="/registro">
                   {" "}
-                  <h1 className="font-extrabold text-[#ff288b]">Sign Up</h1>
+                  <h1 className="font-extrabold text-[#ff288b]">Registrate</h1>
                 </Link>{" "}
               </h1>
             </label>

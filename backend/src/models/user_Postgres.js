@@ -33,7 +33,7 @@ export const UserModel = (sequelize) => {
     },
     isVerified: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      allowNull: false,
     },
     verificationToken: {
       type: DataTypes.STRING,
