@@ -9,9 +9,13 @@ export const SendEmail = async (email_info) => {
     secure: false,
     auth: {
       user: process.env.EMAIL,
-      pass: process.env.GMAIL_KEY_APPLICATION,
+      pass: process.env.GMAIL_KEY_APPLICATION.replace(/\s+/g, ""),
     },
     family: 4,
+    tls: {
+    servername: 'smtp.gmail.com', 
+    rejectUnauthorized: false
+  },
     connectionTimeout: 10000,
   });
 
