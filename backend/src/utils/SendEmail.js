@@ -5,13 +5,14 @@ export const SendEmail = async (email_info) => {
 
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
     auth: {
       user: process.env.EMAIL,
       pass: process.env.GMAIL_KEY_APPLICATION,
     },
     family: 4,
+    connectionTimeout: 10000,
   });
 
   try {
