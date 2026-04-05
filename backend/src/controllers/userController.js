@@ -336,7 +336,7 @@ export const resend_email = async (req, res) => {
   user.verificationToken=token;
   await user.save();
   
-
+  console.log(email)
   const email_info = {
 
       email,
