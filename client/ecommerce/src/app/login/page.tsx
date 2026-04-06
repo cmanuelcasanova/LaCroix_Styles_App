@@ -60,8 +60,8 @@ export default function Login() {
     } catch (error) {
 
     
-      const serverError = error as { data: { message: string } };
-      toast("⚠️​" + serverError.data.message)
+      const serverError = error as { status:string,data: { message: string } };
+      toast(serverError.status==='PARSING_ERROR' ? "Error en el Servidor, Reintente"  : "⚠️​" + serverError.data.message)
       setLoading(false)
 
 
