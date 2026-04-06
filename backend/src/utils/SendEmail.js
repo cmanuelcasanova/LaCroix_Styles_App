@@ -1,32 +1,39 @@
 import nodemailer from "nodemailer";
 
 export const SendEmail = async (email_info) => {
+  
+  try {
   const { email, subject, html } = email_info;
 
   const transporter = nodemailer.createTransport({
+    port: 465,
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    secure: true,
     auth: {
       user: process.env.EMAIL,
       pass: process.env.GMAIL_KEY_APPLICATION.replace(/\s+/g, ""),
     },
-    family: 4,
-    tls: {
-    servername: 'smtp.gmail.com', 
-    rejectUnauthorized: false
-  },
-    connectionTimeout: 10000,
   });
 
-  try {
-    const info = await transporter.sendMail({
+  const mailData = {
       from: '"LaCroix Styles" <lacroixstyles@gmail.com>',
       to: email,
       subject: subject,
       html: html,
-    });
-  } catch (err) {
-    console.error("Error while sending mail:", err);
   }
+
+  await new Promise ((resolve,reject) => {
+      
+      transporter.sendMail(mailData,(err,info) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(info);
+        }
+      });
+
+})
+}catch (error) {
+  res.status(500).json({ message: error.message });
+}
 };
