@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LoadingModal from "@/app/components/Loadingpage"
 import toast, { Toaster } from "react-hot-toast";
+import * as z from "zod"; 
 
 
 
@@ -20,22 +21,35 @@ export default function Forgetpassword() {
   const { register, handleSubmit } = useForm<FormData>();
   const [loading, setLoading] = useState<boolean>(false)
   const [ recoverypass ] = useRecoverypassMutation ();
+  const emailSchema = z.email()
+  const router = useRouter();
 
 
   const onSubmit = handleSubmit(async (data) => {
     
     setLoading(true)
     try {
-      const response = await recoverypass({email:data.email}).unwrap();
-   
-      //router.push("/");
-      setLoading(false)
 
-      toast("✔️​ Correo de recuperacion enviado");
+      
+      if (emailSchema.safeParse(data.email).success){
+        
+        const response = await recoverypass({email:data.email}).unwrap();
+        toast("✔️​ Correo de recuperacion enviado");
+       
+        //router.push("/");
+      }else {
+
+         toast("❌​ Es formato de correo invalido");
+
+      }
+       setLoading(false)
+      
+
+     
     } catch (error) {
-      console.error("Correo no registrado:", error);
-      toast("​❌ Correo no registrado!");
-        setLoading(false)
+      const serverError = error as { status:string,data: { message: string } };
+      toast(serverError.status==='PARSING_ERROR' ? "⚠️​" + serverError.data : "⚠️​" + serverError.data.message)
+      setLoading(false)
     }
   });
 

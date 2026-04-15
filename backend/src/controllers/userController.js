@@ -351,6 +351,6 @@ export const resend_email = async (req, res) => {
 
     res.status(201).json({ userid: user.id, username: user.username });
   } catch (error) {
-    res.status(500).json({ message: "Error al registrar usuario", error });
+    res.status(500).json({ message: "Error al Enviar Email", error });
   }
 };

@@ -13,6 +13,7 @@ import dotenv from "dotenv";
 const app = express();
 dotenv.config({ quiet: true }); 
 
+app.set('trust proxy', 1);
 
 app.use(cors({
  origin: process.env.FRONTEND_URL,   

@@ -16,17 +16,13 @@ import { useState } from "react";
 import LoadingModal from "@/app/components/Loadingpage"
 import toast, { Toaster } from "react-hot-toast";
 import { FaRegEye } from "react-icons/fa";
+import * as z from "zod"; 
 
 
 
-
-type FormData = {
-  email: string;
-  password: string;
-};
 
 export default function Login() {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit } = useForm<loginType>();
   const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState<boolean>(false)
   const [play_LazyGetItemsCar, { data: itemsCarBD }] = useLazyGetAllItemsCarQuery();
@@ -37,11 +33,36 @@ export default function Login() {
   const [mergeRTK,setMergeRTK] = useState<boolean>(false);
   const [mergeDB,setMergeDB] = useState<boolean>(false);
   const [ viewpassword , setViewPAssword  ] = useState<boolean>(false)
+  const loginSchema = z.object ({
+
+    email: z.email("⚠️ ​Formato de correo invalido"),
+    password: z.string().min(6,"⚠️​ password muy corto").max(32,"⚠️​ password muy largo")
+
+
+  })
+  type loginType = z.infer<typeof loginSchema>
+
+
 
   const onSubmit = handleSubmit(async (data) => {
     
     setLoading(true)
     try {
+
+      const result = loginSchema.safeParse(data)
+      if(!result.success ){
+
+        result.error.issues.map ( i => {
+
+          toast(i.message) 
+          
+
+        }  )
+       
+        
+      }else {
+      
+      
       const response = await Login(data).unwrap();
    
       dispatch(
@@ -57,11 +78,14 @@ export default function Login() {
 
       toast("Bienvenido" + response.username )
       router.push("/");
+    }
+      setLoading(false)
+
     } catch (error) {
 
-    
+     
       const serverError = error as { status:string,data: { message: string } };
-      toast(serverError.status==='PARSING_ERROR' ? "Error en el Servidor, Reintente"  : "⚠️​" + serverError.data.message)
+      toast(serverError.status==='PARSING_ERROR' ? "⚠️​" + serverError.data : "⚠️​" + serverError.data.message)
       setLoading(false)
 
 

@@ -7,6 +7,7 @@ import { TbArrowBackUp } from "react-icons/tb";
 import { useEffect, useState, useRef } from "react";
 import { useResend_emailMutation } from "@/app/services/api/usersApi";
 import Countdown from "react-countdown";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function ProfilePage() {
   const { data: profile, isLoading } = useProfileQuery();
@@ -27,10 +28,17 @@ export default function ProfilePage() {
     isSubmitting.current=true;
 
     if (profile) {
-      const response = await resend_email({ email: profile.email }).unwrap();
-      setSend(true);
-      isSubmitting.current =false
 
+      try {
+        const response = await resend_email({ email: profile.email }).unwrap();
+        setSend(true);
+        isSubmitting.current =false
+
+      } catch (error) {
+      const serverError = error as { status:string,data: { message: string } };
+      console.log(serverError)
+      toast(serverError.status==='PARSING_ERROR' ? "⚠️​" + serverError.data : "⚠️​" + serverError.data.message)
+      }
     }
   };
 
@@ -41,6 +49,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen mx-4 mt-20 sm:mt-6 ">
+        <Toaster />
       <div className="flex flex-col items-start justify-start h-120 sm:w-100 w-80 mx-4 border bg-white border-[#202b38] p-4 sm:p-6 rounded-3xl hover:border-[#677483] transition-colors duration-800">
         <h1 className="  text-4xl mx-auto mt-12 mb-8">Perfil de Usuario</h1>
 

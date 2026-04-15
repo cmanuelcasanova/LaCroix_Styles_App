@@ -6,27 +6,44 @@ import { useRouter } from "next/navigation";
 import { useState } from "react"
 import LoadingModal from "@/app/components/Loadingpage"
 import toast, { Toaster } from "react-hot-toast";
-
-type FormData = {
-  email: string;
-  password: string;
-  confirm: string;
-  username: string;
-  agreeTerms: boolean;
-};
+import { FaRegEye } from "react-icons/fa";
+import * as z from "zod"; 
 
 export default function Signup() {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit } = useForm<SignUpType>();
   const [registro] = useRegistroMutation();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false)
+  const [viewpassword, setviewpassword] = useState<boolean>(false)
+  const [viewpasswordconfirm, setviewpasswordconfirm] = useState<boolean>(false)
+  const SignUpSchema = z.object ({
+  
+      email: z.email("⚠️ ​Formato de correo invalido"),
+      password: z.string().min(6,"⚠️​ password muy corto").max(32,"⚠️​ password muy largo"),
+      confirm: z.string().min(6,"⚠️​ confirmar password muy corto").max(32,"⚠️​ password muy largo"),
+      username: z.string().min(6,"⚠️​ Nombre de Usuario muy corto").max(32,"⚠️​ Username muy largo"),
+      agreeTerms: z.boolean()
+  
+    }).refine((data) => data.password === data.confirm, {
+        message: "⚠️ Los passwords no coinciden",
+        path: ["confirm"], 
+    });
+
+    type SignUpType = z.infer<typeof SignUpSchema>
+
 
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true)
 
-    if (data.password !==data.confirm) {
-      toast("El Password con coincide, reintente ");
+    const result = SignUpSchema.safeParse(data)
+    
+    if (!result.success) {
+     
+       result.error.issues.map ( i => {
+          toast(i.message) 
+        })
+
       setLoading(false)
       return
     }
@@ -83,30 +100,33 @@ export default function Signup() {
 
             <label className="flex flex-col mb-4">
               Password
+              
+              <div className="flex flex-wrap items-center justify-between h-10  border-[#202b38] border rounded-md p-2">
               <input
-                className=" h-10  border-[#202b38] border rounded-md p-2
-                focus:outline-none focus:ring-2
-             focus:ring-[#fd298b] focus:shadow-[0_0_0_4px_#fe9ace]
-                hover:border-[#677483] transition-colors duration-200"
-                type="password"
+                className=" focus:outline-none"
+                type={ viewpassword ? "input" :  "password"}
                 
                 required
                 {...register("password")}
               />
+                <FaRegEye size={20}  onClick={()=>setviewpassword(!viewpassword)} />
+                </div>
             </label>
 
              <label className="flex flex-col mb-4">
               Confirmar Password
+
+                <div className="flex flex-wrap items-center justify-between h-10  border-[#202b38] border rounded-md p-2">
+            
               <input
-                className=" h-10  border-[#202b38] border rounded-md p-2
-                focus:outline-none focus:ring-2
-             focus:ring-[#fd298b] focus:shadow-[0_0_0_4px_#fe9ace]
-                hover:border-[#677483] transition-colors duration-200"
-                type="password"
+                className="focus:outline-none"
+                type= { viewpasswordconfirm ? "input" :"password" }
                 
                 required
                 {...register("confirm")}
               />
+              <FaRegEye size={20}  onClick={()=>setviewpasswordconfirm(!viewpasswordconfirm)}/>
+              </div>
             </label>
 
             <label className="flex items-center gap-2 mt-6">
